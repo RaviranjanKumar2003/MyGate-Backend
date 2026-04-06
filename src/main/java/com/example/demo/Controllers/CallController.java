@@ -24,4 +24,19 @@ public class CallController {
         );
 
     }
+
+
+    // ✅ END CALL (⭐ NEW ADD)
+    @MessageMapping("/end-call")
+    public void endCall(CallMessage message) {
+
+        System.out.println("Call Ended: " + message.getRoomName());
+
+        messagingTemplate.convertAndSend(
+                "/topic/end-call",
+                message
+        );
+    }
+
+
 }
