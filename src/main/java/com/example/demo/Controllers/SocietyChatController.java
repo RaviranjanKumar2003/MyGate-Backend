@@ -3,6 +3,8 @@ package com.example.demo.Controllers;
 import com.example.demo.Payloads.SocietyChatDto;
 import com.example.demo.Services.SocietyChatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +18,21 @@ public class SocietyChatController {
     private SocietyChatService chatService;
 
     // Send message
-    @PostMapping("/send")
-    public SocietyChatDto sendMessage(@RequestBody SocietyChatDto dto) {
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
-        return chatService.sendMessage(dto);
+    @MessageMapping("/chat.send")
+    public void sendMessage(SocietyChatDto dto) {
+
+        SocietyChatDto saved = chatService.sendMessage(dto);
+
+        // ⭐ send tempId back
+        saved.setTempId(dto.getTempId());
+
+        messagingTemplate.convertAndSend(
+                "/topic/messages/" + dto.getSocietyId(),
+                saved
+        );
     }
 
     // Get all messages
@@ -68,6 +81,14 @@ public class SocietyChatController {
         chatService.hardDeleteMessage(societyId, messageId, dto.getSenderId());
 
         return "Message deleted for everyone";
+    }
+
+
+    @PostMapping("/seen/{societyId}/{userId}")
+    public void markSeen(@PathVariable Integer societyId,
+                         @PathVariable Integer userId) {
+
+        chatService.markMessagesAsSeen(societyId, userId);
     }
 
 }

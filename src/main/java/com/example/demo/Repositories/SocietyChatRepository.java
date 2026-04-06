@@ -9,4 +9,6 @@ public interface SocietyChatRepository extends JpaRepository<SocietyChat, Intege
 
     List<SocietyChat> findBySocietyIdOrderByCreatedAtAsc(Integer societyId);
 
+    List<SocietyChat> findBySocietyId(Integer societyId);
+
 }

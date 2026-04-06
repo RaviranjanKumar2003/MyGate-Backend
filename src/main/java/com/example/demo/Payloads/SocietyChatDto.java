@@ -23,6 +23,10 @@ public class SocietyChatDto {
 
     private Map<String, Long> reactions;
 
+    private boolean seen;
+
+    private Long tempId;
+
 
 // GETTERS & SETTERS & CONSTRUCTOR
 
@@ -47,6 +51,22 @@ public class SocietyChatDto {
         this.userType = userType;
         this.message = message;
         this.createdAt = createdAt;
+    }
+
+    public Long getTempId() {
+        return tempId;
+    }
+
+    public void setTempId(Long tempId) {
+        this.tempId = tempId;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 
     public Map<String, Long> getReactions() {

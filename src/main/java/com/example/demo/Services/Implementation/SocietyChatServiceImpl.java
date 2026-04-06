@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,8 +25,13 @@ public class SocietyChatServiceImpl implements SocietyChatService {
     @Lazy
     private MessageReactionService reactionService;
 
+    // ✅ SEND MESSAGE
     @Override
     public SocietyChatDto sendMessage(SocietyChatDto dto) {
+
+        if (dto.getMessage() == null || dto.getMessage().trim().isEmpty()) {
+            throw new RuntimeException("Message cannot be empty");
+        }
 
         SocietyChat chat = new SocietyChat();
 
@@ -33,38 +40,51 @@ public class SocietyChatServiceImpl implements SocietyChatService {
         chat.setSenderName(dto.getSenderName());
         chat.setRole(dto.getRole());
         chat.setUserType(dto.getUserType());
-        chat.setMessage(dto.getMessage());
-        chat.setCreatedAt(LocalDateTime.now());
+        chat.setMessage(dto.getMessage().trim());
+        chat.setCreatedAt(
+                ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).toLocalDateTime()
+        );
+        chat.setSeenByUsers(new HashSet<>());
+        chat.setDeletedForUsers(new ArrayList<>());
+        chat.setDeletedForEveryone(false);
 
         SocietyChat saved = chatRepository.save(chat);
 
-        return new SocietyChatDto(
-                saved.getId(),
-                saved.getSocietyId(),
-                saved.getSenderId(),
-                saved.getSenderName(),
-                saved.getRole(),
-                saved.getUserType(),
-                saved.getMessage(),
-                saved.getCreatedAt()
-        );
+        return mapToDto(saved);
     }
 
+    // ✅ GET MESSAGES
     @Override
     public List<SocietyChatDto> getMessages(Integer societyId, Integer userId) {
 
         List<SocietyChat> chats =
                 chatRepository.findBySocietyIdOrderByCreatedAtAsc(societyId);
 
-        return chats.stream().map(chat -> {
+        List<SocietyChat> updatedChats = new ArrayList<>();
 
-            String messageText = chat.getMessage();
+        List<SocietyChatDto> result = chats.stream().map(chat -> {
 
-            if (chat.isDeletedForEveryone()) {
-                messageText = " This message was deleted";
+            // Initialize sets if null
+            if (chat.getSeenByUsers() == null) {
+                chat.setSeenByUsers(new HashSet<>());
             }
 
-            if (chat.getDeletedForUsers().contains(userId)) {
+            if (chat.getDeletedForUsers() == null) {
+                chat.setDeletedForUsers(new ArrayList<>());
+            }
+
+            // Mark as seen
+            if (!chat.getSenderId().equals(userId)) {
+                if (chat.getSeenByUsers().add(userId)) {
+                    updatedChats.add(chat);
+                }
+            }
+
+            // Handle deleted messages
+            String messageText = chat.getMessage();
+
+            if (chat.isDeletedForEveryone() ||
+                    chat.getDeletedForUsers().contains(userId)) {
                 messageText = "This message was deleted";
             }
 
@@ -79,83 +99,90 @@ public class SocietyChatServiceImpl implements SocietyChatService {
                     chat.getCreatedAt()
             );
 
-            // ⭐ ADD THIS (REACTIONS)
+            // Add reactions
             dto.setReactions(
                     reactionService.getReactions(chat.getId())
             );
 
+            // Correct seen logic
+            dto.setSeen(chat.getSeenByUsers().contains(userId));
+
             return dto;
 
         }).collect(Collectors.toList());
+
+        // Save only updated chats
+        if (!updatedChats.isEmpty()) {
+            chatRepository.saveAll(updatedChats);
+        }
+
+        return result;
     }
 
-    // UPDATE MESSAGE (ONLY SENDER)
+    // ✅ UPDATE MESSAGE (ONLY SENDER)
     @Override
     public SocietyChatDto updateMessage(Integer societyId,
                                         Integer messageId,
                                         Integer senderId,
                                         String newMessage) {
 
+        if (newMessage == null || newMessage.trim().isEmpty()) {
+            throw new RuntimeException("Message cannot be empty");
+        }
+
         SocietyChat chat = chatRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
 
-        // Check society
         if (!chat.getSocietyId().equals(societyId)) {
             throw new RuntimeException("Message does not belong to this society");
         }
 
-        // Check sender
         if (!chat.getSenderId().equals(senderId)) {
             throw new RuntimeException("You can update only your message");
         }
 
-        // Prevent editing deleted message
         if (chat.isDeletedForEveryone()) {
             throw new RuntimeException("Deleted message cannot be edited");
         }
 
-        chat.setMessage(newMessage);
+        chat.setMessage(newMessage.trim());
 
         SocietyChat updatedChat = chatRepository.save(chat);
 
         return mapToDto(updatedChat);
     }
 
-    // SOFT DELETE
+    // ✅ SOFT DELETE (FOR USER ONLY)
     @Override
     public void softDeleteMessage(Integer societyId, Integer messageId, Integer userId) {
 
         SocietyChat chat = chatRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
 
-        if(!chat.getSocietyId().equals(societyId)){
-            throw new RuntimeException("Invalid society message");
-        }
-
-        List<Integer> deletedUsers = chat.getDeletedForUsers();
-
-        if(!deletedUsers.contains(userId)){
-            deletedUsers.add(userId);
-        }
-
-        chat.setDeletedForUsers(deletedUsers);
-
-        chatRepository.save(chat);
-    }
-
-    // HARD DELETE
-    @Override
-    public void hardDeleteMessage(Integer societyId, Integer messageId, Integer senderId) {
-
-        SocietyChat chat = chatRepository.findById(messageId)
-                .orElseThrow(() -> new RuntimeException("Message not found"));
-
-        // Society validation
         if (!chat.getSocietyId().equals(societyId)) {
             throw new RuntimeException("Invalid society message");
         }
 
-        // Sender validation
+        if (chat.getDeletedForUsers() == null) {
+            chat.setDeletedForUsers(new ArrayList<>());
+        }
+
+        if (!chat.getDeletedForUsers().contains(userId)) {
+            chat.getDeletedForUsers().add(userId);
+        }
+
+        chatRepository.save(chat);
+    }
+
+    @Override
+    public void hardDeleteMessage(Integer societyId, Integer messageId, Integer senderId) {
+        SocietyChat chat = chatRepository.findById(messageId)
+                .orElseThrow(() -> new RuntimeException("Message not found"));
+
+        if (!chat.getSocietyId().equals(societyId)) {
+            throw new RuntimeException("Invalid society message");
+        }
+
         if (!chat.getSenderId().equals(senderId)) {
             throw new RuntimeException("Only sender can delete message for everyone");
         }
@@ -165,11 +192,40 @@ public class SocietyChatServiceImpl implements SocietyChatService {
         chatRepository.save(chat);
     }
 
-    // DTO MAPPER
+
+
+    // ✅ MARK AS SEEN (BULK)
+    @Override
+    public void markMessagesAsSeen(Integer societyId, Integer userId) {
+
+        List<SocietyChat> messages = chatRepository.findBySocietyId(societyId);
+
+        List<SocietyChat> updatedMessages = new ArrayList<>();
+
+        for (SocietyChat msg : messages) {
+
+            if (msg.getSenderId().equals(userId)) continue;
+
+            if (msg.getSeenByUsers() == null) {
+                msg.setSeenByUsers(new HashSet<>());
+            }
+
+            if (msg.getSeenByUsers().add(userId)) {
+                updatedMessages.add(msg);
+            }
+        }
+
+        if (!updatedMessages.isEmpty()) {
+            chatRepository.saveAll(updatedMessages);
+        }
+    }
+
+    // ✅ DTO MAPPER
     private SocietyChatDto mapToDto(SocietyChat chat) {
 
         SocietyChatDto dto = new SocietyChatDto();
 
+        dto.setId(chat.getId()); // IMPORTANT FIX
         dto.setSocietyId(chat.getSocietyId());
         dto.setSenderId(chat.getSenderId());
         dto.setSenderName(chat.getSenderName());

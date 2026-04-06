@@ -21,4 +21,7 @@ public interface SocietyChatService {
     // HARD DELETE (ONLY SENDER)
     void hardDeleteMessage(Integer societyId, Integer messageId, Integer senderId);
 
+    // MARK AS SEEN
+    void markMessagesAsSeen(Integer societyId, Integer userId);
+
 }

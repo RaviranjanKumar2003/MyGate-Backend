@@ -51,9 +51,20 @@ public class SocietyChat {
 
     private String fileUrl;
 
+    @ElementCollection
+    private Set<Integer> seenByUsers = new HashSet<>();
+
 
 // GETTERS & SETTERS
 
+
+    public Set<Integer> getSeenByUsers() {
+        return seenByUsers;
+    }
+
+    public void setSeenByUsers(Set<Integer> seenByUsers) {
+        this.seenByUsers = seenByUsers;
+    }
 
     public List<Integer> getDeletedForUsers() {
         return deletedForUsers;
