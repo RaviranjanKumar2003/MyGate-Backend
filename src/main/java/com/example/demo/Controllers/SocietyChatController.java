@@ -8,6 +8,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/society-chat")
@@ -90,5 +91,6 @@ public class SocietyChatController {
 
         chatService.markMessagesAsSeen(societyId, userId);
     }
+
 
 }
