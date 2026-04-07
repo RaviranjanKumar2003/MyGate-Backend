@@ -49,6 +49,7 @@ public class SocietyChatServiceImpl implements SocietyChatService {
         chat.setDeletedForEveryone(false);
 
         SocietyChat saved = chatRepository.save(chat);
+        System.out.println("✅ After save ID: " + chat.getId());
 
         return mapToDto(saved);
     }
