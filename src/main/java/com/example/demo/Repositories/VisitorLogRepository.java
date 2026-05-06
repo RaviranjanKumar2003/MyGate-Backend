@@ -8,16 +8,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VisitorLogRepository extends JpaRepository<VisitorLog, Integer> {
+public interface VisitorLogRepository extends JpaRepository<VisitorLog, Long> {
 
     // Find all logs by status
     List<VisitorLog> findByVisitorLogStatus(VisitorLogStatus status);
 
     // Find all logs for a specific visitor
-    List<VisitorLog> findByVisitorId(Integer visitorId);
+    List<VisitorLog> findByVisitorId(Long visitorId);
 
     // Find all logs for a specific flat
-    List<VisitorLog> findByFlatId(Integer flatId);
+    List<VisitorLog> findByFlatId(Long flatId);
 
 
 }

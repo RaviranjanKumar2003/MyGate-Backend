@@ -11,7 +11,6 @@ import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -69,7 +68,7 @@ public class SocietyChatServiceImpl implements SocietyChatService {
 
     // ✅ GET MESSAGES
     @Override
-    public List<SocietyChatDto> getMessages(Integer societyId, Integer userId) {
+    public List<SocietyChatDto> getMessages(Long societyId, Long userId) {
 
         List<SocietyChat> chats =
                 chatRepository.findBySocietyIdOrderByCreatedAtAsc(societyId);
@@ -116,7 +115,7 @@ public class SocietyChatServiceImpl implements SocietyChatService {
                     messageText,
                     chat.getCreatedAt()
             );
-            dto.setFileType(chat.getFileType());   // ⭐ IMPORTANT
+            dto.setFileType(chat.getFileType());   //  IMPORTANT
             dto.setReplyToMessageId(chat.getReplyToMessageId());
             dto.setReplyToMessageText(chat.getReplyToMessageText());
             dto.setReplyToSenderName(chat.getReplyToSenderName());
@@ -142,11 +141,11 @@ public class SocietyChatServiceImpl implements SocietyChatService {
         return result;
     }
 
-    // ✅ UPDATE MESSAGE (ONLY SENDER)
+    //  UPDATE MESSAGE (ONLY SENDER)
     @Override
-    public SocietyChatDto updateMessage(Integer societyId,
-                                        Integer messageId,
-                                        Integer senderId,
+    public SocietyChatDto updateMessage(Long societyId,
+                                        Long messageId,
+                                        Long senderId,
                                         String newMessage) {
 
         if (newMessage == null || newMessage.trim().isEmpty()) {
@@ -175,9 +174,9 @@ public class SocietyChatServiceImpl implements SocietyChatService {
         return mapToDto(updatedChat);
     }
 
-    // ✅ SOFT DELETE (FOR USER ONLY)
+    //  SOFT DELETE (FOR USER ONLY)
     @Override
-    public void softDeleteMessage(Integer societyId, Integer messageId, Integer userId) {
+    public void softDeleteMessage(Long societyId, Long messageId, Long userId) {
 
         SocietyChat chat = chatRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
@@ -198,7 +197,7 @@ public class SocietyChatServiceImpl implements SocietyChatService {
     }
 
     @Override
-    public void hardDeleteMessage(Integer societyId, Integer messageId, Integer senderId) {
+    public void hardDeleteMessage(Long societyId, Long messageId, Long senderId) {
         SocietyChat chat = chatRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
 
@@ -219,9 +218,9 @@ public class SocietyChatServiceImpl implements SocietyChatService {
 
 
 
-    // ✅ MARK AS SEEN (BULK)
+    //  MARK AS SEEN (BULK)
     @Override
-    public void markMessagesAsSeen(Integer societyId, Integer userId) {
+    public void markMessagesAsSeen(Long societyId, Long userId) {
 
         List<SocietyChat> messages = chatRepository.findBySocietyIdOrderByCreatedAtAsc(societyId);
 
@@ -246,7 +245,7 @@ public class SocietyChatServiceImpl implements SocietyChatService {
     }
 
 
-    public List<Map<String, Object>> getSeenUsers(Integer messageId) {
+    public List<Map<String, Object>> getSeenUsers(Long messageId) {
 
         SocietyChat chat = chatRepository.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
@@ -256,7 +255,7 @@ public class SocietyChatServiceImpl implements SocietyChatService {
             Map<String, Object> map = new HashMap<>();
             map.put("userId", userId);
 
-            // 👉 real user fetch
+            //  real user fetch
             User user = userRepository.findById(userId).orElse(null);
 
             if (user != null) {
@@ -268,7 +267,7 @@ public class SocietyChatServiceImpl implements SocietyChatService {
         }).toList();
     }
 
-    // ✅ DTO MAPPER
+    //  DTO MAPPER
     private SocietyChatDto mapToDto(SocietyChat chat) {
 
         SocietyChatDto dto = new SocietyChatDto();

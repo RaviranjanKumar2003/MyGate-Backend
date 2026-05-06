@@ -72,7 +72,7 @@ public class CompanyController {
     @PostMapping("/image/upload/{companyId}")
     public ResponseEntity<CompanyDto> uploadUserImage(
             @RequestParam("image") MultipartFile image,
-            @PathVariable Integer companyId
+            @PathVariable Long companyId
     ) throws IOException {
 
         Company company = companyRepository.findById(companyId).orElseThrow(() ->
@@ -97,7 +97,7 @@ public class CompanyController {
     // GET USERS IMAGE
     @GetMapping("/image/get/company/{companyId}")
     public void downloadUserImage(
-            @PathVariable Integer companyId,
+            @PathVariable Long companyId,
             HttpServletResponse response
     ) throws IOException {
 

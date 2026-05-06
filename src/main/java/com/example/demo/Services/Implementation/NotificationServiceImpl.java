@@ -63,8 +63,8 @@ public class NotificationServiceImpl implements NotificationService {
     // GET NOTIFICATION
     @Override
     public List<NotificationDto> getNotificationsForAdmin(
-            Integer societyId,
-            Integer adminId
+            Long societyId,
+            Long adminId
     ) {
         return notificationRepository
                 .findBySocietyIdAndReceiverAdminIdOrderByCreatedAtDesc(
@@ -80,7 +80,7 @@ public class NotificationServiceImpl implements NotificationService {
 // ================= FETCH NOTIFICATIONS =================
 @Override
 public List<NotificationDto> getNotificationsForUser(
-        Integer societyId,
+        Long societyId,
         String userRole
 ) {
     return notificationRepository
@@ -93,7 +93,7 @@ public List<NotificationDto> getNotificationsForUser(
 
 
     @Override
-    public void deleteNotification(Integer notificationId) {
+    public void deleteNotification(Long notificationId) {
 
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
@@ -105,7 +105,7 @@ public List<NotificationDto> getNotificationsForUser(
 
     // MARK AS READ NOTIFICATION
     @Override
-    public void markAsRead(Integer notificationId) {
+    public void markAsRead(Long notificationId) {
         Notification n = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new RuntimeException("Notification not found"));
         n.setRead(true);

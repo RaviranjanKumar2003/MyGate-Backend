@@ -9,7 +9,7 @@ public class LoginRequest {
     private String password;
 
 
-
+// GETTERS & SETTERS
 
     public String getEmail() {
         return email;

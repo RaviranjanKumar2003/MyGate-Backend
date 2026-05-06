@@ -35,7 +35,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
 
     // ================= RESIDENT CODE =================
     @Override
-    public VerificationCodeDto generateCode(Integer userId) {
+    public VerificationCodeDto generateCode(Long userId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -94,7 +94,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
 
     @Override
     @Transactional
-    public boolean verifyCode(Integer userId, String code) {
+    public boolean verifyCode(Long userId, String code) {
         VerificationCode vCode =
                 verificationCodeRepository
                         .findByUser_IdAndCodeAndUsedFalse(userId, code)

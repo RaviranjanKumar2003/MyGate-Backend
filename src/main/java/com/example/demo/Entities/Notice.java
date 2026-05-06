@@ -17,7 +17,7 @@ public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     /* ================= BASIC ================= */
 
@@ -30,9 +30,9 @@ public class Notice {
     /* ================= SENDER ================= */
 
     @Column(nullable = false)
-    private Integer createdById;
+    private Long createdById;
 
-    private Integer recievedById;
+    private Long recievedById;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -55,7 +55,7 @@ public class Notice {
 
     // NULL => Global (Super Admin → Society Admin)
     @Column
-    private Integer targetSocietyId;
+    private Long targetSocietyId;
 
     /* ================= META ================= */
 
@@ -97,11 +97,11 @@ public class Notice {
     }
 
 
-// GETTERS & SETTERS & CONSTRUCTOR
+// CONSTRUCTOR
 
-    public Notice(int id, String title, String message, Integer createdById, Integer recievedById,
+    public Notice(Long id, String title, String message, Long createdById, Long recievedById,
                   NoticeCreatedByRole createdByRole, NoticeCreatedByRole recievedByRole, String createdByName, String receivedByName, TargetAudience targetRole,
-                  Integer targetSocietyId, NoticePriority priority, NoticeType noticeType,
+                  Long targetSocietyId, NoticePriority priority, NoticeType noticeType,
                   String attachmentUrl, Boolean isActive, LocalDate expiryDate, LocalDateTime createdAt,
                   LocalDateTime updatedAt) {
 
@@ -126,12 +126,39 @@ public class Notice {
     }
 
 
-    public Integer getRecievedById() {
+ // GETTERS & SETTERS
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(Long createdById) {
+        this.createdById = createdById;
+    }
+
+    public Long getRecievedById() {
         return recievedById;
     }
 
-    public void setRecievedById(Integer recievedById) {
+    public void setRecievedById(Long recievedById) {
         this.recievedById = recievedById;
+    }
+
+    public Long getTargetSocietyId() {
+        return targetSocietyId;
+    }
+
+    public void setTargetSocietyId(Long targetSocietyId) {
+        this.targetSocietyId = targetSocietyId;
     }
 
     public NoticeCreatedByRole getRecievedByRole() {
@@ -150,14 +177,6 @@ public class Notice {
         this.receivedByName = receivedByName;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -172,14 +191,6 @@ public class Notice {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Integer getCreatedById() {
-        return createdById;
-    }
-
-    public void setCreatedById(Integer createdById) {
-        this.createdById = createdById;
     }
 
     public NoticeCreatedByRole getCreatedByRole() {
@@ -212,14 +223,6 @@ public class Notice {
 
     public void setTargetRole(TargetAudience targetRole) {
         this.targetRole = targetRole;
-    }
-
-    public Integer getTargetSocietyId() {
-        return targetSocietyId;
-    }
-
-    public void setTargetSocietyId(Integer targetSocietyId) {
-        this.targetSocietyId = targetSocietyId;
     }
 
     public NoticePriority getPriority() {

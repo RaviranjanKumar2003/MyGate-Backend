@@ -30,7 +30,7 @@ public class VisitorLogController {
 // Get All Log By id
     @GetMapping("/{logId}")
     @PreAuthorize("hasAnyRole('ADMIN','SECURITY')")
-    public ResponseEntity<VisitorLogDto> getLog(@PathVariable Integer logId){
+    public ResponseEntity<VisitorLogDto> getLog(@PathVariable Long logId){
         return ResponseEntity.ok(visitorLogService.getVisitorLogById(logId));
     }
 
@@ -46,7 +46,7 @@ public class VisitorLogController {
 // update logs
     @PutMapping("/{logId}")
     @PreAuthorize("hasRole('SECURITY')")
-    public ResponseEntity<VisitorLogDto> updateLog(@PathVariable Integer logId,
+    public ResponseEntity<VisitorLogDto> updateLog(@PathVariable Long logId,
                                                    @RequestBody VisitorLogDto dto){
         return ResponseEntity.ok(visitorLogService.updateVisitorLog(logId,dto));
     }
@@ -55,7 +55,7 @@ public class VisitorLogController {
 // delete logs
     @DeleteMapping("/{logId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteLog(@PathVariable Integer logId){
+    public ResponseEntity<String> deleteLog(@PathVariable Long logId){
         visitorLogService.deleteVisitorLog(logId);
         return ResponseEntity.ok("Visitor log deleted successfully");
     }

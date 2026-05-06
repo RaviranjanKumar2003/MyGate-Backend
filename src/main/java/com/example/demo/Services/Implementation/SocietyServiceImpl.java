@@ -1,19 +1,17 @@
 package com.example.demo.Services.Implementation;
 
-import com.example.demo.Entities.Society;
-import com.example.demo.Entities.SocietyAdmin;
+import com.example.demo.Entities.*;
 import com.example.demo.Enums.SocietyStatus;
 import com.example.demo.Exceptions.ResourceNotFoundException;
-import com.example.demo.Payloads.SocietyAdminDto;
-import com.example.demo.Payloads.SocietyDto;
-import com.example.demo.Repositories.SocietyAdminRepository;
-import com.example.demo.Repositories.SocietyRepo;
+import com.example.demo.Payloads.*;
+import com.example.demo.Repositories.*;
 import com.example.demo.Services.SocietyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +31,15 @@ public class SocietyServiceImpl implements SocietyService {
     private PasswordEncoder passwordEncoder;
 
     private SocietyAdminDto societyAdminDto;
+
+    @Autowired
+    private BuildingRepo buildingRepo;
+
+    @Autowired
+    private FlatRepository flatRepository;
+
+    @Autowired
+    private FloorRepository floorRepository;
 
 
 // CREATE SOCIETY + SOCIETY ADMIN
@@ -68,6 +75,7 @@ public SocietyDto createSociety(SocietyDto societyDto) {
         admin.setAdminEmail(adminDto.getAdminEmail());
         admin.setAdminPassword(passwordEncoder.encode(adminDto.getAdminPassword()));
         admin.setMobileNumber(adminDto.getMobileNumber());
+        admin.setCreatedAt(LocalDateTime.now());
         admin.setSociety(savedSociety);
 
         SocietyAdmin savedAdmin = societyAdminRepository.save(admin);
@@ -134,7 +142,7 @@ public SocietyDto createSociety(SocietyDto societyDto) {
 
 // GET SOCIETY BY ID
 @Override
-public SocietyDto getSocietyById(Integer societyId) {
+public SocietyDto getSocietyById(Long societyId) {
 
     Society society = societyRepo.findByIdAndIsActive(
             societyId, SocietyStatus.ACTIVE
@@ -175,7 +183,7 @@ public SocietyDto getSocietyById(Integer societyId) {
   // }
 
     @Override
-    public SocietyDto updateSociety(SocietyDto dto, Integer societyId) {
+    public SocietyDto updateSociety(SocietyDto dto, Long societyId) {
 
         Society society = societyRepo.findByIdAndIsActive(societyId, SocietyStatus.ACTIVE)
                 .orElseThrow(() -> new ResourceNotFoundException("Society","Society Id",societyId));
@@ -196,7 +204,7 @@ public SocietyDto getSocietyById(Integer societyId) {
 
     // DELETE SOCIETY
    @Override
-   public void deleteSociety(Integer societyId) {
+   public void deleteSociety(Long societyId) {
 
        Society society = societyRepo
                .findByIdAndIsActive(societyId, SocietyStatus.ACTIVE)
@@ -220,6 +228,44 @@ public SocietyDto getSocietyById(Integer societyId) {
                 .stream()
                 .map(s -> modelMapper.map(s, SocietyDto.class))
                 .collect(Collectors.toList());
+    }
+
+
+
+    @Override
+    public List<BuildingFullDto> getFullBuildings(Long societyId) {
+
+        List<Building> buildings = buildingRepo.findBySocietyId(societyId);
+
+        return buildings.stream().map(b -> {
+
+            List<Floor> floors = floorRepository
+                    .findByBuildingIdAndSocietyId(b.getId(), societyId);
+
+            List<FloorDto> floorDtos = floors.stream().map(f -> {
+
+                List<Flat> flats = flatRepository.findByFloor_Id(f.getId());
+
+                List<FlatDto> flatDtos = flats.stream()
+                        .map(fl -> {
+                            FlatDto dto = new FlatDto();
+                            dto.setId(fl.getId());
+                            dto.setFlatNumber(fl.getFlatNumber());
+                            return dto;
+                        })
+                        .toList();
+
+                return new FloorDto(f.getId(), f.getFloorNumber(), flatDtos);
+
+            }).toList();
+
+            return new BuildingFullDto(
+                    b.getId(),
+                    b.getName(),
+                    floorDtos
+            );
+
+        }).toList();
     }
 
 }

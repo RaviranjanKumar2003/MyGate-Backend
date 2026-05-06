@@ -24,7 +24,7 @@ public class StaffController {
 // GET STAFF by ID
     @GetMapping("/{staffId}")
     @PreAuthorize("hasAnyRole('ADMIN','SECURITY')")
-    public ResponseEntity<StaffDto> getStaff(@PathVariable Integer staffId) {
+    public ResponseEntity<StaffDto> getStaff(@PathVariable Long staffId) {
         return ResponseEntity.ok(staffService.getStaffById(staffId));
     }
 
@@ -50,7 +50,7 @@ public class StaffController {
     @PutMapping("/{staffId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StaffDto> updateStaff(
-            @PathVariable Integer staffId,
+            @PathVariable Long staffId,
             @RequestBody StaffDto dto) {
         return ResponseEntity.ok(staffService.updateStaff(staffId, dto));
     }
@@ -59,7 +59,7 @@ public class StaffController {
 // DELETE STAFF
     @DeleteMapping("/{staffId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteStaff(@PathVariable Integer staffId) {
+    public ResponseEntity<String> deleteStaff(@PathVariable Long staffId) {
         staffService.deleteStaff(staffId);
         return ResponseEntity.ok("Staff deleted successfully");
     }

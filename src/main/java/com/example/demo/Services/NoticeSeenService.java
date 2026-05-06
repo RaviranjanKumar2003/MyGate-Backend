@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface NoticeSeenService {
 
-    void markAsSeen(Integer noticeId, Integer userId, String role);
+    void markAsSeen(Long noticeId, Long userId, String role);
 
-    List<NoticeSeenDto> getSeenUsers(Integer noticeId);
+    List<NoticeSeenDto> getSeenUsers(Long noticeId);
 
 }

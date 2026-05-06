@@ -1,6 +1,7 @@
 package com.example.demo.ECommerce.EControllers;
 
 import com.example.demo.ECommerce.Dtos.OfferDto;
+import com.example.demo.ECommerce.EServices.ESImpl.OfferServiceImpl;
 import com.example.demo.ECommerce.EServices.OfferService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,5 +52,10 @@ public class OfferController {
     @GetMapping("/buyer/{buyerId}")
     public ResponseEntity<List<OfferDto>> getOffersByBuyer(@PathVariable Integer buyerId) {
         return ResponseEntity.ok(offerService.getOffersByBuyer(buyerId));
+    }
+
+    @GetMapping("/flat/{flatId}")
+    public ResponseEntity<List<OfferDto>> getOffersByFlat(@PathVariable Long flatId) {
+        return ResponseEntity.ok(offerService.getOffersByFlat(flatId));
     }
 }

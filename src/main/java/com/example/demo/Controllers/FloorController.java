@@ -23,8 +23,8 @@ public class FloorController {
 // CREATE FLOOR
     @PostMapping("/society/{societyId}/building/{buildingId}/create")
     public ResponseEntity<FloorDto> createFloor(
-            @PathVariable int societyId,
-            @PathVariable int buildingId,
+            @PathVariable Long societyId,
+            @PathVariable Long buildingId,
             @RequestBody FloorDto dto) {
 
         dto.setSocietyId(societyId);
@@ -35,18 +35,21 @@ public class FloorController {
 
 
 // GET ALL FLOORS IN A BUILDING
+
     @GetMapping("/society/{societyId}/building/{buildingId}/get")
     public ResponseEntity<List<FloorDto>> getFloorsByBuilding(
-            @PathVariable int buildingId) {
+            @PathVariable Long societyId,
+            @PathVariable Long buildingId) {
+
         return ResponseEntity.ok(
-                floorService.getFloorsByBuilding(buildingId));
+                floorService.getFloorsByBuildingAndSociety(societyId, buildingId));
     }
 
 
 // GET FLOORS BY BUILDING + STATUS
     @GetMapping("/society/{societyId}/building/{buildingId}/status/{status}")
     public ResponseEntity<List<FloorDto>> getFloorsByBuildingAndStatus(
-            @PathVariable int buildingId,
+            @PathVariable Long buildingId,
             @PathVariable FloorStatus status) {
 
         return ResponseEntity.ok(
@@ -58,7 +61,7 @@ public class FloorController {
 // GET FLOORS BY SOCIETY + STATUS
     @GetMapping("/society/{societyId}/status/{status}")
     public ResponseEntity<List<FloorDto>> getFloorsBySocietyAndStatus(
-            @PathVariable int societyId,
+            @PathVariable Long societyId,
             @PathVariable FloorStatus status) {
 
         return ResponseEntity.ok(
@@ -69,7 +72,7 @@ public class FloorController {
 // BUILDING FLOOR SUMMARY
     @GetMapping("/society/{societyId}/building/{buildingId}/summary")
     public ResponseEntity<FloorSummaryDto> getBuildingSummary(
-            @PathVariable int buildingId) {
+            @PathVariable Long buildingId) {
 
         return ResponseEntity.ok(
                 floorService.getBuildingFloorSummary(buildingId));
@@ -79,7 +82,7 @@ public class FloorController {
 // SOCIETY FLOOR SUMMARY
     @GetMapping("/society/{societyId}/summary")
     public ResponseEntity<FloorSummaryDto> getSocietySummary(
-            @PathVariable int societyId) {
+            @PathVariable Long societyId) {
 
         return ResponseEntity.ok(
                 floorService.getSocietyFloorSummary(societyId));
@@ -89,7 +92,7 @@ public class FloorController {
 // UPDATE FLOOR
     @PutMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}")
     public ResponseEntity<FloorDto> updateFloor(
-            @PathVariable int floorId,
+            @PathVariable Long floorId,
             @RequestBody FloorDto dto) {
 
         return ResponseEntity.ok(
@@ -100,7 +103,7 @@ public class FloorController {
 
 // DELETE FLOOR (SOFT)
     @DeleteMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}/delete")
-    public ResponseEntity<String> deleteFloor(@PathVariable int floorId) {
+    public ResponseEntity<String> deleteFloor(@PathVariable Long floorId) {
         floorService.deleteFloor(floorId);
         return ResponseEntity.ok("Floor marked as IN");
     }

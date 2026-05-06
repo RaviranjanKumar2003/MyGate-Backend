@@ -14,7 +14,6 @@ import com.example.demo.Repositories.FloorRepository;
 import com.example.demo.Repositories.SocietyRepo;
 import com.example.demo.Services.FloorService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -90,7 +89,7 @@ public class FloorServiceImpl implements FloorService {
 
 // GET FLOORS BY BUILDING
     @Override
-    public List<FloorDto> getFloorsByBuilding(int buildingId) {
+    public List<FloorDto> getFloorsByBuilding(Long buildingId) {
 
         Building building = buildingRepo.findById(buildingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Building", "id", buildingId));
@@ -101,7 +100,7 @@ public class FloorServiceImpl implements FloorService {
 
 // GET FLOORS BY BUILDING + STATUS
     @Override
-    public List<FloorDto> getFloorsByBuildingAndStatus(int buildingId, FloorStatus status) {
+    public List<FloorDto> getFloorsByBuildingAndStatus(Long buildingId, FloorStatus status) {
 
         Building building = buildingRepo.findById(buildingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Building", "id", buildingId));
@@ -113,7 +112,7 @@ public class FloorServiceImpl implements FloorService {
 
 // GET FLOORS BY SOCIETY + STATUS
     @Override
-    public List<FloorDto> getFloorsBySocietyAndStatus(int societyId, FloorStatus status) {
+    public List<FloorDto> getFloorsBySocietyAndStatus(Long societyId, FloorStatus status) {
         Society society = societyRepo.findById(societyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Society", "id", societyId));
 
@@ -123,7 +122,7 @@ public class FloorServiceImpl implements FloorService {
 
 // GET BUILDING FLOOR SUMMARY
     @Override
-    public FloorSummaryDto getBuildingFloorSummary(int buildingId) {
+    public FloorSummaryDto getBuildingFloorSummary(Long buildingId) {
 
         Building building = buildingRepo.findById(buildingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Building", "id", buildingId));
@@ -138,7 +137,7 @@ public class FloorServiceImpl implements FloorService {
 
 // GET SOCIETY FLOOR SUMMARY
     @Override
-    public FloorSummaryDto getSocietyFloorSummary(int societyId) {
+    public FloorSummaryDto getSocietyFloorSummary(Long societyId) {
 
         Society society = societyRepo.findById(societyId)
                 .orElseThrow(() ->
@@ -154,7 +153,7 @@ public class FloorServiceImpl implements FloorService {
 
 // UPDATE FLOOR
    @Override
-   public FloorDto updateFloor(int floorId, FloorDto dto) {
+   public FloorDto updateFloor(Long floorId, FloorDto dto) {
        Floor floor = floorRepo.findByIdAndBuildingIsActive(floorId, BuildingStatus.ACTIVE)
                .orElseThrow(() -> new ResourceNotFoundException("Floor", "id", floorId));
 
@@ -171,7 +170,7 @@ public class FloorServiceImpl implements FloorService {
 
 // DELETE FLOOR (SOFT DELETE)
    @Override
-   public void deleteFloor(int floorId) {
+   public void deleteFloor(Long floorId) {
        Floor floor = floorRepo.findByIdAndBuildingIsActive(floorId, BuildingStatus.ACTIVE)
             .orElseThrow(() -> new ResourceNotFoundException("Floor", "id", floorId));
 
@@ -199,5 +198,22 @@ public class FloorServiceImpl implements FloorService {
         dto.setBuildingId(floor.getBuilding().getId());
         dto.setSocietyId(floor.getSociety().getId());
         return dto;
+    }
+
+    @Override
+    public List<FloorDto> getFloorsByBuildingAndSociety(Long societyId, Long buildingId) {
+
+        Building building = buildingRepo.findById(buildingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Building", "id", buildingId));
+
+        // ✅ VALIDATION (IMPORTANT)
+        if (!building.getSociety().getId().equals(societyId)) {
+            throw new IllegalStateException("Building does not belong to this society");
+        }
+
+        return floorRepo.findByBuilding(building)
+                .stream()
+                .map(this::mapToDto)
+                .toList();
     }
 }

@@ -4,6 +4,7 @@ import com.example.demo.ECommerce.Dtos.ProductDto;
 import com.example.demo.ECommerce.ERepositories.ProductRepository;
 import com.example.demo.ECommerce.EServices.ProductService;
 import com.example.demo.ECommerce.Eentities.Product;
+import com.example.demo.Entities.User;
 import com.example.demo.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,22 +46,19 @@ public class ProductServiceImpl implements ProductService {
         dto.setStock(product.getStock());
         dto.setCategory(product.getCategory());
 
-        // ✅ CORRECT (since you use IDs)
-        dto.setSellerId(product.getSellerId());
+        // ✅ SELLER FROM RELATION
+        if (product.getSeller() != null) {
+            dto.setSellerId(product.getSeller().getId());
+            dto.setSellerName(product.getSeller().getName());
+            dto.setSellerEmail(product.getSeller().getEmail());
+            dto.setSellerMobile(product.getSeller().getMobileNumber());
+        }
+
         dto.setSocietyId(product.getSocietyId());
 
         dto.setCodAvailable(
                 product.getCodAvailable() != null ? product.getCodAvailable() : true
         );
-
-        if (product.getSellerId() != null) {
-            userRepository.findById(product.getSellerId().intValue())
-                    .ifPresent(user -> {
-                        dto.setSellerName(user.getName());
-                        dto.setSellerEmail(user.getEmail());
-                        dto.setSellerMobile(user.getMobileNumber());
-                    });
-        }
 
         return dto;
     }
@@ -78,8 +76,13 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(dto.getStock());
         product.setCategory(dto.getCategory());
 
-        // ✅ DIRECT ID SET
-        product.setSellerId(dto.getSellerId());
+        // ✅ SET SELLER USING ID
+        if (dto.getSellerId() != null) {
+            User user = userRepository.findById(dto.getSellerId())
+                    .orElseThrow(() -> new RuntimeException("Seller not found"));
+            product.setSeller(user);
+        }
+
         product.setSocietyId(dto.getSocietyId());
 
         product.setCodAvailable(
@@ -102,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         // ✅ AUTH CHECK
-        if (!product.getSellerId().equals(userId)) {
+        if (!product.getSeller().getId().equals(userId)) {
             throw new RuntimeException("You are not authorized to update this product");
         }
 
@@ -123,7 +126,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         // ✅ AUTH CHECK
-        if (!product.getSellerId().equals(userId)) {
+        if (!product.getSeller().getId().equals(userId)) {
             throw new RuntimeException("You are not authorized to delete this product");
         }
 

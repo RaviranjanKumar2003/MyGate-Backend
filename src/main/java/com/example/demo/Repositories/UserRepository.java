@@ -1,6 +1,7 @@
 package com.example.demo.Repositories;
 
 import com.example.demo.Entities.User;
+import com.example.demo.Enums.NormalUserType;
 import com.example.demo.Enums.UserRole;
 import com.example.demo.Enums.UserStatus;
 import org.springframework.data.domain.Pageable;
@@ -11,29 +12,29 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     // ===== Society level =====
 
     // Simple fetch (NO pagination)
-    List<User> findBySocietyId(Integer societyId);
+    List<User> findBySocietyId(Long societyId);
 
     // Pagination + sorting
     @Query("SELECT u FROM User u WHERE u.society.id = :societyId")
     List<User> findBySocietyIdWithPage(
-            @Param("societyId") Integer societyId,
+            @Param("societyId") Long societyId,
             Pageable pageable
     );
 
-    List<User> findBySocietyIdAndUserRole(Integer societyId, UserRole role);
+    List<User> findBySocietyIdAndUserRole(Long societyId, UserRole role);
 
-    List<User> findBySocietyIdAndUserStatus(Integer societyId, UserStatus status);
+    List<User> findBySocietyIdAndUserStatus(Long societyId, UserStatus status);
 
-    long countBySocietyId(Integer societyId);
+    long countBySocietyId(Long societyId);
 
-    long countBySocietyIdAndUserRole(Integer societyId, UserRole role);
+    long countBySocietyIdAndUserRole(Long societyId, UserRole role);
 
-    long countBySocietyIdAndUserStatus(Integer societyId, UserStatus status);
+    long countBySocietyIdAndUserStatus(Long societyId, UserStatus status);
 
     // ===== Correct search query =====
     @Query("""
@@ -46,7 +47,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
           )
     """)
     List<User> searchUsersInSociety(
-            @Param("societyId") Integer societyId,
+            @Param("societyId") Long societyId,
             @Param("status") UserStatus status,
             @Param("keyword") String keyword
     );
@@ -58,12 +59,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
           AND LOWER(u.email) LIKE LOWER(CONCAT('%', :email, '%'))
     """)
     List<User> findBySocietyIdAndEmailContainingIgnoreCase(
-            @Param("societyId") Integer societyId,
+            @Param("societyId") Long societyId,
             @Param("email") String email
     );
-
-
-    boolean existsByEmailAndSocietyId(String email, Integer societyId);
 
 
     // Super Admin ke liye
@@ -75,13 +73,18 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 
 
-    Optional<User> findByEmailAndSocietyId(String email, Integer societyId);
+    Optional<User> findByEmailAndSocietyId(String email, Long societyId);
 
     boolean existsByEntryCode(String entryCode);
 
-    Optional<User> findByIdAndSociety_Id(Integer id, Integer societyId);
+    Optional<User> findByIdAndSociety_Id(Long id, Long societyId);
 
     Optional<User> findByEntryCode(String entryCode);
+
+
+    Optional<User> findByIdAndNormalUserType(Long id, NormalUserType type);
+
+
 
 
 }

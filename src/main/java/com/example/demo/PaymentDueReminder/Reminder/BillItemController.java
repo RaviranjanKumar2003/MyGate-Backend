@@ -17,7 +17,7 @@ public class BillItemController {
 // Add item to bill
    @PostMapping("/society/{societyId}")
    public ResponseEntity<BillItemDto> addBillItem(
-           @PathVariable Integer societyId,
+           @PathVariable Long societyId,
            @RequestBody BillItemDto dto
    ) {
        return ResponseEntity.ok(billItemService.createBillItem(dto, societyId));
@@ -25,7 +25,7 @@ public class BillItemController {
 
     //  Get items of a bill
     @GetMapping("/bill/{billId}")
-    public ResponseEntity<List<BillItemDto>> getByBill(@PathVariable Integer billId) {
+    public ResponseEntity<List<BillItemDto>> getByBill(@PathVariable Long billId) {
         return ResponseEntity.ok(
                 billItemService.getItemsByMonthlyBill(billId)
         );
@@ -34,7 +34,7 @@ public class BillItemController {
     // ✏ Update item
     @PutMapping("/{itemId}")
     public ResponseEntity<BillItemDto> update(
-            @PathVariable Integer itemId,
+            @PathVariable Long itemId,
             @RequestBody BillItemDto dto
     ) {
         return ResponseEntity.ok(
@@ -44,7 +44,7 @@ public class BillItemController {
 
     //  Delete item
     @DeleteMapping("/{itemId}")
-    public ResponseEntity<Void> delete(@PathVariable Integer itemId) {
+    public ResponseEntity<Void> delete(@PathVariable Long itemId) {
         billItemService.deleteBillItem(itemId);
         return ResponseEntity.noContent().build();
     }

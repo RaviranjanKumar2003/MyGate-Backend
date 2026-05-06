@@ -14,14 +14,14 @@ public class MonthlyBill {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // Society & User Info
-    private Integer societyId;
+    private Long societyId;
     private String societyName;
-    private Integer userId;      // tenant / owner
+    private Long userId;      // tenant / owner
     private String userName;
-    private Integer flatId;      // optional (future)
+    private Long flatId;      // optional (future)
 
     // Billing Info
     private String billMonth;    // e.g. "2026-02"
@@ -72,7 +72,7 @@ public class MonthlyBill {
     private UserRole lastUpdatedByRole;
 
     @Column(name = "last_updated_by_user_id")
-    private Integer lastUpdatedByUserId;
+    private Long lastUpdatedByUserId;
 
     @Column(name = "status_updated_at")
     private LocalDateTime statusUpdatedAt;
@@ -81,20 +81,52 @@ public class MonthlyBill {
 // GETTERS & SETTERS
 
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getFlatId() {
+        return flatId;
+    }
+
+    public void setFlatId(Long flatId) {
+        this.flatId = flatId;
+    }
+
+    public Long getLastUpdatedByUserId() {
+        return lastUpdatedByUserId;
+    }
+
+    public void setLastUpdatedByUserId(Long lastUpdatedByUserId) {
+        this.lastUpdatedByUserId = lastUpdatedByUserId;
+    }
+
     public UserRole getLastUpdatedByRole() {
         return lastUpdatedByRole;
     }
 
     public void setLastUpdatedByRole(UserRole lastUpdatedByRole) {
         this.lastUpdatedByRole = lastUpdatedByRole;
-    }
-
-    public Integer getLastUpdatedByUserId() {
-        return lastUpdatedByUserId;
-    }
-
-    public void setLastUpdatedByUserId(Integer lastUpdatedByUserId) {
-        this.lastUpdatedByUserId = lastUpdatedByUserId;
     }
 
     public LocalDateTime getStatusUpdatedAt() {
@@ -151,38 +183,6 @@ public class MonthlyBill {
 
     public void setDueAmount(Double dueAmount) {
         this.dueAmount = dueAmount;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getFlatId() {
-        return flatId;
-    }
-
-    public void setFlatId(Integer flatId) {
-        this.flatId = flatId;
     }
 
     public String getBillMonth() {

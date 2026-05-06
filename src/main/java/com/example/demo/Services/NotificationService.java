@@ -12,12 +12,12 @@ public interface NotificationService {
 
 
 // GET NOTIFICATION FOR SOCIETY ADMIN
-    List<NotificationDto> getNotificationsForAdmin( Integer societyId, Integer adminId);
+    List<NotificationDto> getNotificationsForAdmin( Long societyId, Long adminId);
 
     // Fetch notifications for any user based on role and societyId
-    List<NotificationDto> getNotificationsForUser(Integer societyId, String userRole);
+    List<NotificationDto> getNotificationsForUser(Long societyId, String userRole);
 
-    void markAsRead(Integer notificationId);
+    void markAsRead(Long notificationId);
 
-    void deleteNotification(Integer notificationId);
+    void deleteNotification(Long notificationId);
 }

@@ -9,15 +9,15 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface FlatRepository extends JpaRepository<Flat, Integer> {
+public interface FlatRepository extends JpaRepository<Flat, Long> {
 
-    List<Flat> findByFloorId(Integer floorId);
+    List<Flat> findByFloorId(Long floorId);
 
-    List<Flat> findByBuildingId(Integer buildingId);
+    List<Flat> findByBuildingId(Long buildingId);
 
-    List<Flat> findBySocietyId(Integer societyId);
+    List<Flat> findBySocietyId(Long societyId);
 
-    List<Flat> findByFloorIdAndFlatStatus(Integer floorId, FlatStatus status);
+    List<Flat> findByFloorIdAndFlatStatus(Long floorId, FlatStatus status);
 
     boolean existsBySocietyAndBuildingAndFloorAndFlatNumber(
             Society society,
@@ -27,41 +27,39 @@ public interface FlatRepository extends JpaRepository<Flat, Integer> {
     );
 
 
-    List<Flat> findBySocietyIdAndFlatStatus(Integer societyId, FlatStatus flatStatus);
+    List<Flat> findBySocietyIdAndFlatStatus(Long societyId, FlatStatus flatStatus);
 
     // ✅ SOCIETY LEVEL
-    long countBySocietyIdAndFlatStatus(Integer societyId, FlatStatus status);
+    long countBySocietyIdAndFlatStatus(Long societyId, FlatStatus status);
 
     // ✅ BUILDING LEVEL
     long countBySocietyIdAndBuildingIdAndFlatStatus(
-            Integer societyId,
-            Integer buildingId,
+            Long societyId,
+            Long buildingId,
             FlatStatus flatStatus
     );
 
     // ✅ FLOOR LEVEL
     long countBySocietyIdAndBuildingIdAndFloorIdAndFlatStatus(
-            Integer societyId,
-            Integer buildingId,
-            Integer floorId,
+            Long societyId,
+            Long buildingId,
+            Long floorId,
             FlatStatus status
     );
 
-    Optional<Flat> findByIdAndSociety_Id(Integer id, Integer societyId);
+    Optional<Flat> findByIdAndSociety_Id(Long id, Long societyId);
 
     Optional<Flat> findByIdAndFloor_IdAndFloor_Building_IdAndFloor_Building_Society_Id(
-            Integer flatId,
-            Integer floorId,
-            Integer buildingId,
-            Integer societyId
+            Long flatId,
+            Long floorId,
+            Long buildingId,
+            Long societyId
     );
 
 
-    boolean existsByIdAndSociety_Id(Integer userId, Integer societyId);
+    boolean existsByIdAndSociety_Id(Long userId, Long societyId);
 
-
-
-
+    List<Flat> findByFloor_Id(Long floorId);
 
     // COUNT FLATS IN FLOOR
     @Query("""
@@ -70,7 +68,7 @@ public interface FlatRepository extends JpaRepository<Flat, Integer> {
     WHERE f.floor.id = :floorId
     GROUP BY f.flatStatus
     """)
-    List<Object[]> countByFloorStatus(Integer floorId);
+    List<Object[]> countByFloorStatus(Long floorId);
 
 
     // 🔹 BUILDING
@@ -80,7 +78,7 @@ public interface FlatRepository extends JpaRepository<Flat, Integer> {
         WHERE f.building.id = :buildingId
         GROUP BY f.flatStatus
     """)
-    List<Object[]> countByBuildingStatus(@Param("buildingId") Integer buildingId);
+    List<Object[]> countByBuildingStatus(@Param("buildingId") Long buildingId);
 
     // 🔹 SOCIETY
     @Query("""
@@ -89,7 +87,7 @@ public interface FlatRepository extends JpaRepository<Flat, Integer> {
         WHERE f.society.id = :societyId
         GROUP BY f.flatStatus
     """)
-    List<Object[]> countBySocietyStatus(@Param("societyId") Integer societyId);
+    List<Object[]> countBySocietyStatus(@Param("societyId") Long societyId);
 
 
 }

@@ -5,18 +5,18 @@ import com.example.demo.Enums.UserRole;
 
 public class LoginResponse {
 
-    private Integer id;
+    private Long id;
     private String token;
     private UserRole role;
     private NormalUserType userType;
     private String email;
     private String name;
 
-    private Integer societyId;
+    private Long societyId;
     private String societyName;
 
     // 3-args constructor
-    public LoginResponse(Integer id, String token, UserRole role, NormalUserType userType, String email, String name, Integer societyId, String societyName) {
+    public LoginResponse(Long id, String token, UserRole role, NormalUserType userType, String email, String name, Long societyId, String societyName) {
         this.id=id;
         this.token = token;
         this.role = role;
@@ -40,11 +40,11 @@ public class LoginResponse {
         this.userType = userType;
     }
 
-    public Integer getSocietyId() {
+    public Long getSocietyId() {
         return societyId;
     }
 
-    public void setSocietyId(Integer societyId) {
+    public void setSocietyId(Long societyId) {
         this.societyId = societyId;
     }
 
@@ -64,11 +64,11 @@ public class LoginResponse {
         this.name = name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

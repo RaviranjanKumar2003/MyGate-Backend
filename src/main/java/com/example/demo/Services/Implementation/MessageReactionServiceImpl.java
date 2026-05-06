@@ -26,7 +26,7 @@ public class MessageReactionServiceImpl implements MessageReactionService {
     /* ================= TOGGLE REACTION ================= */
 
     @Override
-    public void toggleReaction(Integer messageId, Integer userId, String emoji) {
+    public void toggleReaction(Long messageId, Long userId, String emoji) {
 
         Optional<MessageReaction> existing =
                 reactionRepository.findByMessageIdAndUserId(messageId, userId);
@@ -63,7 +63,7 @@ public class MessageReactionServiceImpl implements MessageReactionService {
     /* ================= GET REACTIONS ================= */
 
     @Override
-    public Map<String, Long> getReactions(Integer messageId) {
+    public Map<String, Long> getReactions(Long messageId) {
 
         List<MessageReaction> reactions =
                 reactionRepository.findByMessageId(messageId);
@@ -76,7 +76,7 @@ public class MessageReactionServiceImpl implements MessageReactionService {
     }
 
     @Override
-    public List<ReactionDto> getReactionUsers(Integer messageId) {
+    public List<ReactionDto> getReactionUsers(Long messageId) {
 
         List<MessageReaction> reactions =
                 reactionRepository.findByMessageId(messageId);
@@ -99,7 +99,7 @@ public class MessageReactionServiceImpl implements MessageReactionService {
     }
 
     @Override
-    public void removeReaction(Integer messageId, Integer userId) {
+    public void removeReaction(Long messageId, Long userId) {
 
         Optional<MessageReaction> reaction =
                 reactionRepository.findByMessageIdAndUserId(messageId,userId);

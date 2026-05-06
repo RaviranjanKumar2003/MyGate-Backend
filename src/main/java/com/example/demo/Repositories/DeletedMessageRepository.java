@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface DeletedMessageRepository
-        extends JpaRepository<DeletedMessage, Integer> {
+        extends JpaRepository<DeletedMessage, Long> {
 
-    boolean existsByMessageIdAndUserId(Integer messageId, Integer userId);
+    boolean existsByMessageIdAndUserId(Long messageId, Long userId);
 
-    List<DeletedMessage> findByUserId(Integer userId);
+    List<DeletedMessage> findByUserId(Long userId);
 }

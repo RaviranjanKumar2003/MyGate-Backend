@@ -115,14 +115,14 @@ public class EmailOtpServiceImpl implements EmailOtpService {
 
         // Return full LoginResponse
         return new LoginResponse(
-                user.getId(),
-                token,
-                role,
-                userType,
-                user.getEmail(),
-                user.getName(),
                 user.getSociety() != null ? user.getSociety().getId() : null,
-                user.getSociety() != null ? user.getSociety().getName() : null
-        );
+                        token,
+                        role,
+                        userType,
+                        user.getEmail(),
+                        user.getName(),
+                (long) Math.toIntExact(user.getId()),
+                        user.getSociety() != null ? user.getSociety().getName() : null
+                );
     }
 }

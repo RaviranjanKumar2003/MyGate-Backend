@@ -11,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OfferServiceImpl implements OfferService {
@@ -32,17 +33,21 @@ public class OfferServiceImpl implements OfferService {
         this.offerRepository = offerRepository;
     }
 
+    /* ================= DTO MAPPER ================= */
     private OfferDto mapToDto(Offer offer) {
+
         OfferDto dto = new OfferDto(
                 offer.getId(),
-                offer.getProductId(),
+                offer.getRefId(),
                 offer.getBuyerId(),
                 offer.getOfferPrice(),
                 offer.getOfferTime()
         );
 
-        dto.setStatus(offer.getStatus()); // ✅ ADD THIS
+        dto.setRefType(offer.getRefType());
+        dto.setStatus(offer.getStatus());
 
+        // 🔥 Buyer Details
         if (offer.getBuyerId() != null) {
             userRepository.findById(offer.getBuyerId()).ifPresent(user -> {
                 dto.setBuyerName(user.getName());
@@ -55,33 +60,37 @@ public class OfferServiceImpl implements OfferService {
     }
 
     private Offer mapToEntity(OfferDto dto) {
-        Offer offer = new Offer(
-                dto.getId(),
-                dto.getProductId(),
-                dto.getBuyerId(),
-                dto.getOfferPrice(),
-                dto.getOfferTime()
-        );
 
-        offer.setStatus(dto.getStatus()); // ✅ ADD THIS
+        Offer offer = new Offer();
+
+        offer.setId(dto.getId());
+        offer.setRefId(dto.getRefId());
+        offer.setRefType(dto.getRefType());
+        offer.setBuyerId(dto.getBuyerId());
+        offer.setOfferPrice(dto.getOfferPrice());
+        offer.setOfferTime(dto.getOfferTime());
+        offer.setStatus(dto.getStatus());
 
         return offer;
     }
 
-// CREATE OFFER
+    /* ================= CREATE OFFER ================= */
     @Override
     public OfferDto createOffer(OfferDto offerDto) {
 
-        Offer offer = mapToEntity(offerDto);
-
-        // ✅ NULL CHECK (important)
-        if (offer.getOfferPrice() == null) {
+        if (offerDto.getOfferPrice() == null) {
             throw new RuntimeException("Offer price is required");
         }
 
-        // ✅ DEFAULT VALUES SET
+        if (offerDto.getRefId() == null || offerDto.getRefType() == null) {
+            throw new RuntimeException("refId and refType are required");
+        }
+
+        Offer offer = mapToEntity(offerDto);
+
+        // Default values
         if (offer.getOfferTime() == null) {
-            offer.setOfferTime(java.time.LocalDateTime.now());
+            offer.setOfferTime(LocalDateTime.now());
         }
 
         if (offer.getStatus() == null) {
@@ -90,37 +99,62 @@ public class OfferServiceImpl implements OfferService {
 
         Offer saved = offerRepository.save(offer);
 
-        // 🔥 product fetch karo
-        Product product = productRepository.findById(
-                Long.valueOf(offer.getProductId())  // ✅ FIX
-        ).orElseThrow(() -> new RuntimeException("Product not found"));
+        /* ================= NOTIFICATION ================= */
+        try {
+            if ("PRODUCT".equalsIgnoreCase(offer.getRefType())) {
 
-// 🔥 sellerId nikalo
-        Long sellerId = product.getSellerId();
+                Product product = productRepository.findById(offer.getRefId())
+                        .orElseThrow(() -> new RuntimeException("Product not found"));
 
-// 🔔 notification bhejo
-        messagingTemplate.convertAndSend(
-                "/topic/offer/" + sellerId,
-                "New Offer on product: " + product.getTitle()
-        );
+                Long sellerId = product.getSeller().getId();
+
+                messagingTemplate.convertAndSend(
+                        "/topic/offer/" + sellerId,
+                        "New Offer on product: " + product.getTitle()
+                );
+
+            } else if ("FLAT".equalsIgnoreCase(offer.getRefType())) {
+
+                messagingTemplate.convertAndSend(
+                        "/topic/flat-offer/" + offer.getRefId(),
+                        "New Offer on Flat ID: " + offer.getRefId()
+                );
+            }
+        } catch (Exception e) {
+            // ❌ Notification fail ho jaye to bhi app crash na ho
+            System.out.println("Notification failed: " + e.getMessage());
+        }
 
         return mapToDto(saved);
     }
 
+    /* ================= UPDATE OFFER ================= */
     @Override
     public OfferDto updateOffer(Integer id, OfferDto offerDto) {
+
         Offer offer = offerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Offer not found"));
-        offer.setOfferPrice(offerDto.getOfferPrice());
+
+        if (offerDto.getOfferPrice() != null) {
+            offer.setOfferPrice(offerDto.getOfferPrice());
+        }
+
+        if (offerDto.getStatus() != null) {
+            offer.setStatus(offerDto.getStatus());
+        }
+
         Offer updated = offerRepository.save(offer);
+
         return mapToDto(updated);
     }
 
+    /* ================= DELETE ================= */
     @Override
     public void deleteOffer(Integer id) {
         offerRepository.deleteById(id);
     }
 
+    /* ================= GET BY ID ================= */
     @Override
     public OfferDto getOfferById(Integer id) {
         return offerRepository.findById(id)
@@ -128,27 +162,47 @@ public class OfferServiceImpl implements OfferService {
                 .orElseThrow(() -> new RuntimeException("Offer not found"));
     }
 
+    /* ================= GET ALL ================= */
     @Override
     public List<OfferDto> getAllOffers() {
-        List<Offer> offers = offerRepository.findAll();
-        List<OfferDto> dtos = new ArrayList<>();
-        for (Offer o : offers) dtos.add(mapToDto(o));
-        return dtos;
+        return offerRepository.findAll()
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
+    /* ================= PRODUCT OFFERS ================= */
     @Override
     public List<OfferDto> getOffersByProduct(Integer productId) {
-        List<Offer> offers = offerRepository.findByProductId(productId);
-        List<OfferDto> dtos = new ArrayList<>();
-        for (Offer o : offers) dtos.add(mapToDto(o));
-        return dtos;
+
+        List<Offer> offers = offerRepository
+                .findByRefIdAndRefType(Long.valueOf(productId), "PRODUCT");
+
+        return offers.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
+
+    /* ================= BUYER OFFERS ================= */
     @Override
     public List<OfferDto> getOffersByBuyer(Integer buyerId) {
+
         List<Offer> offers = offerRepository.findByBuyerId(buyerId);
-        List<OfferDto> dtos = new ArrayList<>();
-        for (Offer o : offers) dtos.add(mapToDto(o));
-        return dtos;
+
+        return offers.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<OfferDto> getOffersByFlat(Long flatId) {
+        List<Offer> offers = offerRepository
+                .findByRefIdAndRefType(flatId, "FLAT");
+
+        return offers.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 }

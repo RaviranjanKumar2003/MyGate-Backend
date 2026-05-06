@@ -6,16 +6,16 @@ public interface SuperAdminService {
 
     SuperAdminDto createSuperAdmin(SuperAdminDto dto);
 
-    SuperAdminDto getSuperAdminById(int id);
+    SuperAdminDto getSuperAdminById(Long id);
 
     List<SuperAdminDto> getAllSuperAdmins();
 
-    SuperAdminDto updateSuperAdmin(int id, SuperAdminDto dto);
+    SuperAdminDto updateSuperAdmin(Long id, SuperAdminDto dto);
 
-    void deactivateSuperAdmin(int id);
+    void deactivateSuperAdmin(Long id);
 
 
-    SuperAdminDto updateSuperAdminImage(Integer superAdminId, String imageName);
+    SuperAdminDto updateSuperAdminImage(Long superAdminId, String imageName);
 
 
 }

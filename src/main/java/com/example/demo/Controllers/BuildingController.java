@@ -19,7 +19,7 @@ public class BuildingController {
 // CREATE
     @PostMapping
     public ResponseEntity<BuildingDto> createBuilding(
-            @PathVariable Integer societyId,
+            @PathVariable Long societyId,
             @RequestBody BuildingDto dto) {
 
         return ResponseEntity.ok(
@@ -30,19 +30,19 @@ public class BuildingController {
 
 // GET ALL Active Building by Society
     @GetMapping
-    public ResponseEntity<List<BuildingDto>> getAllActiveBuildings(@PathVariable Integer societyId) {
+    public ResponseEntity<List<BuildingDto>> getAllActiveBuildings(@PathVariable Long societyId) {
         return ResponseEntity.ok(buildingService.getAllActiveBuildings(societyId));
     }
 
 // GET ALL De-Active Building By Society
     @GetMapping("/inactive")
-    public ResponseEntity<List<BuildingDto>> getAllDeActiveBuildings(@PathVariable Integer societyId) {
+    public ResponseEntity<List<BuildingDto>> getAllDeActiveBuildings(@PathVariable Long societyId) {
         return ResponseEntity.ok(buildingService.getAllDeActiveBuildings(societyId));
     }
 
 // GET BY ID
     @GetMapping("/{buildingId}")
-    public ResponseEntity<BuildingDto> getBuildingById(@PathVariable Integer buildingId) {
+    public ResponseEntity<BuildingDto> getBuildingById(@PathVariable Long buildingId) {
         return ResponseEntity.ok(buildingService.getBuildingById(buildingId));
     }
 
@@ -51,14 +51,14 @@ public class BuildingController {
     @PutMapping("/{buildingId}")
     public ResponseEntity<BuildingDto> updateBuilding(
             @RequestBody BuildingDto dto,
-            @PathVariable Integer buildingId) {
+            @PathVariable Long buildingId) {
         return ResponseEntity.ok(buildingService.updateBuilding(dto, buildingId));
     }
 
 
 // SOFT DELETE
     @DeleteMapping("/{buildingId}")
-    public ResponseEntity<String> deleteBuilding(@PathVariable Integer buildingId) {
+    public ResponseEntity<String> deleteBuilding(@PathVariable Long buildingId) {
         buildingService.deleteBuilding(buildingId);
         return ResponseEntity.ok("Building deleted successfully (soft delete)");
     }

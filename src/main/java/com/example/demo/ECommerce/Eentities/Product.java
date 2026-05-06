@@ -26,9 +26,7 @@ public class Product {
 
     private Integer stock;
 
-    private Long sellerId;  // User Id
-
-    private Long societyId; // Society Id
+    private Long societyId;
 
     private String category;
 
@@ -36,7 +34,7 @@ public class Product {
     private Boolean codAvailable = true;  // ✅ Boolean use karo
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "sellerId", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "seller_id")   // 🔥 correct DB column
     @JsonIgnoreProperties({"society","staff","flat","floor","building"})
     private User seller;
 
@@ -44,14 +42,13 @@ public class Product {
     public Product() {}
 
     public Product(Long id, String title, String description, List<String> images,
-                   BigDecimal price, Integer stock, Long sellerId, Long societyId, String category) {
+                   BigDecimal price, Integer stock, Long societyId, String category) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.images = images;
         this.price = price;
         this.stock = stock;
-        this.sellerId = sellerId;
         this.societyId = societyId;
         this.category = category;
     }
@@ -92,9 +89,6 @@ public class Product {
 
     public Integer getStock() { return stock; }
     public void setStock(Integer stock) { this.stock = stock; }
-
-    public Long getSellerId() { return sellerId; }
-    public void setSellerId(Long sellerId) { this.sellerId = sellerId; }
 
     public Long getSocietyId() { return societyId; }
     public void setSocietyId(Long societyId) { this.societyId = societyId; }

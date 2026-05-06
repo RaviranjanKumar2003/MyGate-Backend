@@ -33,7 +33,7 @@ public class SocietyAdminServiceImpl implements SocietyAdminService {
 
 // GET BY ID
     @Override
-    public SocietyAdminDto getSocietyAdminById(Integer adminId) {
+    public SocietyAdminDto getSocietyAdminById(Long adminId) {
         SocietyAdmin admin = societyAdminRepository.findById(adminId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("SocietyAdmin", "id", adminId));
@@ -44,7 +44,7 @@ public class SocietyAdminServiceImpl implements SocietyAdminService {
 
 // UPDATE SOCIETY ADMIN
     @Override
-    public SocietyAdminDto updateSocietyAdmin(SocietyAdminDto dto, Integer adminId) {
+    public SocietyAdminDto updateSocietyAdmin(SocietyAdminDto dto, Long adminId) {
         SocietyAdmin admin = societyAdminRepository.findById(adminId)
                 .orElseThrow(() -> new ResourceNotFoundException("SocietyAdmin", "id", adminId));
 
@@ -65,7 +65,7 @@ public class SocietyAdminServiceImpl implements SocietyAdminService {
 
     // ================= IMAGE UPDATE =================
     @Override
-    public SocietyAdminDto updateSocietyAdminImage(Integer societyAdminId, String imageURL) {
+    public SocietyAdminDto updateSocietyAdminImage(Long societyAdminId, String imageURL) {
 
         SocietyAdmin admin = societyAdminRepository.findById(societyAdminId)
                 .orElseThrow(() -> new ResourceNotFoundException(

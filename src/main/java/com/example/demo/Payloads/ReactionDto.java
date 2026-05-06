@@ -2,8 +2,8 @@ package com.example.demo.Payloads;
 
 public class ReactionDto {
 
-    private Integer messageId;
-    private Integer userId;
+    private Long messageId;
+    private Long userId;
     private String userName;
     private String emoji;
 
@@ -19,20 +19,12 @@ public class ReactionDto {
         this.userName = userName;
     }
 
-    public Integer getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(Integer messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public String getEmoji() {
@@ -41,5 +33,13 @@ public class ReactionDto {
 
     public void setEmoji(String emoji) {
         this.emoji = emoji;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

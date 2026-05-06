@@ -15,11 +15,11 @@ public class SocietyChat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    private Integer societyId;
+    private Long societyId;
 
-    private Integer senderId;
+    private Long senderId;
 
     private String senderName;
 
@@ -39,11 +39,11 @@ public class SocietyChat {
 
     // ✅ Users who deleted the message for themselves
     @ElementCollection
-    private List<Integer> deletedForUsers = new ArrayList<>();
+    private List<Long> deletedForUsers = new ArrayList<>();
 
 
     // reply feature
-    private Integer replyMessageId;
+    private Long replyMessageId;
 
     // message type
     private String messageType;
@@ -52,13 +52,13 @@ public class SocietyChat {
     private String fileUrl;
 
     @ElementCollection
-    private Set<Integer> seenByUsers = new HashSet<>();
+    private Set<Long> seenByUsers = new HashSet<>();
 
     @Column(name = "file_type")
     private String fileType;
 
 
-    private Integer replyToMessageId;
+    private Long replyToMessageId;
     private String replyToMessageText;
     private String replyToSenderName;
 
@@ -76,11 +76,15 @@ public class SocietyChat {
         this.replyToFileType = replyToFileType;
     }
 
-    public Integer getReplyToMessageId() {
+    public void setReplyMessageId(Long replyMessageId) {
+        this.replyMessageId = replyMessageId;
+    }
+
+    public Long getReplyToMessageId() {
         return replyToMessageId;
     }
 
-    public void setReplyToMessageId(Integer replyToMessageId) {
+    public void setReplyToMessageId(Long replyToMessageId) {
         this.replyToMessageId = replyToMessageId;
     }
 
@@ -108,28 +112,73 @@ public class SocietyChat {
         this.fileType = fileType;
     }
 
-    public Set<Integer> getSeenByUsers() {
-        return seenByUsers;
-    }
-
-    public void setSeenByUsers(Set<Integer> seenByUsers) {
-        this.seenByUsers = seenByUsers;
-    }
-
-    public List<Integer> getDeletedForUsers() {
+    public List<Long> getDeletedForUsers() {
         return deletedForUsers;
     }
 
-    public void setDeletedForUsers(List<Integer> deletedForUsers) {
+    public void setDeletedForUsers(List<Long> deletedForUsers) {
         this.deletedForUsers = deletedForUsers;
     }
 
-    public Integer getReplyMessageId() {
-        return replyMessageId;
+    public Set<Long> getSeenByUsers() {
+        return seenByUsers;
     }
 
-    public void setReplyMessageId(Integer replyMessageId) {
-        this.replyMessageId = replyMessageId;
+    public void setSeenByUsers(Set<Long> seenByUsers) {
+        this.seenByUsers = seenByUsers;
+    }
+
+    public boolean isDeletedForEveryone() {
+        return deletedForEveryone;
+    }
+
+    public void setDeletedForEveryone(boolean deletedForEveryone) {
+        this.deletedForEveryone = deletedForEveryone;
+    }
+
+
+    public NormalUserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(NormalUserType userType) {
+        this.userType = userType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public Long getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(Long senderId) {
+        this.senderId = senderId;
+    }
+
+    public boolean isDeletedForMe() {
+        return deletedForMe;
+    }
+
+    public void setDeletedForMe(boolean deletedForMe) {
+        this.deletedForMe = deletedForMe;
+    }
+
+    public Long getReplyMessageId() {
+        return replyMessageId;
     }
 
     public String getMessageType() {
@@ -146,54 +195,6 @@ public class SocietyChat {
 
     public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
-    }
-
-    public boolean isDeletedForEveryone() {
-        return deletedForEveryone;
-    }
-
-    public void setDeletedForEveryone(boolean deletedForEveryone) {
-        this.deletedForEveryone = deletedForEveryone;
-    }
-
-    public boolean isDeletedForMe() {
-        return deletedForMe;
-    }
-
-    public void setDeletedForMe(boolean deletedForMe) {
-        this.deletedForMe = deletedForMe;
-    }
-
-    public NormalUserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(NormalUserType userType) {
-        this.userType = userType;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
-    }
-
-    public Integer getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(Integer senderId) {
-        this.senderId = senderId;
     }
 
     public String getSenderName() {

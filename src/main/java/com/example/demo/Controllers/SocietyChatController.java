@@ -1,6 +1,5 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.Entities.SocietyChat;
 import com.example.demo.Payloads.SocietyChatDto;
 import com.example.demo.Repositories.SocietyChatRepository;
 import com.example.demo.Services.SocietyChatService;
@@ -9,10 +8,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/society-chat")
@@ -47,8 +44,8 @@ public class SocietyChatController {
     // Get all messages
     @GetMapping("/society/{societyId}/{userId}")
     public List<SocietyChatDto> getMessages(
-            @PathVariable Integer societyId,
-            @PathVariable Integer userId
+            @PathVariable Long societyId,
+            @PathVariable Long userId
     ) {
         return chatService.getMessages(societyId, userId);
     }
@@ -56,8 +53,8 @@ public class SocietyChatController {
     // UPDATE MESSAGE
     @PutMapping("/society/{societyId}/update/{messageId}")
     public SocietyChatDto updateMessage(
-            @PathVariable Integer societyId,
-            @PathVariable Integer messageId,
+            @PathVariable Long societyId,
+            @PathVariable Long messageId,
             @RequestBody SocietyChatDto dto) {
 
         return chatService.updateMessage(
@@ -71,8 +68,8 @@ public class SocietyChatController {
     // SOFT DELETE
     @PutMapping("/society/{societyId}/soft-delete/{messageId}")
     public String softDelete(
-            @PathVariable Integer societyId,
-            @PathVariable Integer messageId,
+            @PathVariable Long societyId,
+            @PathVariable Long messageId,
             @RequestBody SocietyChatDto dto) {
 
         chatService.softDeleteMessage(societyId, messageId, dto.getSenderId());
@@ -83,9 +80,9 @@ public class SocietyChatController {
     // HARD DELETE
     @DeleteMapping("/society/{societyId}/hard-delete/{messageId}")
     public String hardDelete(
-            @PathVariable Integer societyId,
-            @PathVariable Integer messageId,
-            @RequestParam Integer senderId) {   // ✅ FIX
+            @PathVariable Long societyId,
+            @PathVariable Long messageId,
+            @RequestParam Long senderId) {   // ✅ FIX
 
         chatService.hardDeleteMessage(societyId, messageId, senderId);
 
@@ -94,15 +91,15 @@ public class SocietyChatController {
 
 
     @PostMapping("/seen/{societyId}/{userId}")
-    public void markSeen(@PathVariable Integer societyId,
-                         @PathVariable Integer userId) {
+    public void markSeen(@PathVariable Long societyId,
+                         @PathVariable Long userId) {
 
         chatService.markMessagesAsSeen(societyId, userId);
     }
 
 
     @GetMapping("/seen-users/{messageId}")
-    public List<Map<String, Object>> getSeenUsers(@PathVariable Integer messageId) {
+    public List<Map<String, Object>> getSeenUsers(@PathVariable Long messageId) {
         return chatService.getSeenUsers(messageId);
     }
 

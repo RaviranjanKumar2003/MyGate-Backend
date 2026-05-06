@@ -40,7 +40,7 @@ public class SuperAdminController {
 
 // GET SUPER ADMIN BY ID
     @GetMapping("/{superAdminId}")
-    public ResponseEntity<SuperAdminDto> getById(@PathVariable int superAdminId) {
+    public ResponseEntity<SuperAdminDto> getById(@PathVariable Long superAdminId) {
         return ResponseEntity.ok(superAdminService.getSuperAdminById(superAdminId));
     }
 
@@ -55,7 +55,7 @@ public class SuperAdminController {
 // UPDATE SUPER ADMIN
     @PutMapping("/{superAdminId}")
     public ResponseEntity<SuperAdminDto> update(
-            @PathVariable int superAdminId,
+            @PathVariable Long superAdminId,
             @RequestBody SuperAdminDto dto
     ) {
         return ResponseEntity.ok(superAdminService.updateSuperAdmin(superAdminId, dto));
@@ -64,7 +64,7 @@ public class SuperAdminController {
 
 // DELETE SUPER ADMIN
     @DeleteMapping("/{superAdminId}")
-    public ResponseEntity<String> deactivate(@PathVariable int superAdminId) {
+    public ResponseEntity<String> deactivate(@PathVariable Long superAdminId) {
         superAdminService.deactivateSuperAdmin(superAdminId);
         return ResponseEntity.ok("Super Admin deactivated successfully");
     }
@@ -75,7 +75,7 @@ public class SuperAdminController {
     @PostMapping("/image/upload/super-admin/{superAdminId}")
     public ResponseEntity<SuperAdminDto> uploadSuperAdminImage(
             @RequestParam("image") MultipartFile image,
-            @PathVariable Integer superAdminId
+            @PathVariable Long superAdminId
     ) throws IOException {
 
         SuperAdmin superAdmin = superAdminRepository.findById(superAdminId)
@@ -100,7 +100,7 @@ public class SuperAdminController {
 // GET IMAGE
     @GetMapping("/image/get/super-admin/{superAdminId}")
     public void downloadSuperAdminImage(
-            @PathVariable Integer superAdminId,
+            @PathVariable Long superAdminId,
             HttpServletResponse response
     ) throws IOException {
 

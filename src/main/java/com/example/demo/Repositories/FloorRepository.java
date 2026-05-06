@@ -1,6 +1,7 @@
 package com.example.demo.Repositories;
 
 import com.example.demo.Entities.Building;
+import com.example.demo.Entities.Flat;
 import com.example.demo.Entities.Floor;
 import com.example.demo.Entities.Society;
 import com.example.demo.Enums.BuildingStatus;
@@ -10,8 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface FloorRepository extends JpaRepository<Floor, Integer> {
-
+public interface FloorRepository extends JpaRepository<Floor, Long> {
 
     List<Floor> findByBuilding(Building building);
 
@@ -32,12 +32,12 @@ public interface FloorRepository extends JpaRepository<Floor, Integer> {
     long countBySocietyAndFloorStatus(Society society, FloorStatus status);
 
 
-    Optional<Floor> findByIdAndBuildingIsActive(Integer id, BuildingStatus status);
+    Optional<Floor> findByIdAndBuildingIsActive(Long id, BuildingStatus status);
 
-    Optional<Floor> findByIdAndSociety_Id(Integer id, Integer societyId);
+    Optional<Floor> findByIdAndSociety_Id(Long id, Long societyId);
 
 
-
+    List<Floor> findByBuildingIdAndSocietyId(Long buildingId, Long societyId);
 
 
 

@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 public class Staff {
 
     @Id
-    private Integer id;
+    private Long id;
 
     @OneToOne
     @MapsId
@@ -69,11 +69,11 @@ public class Staff {
         this.user = user;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

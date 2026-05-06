@@ -77,7 +77,7 @@ public class PaymentController {
 
     @PatchMapping("/{paymentId}/status")
     public ResponseEntity<PaymentDto> updatePaymentStatus(
-            @PathVariable Integer paymentId,
+            @PathVariable Long paymentId,
             @RequestParam PaymentStatus status,
             Authentication auth
     ) {
@@ -102,7 +102,7 @@ public class PaymentController {
 
     // 🔹 Update payment
     @PutMapping("/{paymentId}")
-    public ResponseEntity<PaymentDto> updatePayment(@PathVariable Integer paymentId, @RequestBody PaymentDto dto) {
+    public ResponseEntity<PaymentDto> updatePayment(@PathVariable Long paymentId, @RequestBody PaymentDto dto) {
         return ResponseEntity.ok(paymentService.updatePayment(paymentId, dto));
     }
 
@@ -110,7 +110,7 @@ public class PaymentController {
 
     // 🔹 Delete payment
     @DeleteMapping("/{paymentId}")
-    public ResponseEntity<String> deletePayment(Authentication auth, @PathVariable Integer paymentId) {
+    public ResponseEntity<String> deletePayment(Authentication auth, @PathVariable Long paymentId) {
         CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
         boolean deleted = paymentService.deletePayment(paymentId, user.getId(), user.getRole());
         return ResponseEntity.ok(deleted ? "Deleted successfully" : "Not authorized");

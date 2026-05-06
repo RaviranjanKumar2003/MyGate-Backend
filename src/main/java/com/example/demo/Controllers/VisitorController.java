@@ -47,10 +47,10 @@ public class VisitorController {
 // CREATE VISITOR
    @PostMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}/flat/{flatId}")
    public ResponseEntity<VisitorDto> createVisitor(
-           @PathVariable Integer societyId,
-           @PathVariable Integer buildingId,
-           @PathVariable Integer floorId,
-           @PathVariable Integer flatId,
+           @PathVariable Long societyId,
+           @PathVariable Long buildingId,
+           @PathVariable Long floorId,
+           @PathVariable Long flatId,
            @RequestBody VisitorDto visitorDto) {
 
        visitorDto.setSocietyId(societyId);
@@ -68,7 +68,7 @@ public class VisitorController {
 // 1. GET ALL VISITORS IN A SOCIETY
     @GetMapping("/society/{societyId}")
     public List<VisitorDto> getAllVisitorsOfSociety(
-            @PathVariable Integer societyId
+            @PathVariable Long societyId
     ) {
         return visitorService.getAllVisitors(societyId);
     }
@@ -77,10 +77,10 @@ public class VisitorController {
 // GET VISITOR FOR FLAT
     @GetMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}/flat/{flatId}/visitors")
     public List<VisitorDto> getVisitors(
-            @PathVariable Integer societyId,
-            @PathVariable Integer buildingId,
-            @PathVariable Integer floorId,
-            @PathVariable Integer flatId
+            @PathVariable Long societyId,
+            @PathVariable Long buildingId,
+            @PathVariable Long floorId,
+            @PathVariable Long flatId
     ) {
         return visitorService.getVisitorsForOwnerTenant(
                 societyId, buildingId, floorId, flatId
@@ -92,10 +92,10 @@ public class VisitorController {
 // GET VISITORS FOR FLAT BY STATUS
     @GetMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}/flat/{flatId}/status/{status}")
     public ResponseEntity<List<VisitorDto>> getVisitorsForOwnerTenantByStatus(
-            @PathVariable Integer societyId,
-            @PathVariable Integer buildingId,
-            @PathVariable Integer floorId,
-            @PathVariable Integer flatId,
+            @PathVariable Long societyId,
+            @PathVariable Long buildingId,
+            @PathVariable Long floorId,
+            @PathVariable Long flatId,
             @PathVariable VisitorStatus status
     ) {
         return ResponseEntity.ok(
@@ -110,8 +110,8 @@ public class VisitorController {
 // UPDATE VISITORS STATUS
    @PutMapping("/society/{societyId}/visitor/{visitorId}/status")
    public ResponseEntity<VisitorDto> updateVisitorStatus(
-           @PathVariable Integer societyId,
-           @PathVariable Integer visitorId,
+           @PathVariable Long societyId,
+           @PathVariable Long visitorId,
           @RequestBody Map<String, String> request
    ) {
        VisitorStatus status = VisitorStatus.valueOf(request.get("visitorStatus"));
@@ -127,8 +127,8 @@ public class VisitorController {
 // 2. GET VISITORS IN A SOCIETY BY ID
    @GetMapping("/society/{societyId}/visitor/{visitorId}")
    public VisitorDto getVisitorById(
-           @PathVariable Integer societyId,
-           @PathVariable Integer visitorId
+           @PathVariable Long societyId,
+           @PathVariable Long visitorId
    ) {
        return visitorService.getVisitorById(societyId, visitorId);
    }
@@ -138,7 +138,7 @@ public class VisitorController {
 // 3. GET VISITORS IN SOCIETY BY STATUS
    @GetMapping("/society/{societyId}/status/{status}")
    public List<VisitorDto> getVisitorsByStatus(
-           @PathVariable Integer societyId,
+           @PathVariable Long societyId,
            @PathVariable VisitorStatus status
    ) {
        return visitorService.getVisitorsBySocietyAndStatus(societyId, status);
@@ -148,7 +148,7 @@ public class VisitorController {
 // GET VISITORS IN SOCIETY BY TYPE
     @GetMapping("/society/{societyId}/visitorType/{visitorType}")
     public ResponseEntity<List<VisitorDto>> getVisitorsBySocietyAndVisitorsType(
-            @PathVariable Integer societyId,
+            @PathVariable Long societyId,
             @PathVariable VisitorType visitorType
     ) {
         List<VisitorDto> visitors =
@@ -161,8 +161,8 @@ public class VisitorController {
 // UPDATE VISITOR
    @PutMapping("/society/{societyId}/visitor/{visitorId}")
    public VisitorDto updateVisitor(
-           @PathVariable Integer societyId,
-           @PathVariable Integer visitorId,
+           @PathVariable Long societyId,
+           @PathVariable Long visitorId,
            @RequestBody VisitorDto dto
    ) {
        return visitorService.updateVisitor(societyId, visitorId, dto);
@@ -173,8 +173,8 @@ public class VisitorController {
 // DELETE VISITOR
    @DeleteMapping("/society/{societyId}/visitor/{visitorId}")
    public ResponseEntity<ApiResponse> deleteVisitor(
-           @PathVariable Integer societyId,
-           @PathVariable Integer visitorId
+           @PathVariable Long societyId,
+           @PathVariable Long visitorId
    ) {
        visitorService.deactivateVisitor(visitorId, societyId);
        return ResponseEntity.ok(
@@ -188,7 +188,7 @@ public class VisitorController {
 // SEARCH
     @GetMapping("/society/{societyId}/search")
     public ResponseEntity<List<VisitorDto>> searchVisitors(
-            @PathVariable Integer societyId,
+            @PathVariable Long societyId,
             @RequestParam String keyword
     ) {
         return ResponseEntity.ok(
@@ -203,7 +203,7 @@ public class VisitorController {
     @PostMapping("/image/upload/{visitorId}")
     public ResponseEntity<VisitorDto> uploadUserImage(
             @RequestParam("image") MultipartFile image,
-            @PathVariable Integer visitorId
+            @PathVariable Long visitorId
     ) throws IOException {
 
         Visitor visitor = visitorRepository.findById(visitorId).orElseThrow(() ->
@@ -228,7 +228,7 @@ public class VisitorController {
 // GET USERS IMAGE
     @GetMapping("/image/get/visitor/{visitorId}")
     public void downloadUserImage(
-            @PathVariable Integer visitorId,
+            @PathVariable Long visitorId,
             HttpServletResponse response
     ) throws IOException {
 

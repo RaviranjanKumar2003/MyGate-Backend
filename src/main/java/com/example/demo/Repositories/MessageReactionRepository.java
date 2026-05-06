@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MessageReactionRepository
-        extends JpaRepository<MessageReaction,Integer> {
+        extends JpaRepository<MessageReaction,Long> {
 
     Optional<MessageReaction> findByMessageIdAndUserId(
-            Integer messageId,
-            Integer userId
+            Long messageId,
+            Long userId
     );
 
-    List<MessageReaction> findByMessageId(Integer messageId);
+    List<MessageReaction> findByMessageId(Long messageId);
 
 
 }

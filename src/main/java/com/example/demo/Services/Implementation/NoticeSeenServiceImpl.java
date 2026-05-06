@@ -28,7 +28,7 @@ public class NoticeSeenServiceImpl implements NoticeSeenService {
 
     // ================= MARK AS SEEN =================
     @Override
-    public void markAsSeen(Integer noticeId, Integer userId, String role) {
+    public void markAsSeen(Long noticeId, Long userId, String role) {
 
         boolean exists = noticeSeenRepository
                 .existsByNoticeIdAndUserIdAndUserRole(noticeId, userId, role);
@@ -48,7 +48,7 @@ public class NoticeSeenServiceImpl implements NoticeSeenService {
 
     // ================= GET SEEN USERS =================
     @Override
-    public List<NoticeSeenDto> getSeenUsers(Integer noticeId) {
+    public List<NoticeSeenDto> getSeenUsers(Long noticeId) {
 
         List<NoticeSeen> list = noticeSeenRepository.findByNoticeId(noticeId);
 

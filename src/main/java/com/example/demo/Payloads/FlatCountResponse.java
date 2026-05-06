@@ -6,19 +6,20 @@ import java.util.Map;
 
 public class FlatCountResponse {
 
-    private Integer totalFlats;
+    private Long totalFlats;
 
     private Map<FlatStatus, Integer> statusWiseCount;
 
 
 
-    // GETTERS & SETTERS
+// GETTERS & SETTERS
 
-    public Integer getTotalFlats() {
+
+    public Long getTotalFlats() {
         return totalFlats;
     }
 
-    public void setTotalFlats(Integer totalFlats) {
+    public void setTotalFlats(Long totalFlats) {
         this.totalFlats = totalFlats;
     }
 

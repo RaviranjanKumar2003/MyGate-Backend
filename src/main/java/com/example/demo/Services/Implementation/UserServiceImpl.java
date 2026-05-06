@@ -1,10 +1,8 @@
 package com.example.demo.Services.Implementation;
 
-import com.example.demo.Entities.NormalUser;
-import com.example.demo.Entities.Society;
-import com.example.demo.Entities.Staff;
-import com.example.demo.Entities.User;
+import com.example.demo.Entities.*;
 import com.example.demo.Enums.FlatStatus;
+import com.example.demo.Enums.NormalUserType;
 import com.example.demo.Enums.UserRole;
 import com.example.demo.Enums.UserStatus;
 import com.example.demo.Exceptions.ResourceNotFoundException;
@@ -30,6 +28,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -65,6 +65,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private VerificationCodeService verificationCodeService;
 
+    @Autowired
+    private FlatOwnershipRepository flatOwnershipRepository;
+
+    @Autowired
+    private FlatOccupancyRepository flatOccupancyRepository;
+
 
 
 //=============================================================================================
@@ -82,146 +88,222 @@ private String generateUnique6DigitCode() {
     return code;
 }
 
-// CREATE USERS
-   @Override
-   @Transactional
-   public UserDto createUser(UserDto userDto) throws Exception {
 
-       if (userDto.getSocietyId() == null) {
-           throw new BadRequestException("Society ID is required");
-       }
+// ==================================================== CREATE USER
 
-       // FETCH SOCIETY
-       Society society = societyRepo.findById(userDto.getSocietyId())
-               .orElseThrow(() -> new ResourceNotFoundException("Society", "id", userDto.getSocietyId()));
+@Override
+@Transactional
+public UserDto createUser(UserDto userDto) throws Exception {
 
-       // CHECK IF USER ALREADY EXISTS (email + society)
-       Optional<User> existingUserOpt = userRepository.findByEmailAndSocietyId(userDto.getEmail(), userDto.getSocietyId());
+    if (userDto.getSocietyId() == null) {
+        throw new BadRequestException("Society ID is required");
+    }
 
-       User user;
-       if (existingUserOpt.isPresent()) {
-           // UPDATE EXISTING USER
-           user = existingUserOpt.get();
+    Society society = societyRepo.findById(userDto.getSocietyId())
+            .orElseThrow(() -> new ResourceNotFoundException("Society", "id", userDto.getSocietyId()));
 
-           user.setName(userDto.getName() != null ? userDto.getName() : user.getName());
-           user.setPassword(userDto.getPassword() != null ? userDto.getPassword() : user.getPassword());
-           user.setMobileNumber(userDto.getMobileNumber() != null ? userDto.getMobileNumber() : user.getMobileNumber());
-           user.setUserRole(userDto.getUserRole() != null ? userDto.getUserRole() : user.getUserRole());
-           user.setUserStatus(userDto.getUserStatus() != null ? userDto.getUserStatus() : user.getUserStatus());
+    Optional<User> existingUserOpt =
+            userRepository.findByEmailAndSocietyId(userDto.getEmail(), userDto.getSocietyId());
 
-       } else {
-           // CREATE NEW USER
-           user = new User();
-           user.setName(userDto.getName());
-           user.setEmail(userDto.getEmail());
-           user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-           user.setMobileNumber(userDto.getMobileNumber());
-           user.setUserRole(userDto.getUserRole());
-           user.setUserStatus(userDto.getUserStatus());
-           user.setSociety(society);
+    User user;
 
-           String entryCode = generateUnique6DigitCode();
-           user.setEntryCode(entryCode);
+    // ================= USER CREATE / UPDATE =================
+    if (existingUserOpt.isPresent()) {
 
-           user = userRepository.save(user);
+        user = existingUserOpt.get();
 
-           // 🔥 GENERATE QR
-           String qrText = "USER:" + user.getId()
-                   + "|CODE:" + entryCode
-                   + "|ROLE:" + user.getUserRole()
-                   + "|SOCIETY:" + society.getId();
+        user.setName(Optional.ofNullable(userDto.getName()).orElse(user.getName()));
+        user.setMobileNumber(Optional.ofNullable(userDto.getMobileNumber()).orElse(user.getMobileNumber()));
+        user.setUserRole(Optional.ofNullable(userDto.getUserRole()).orElse(user.getUserRole()));
+        user.setUserStatus(Optional.ofNullable(userDto.getUserStatus()).orElse(user.getUserStatus()));
 
-           String qrPath = generateQrCode(qrText, user.getId());
-           user.setQrCodePath(qrPath);
+        if (userDto.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
 
-           // 🔥 UPDATE USER
-           user = userRepository.save(user);
+    } else {
 
-//           // 🔹 GENERATE VerificationCode (for guard verification)
-//           VerificationCodeDto vCodeDto = verificationCodeService.generateCode(user.getId());
-//           System.out.println("Generated VerificationCode for user: " + vCodeDto.getCode());
+        user = new User();
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setMobileNumber(userDto.getMobileNumber());
+        user.setUserRole(userDto.getUserRole());
+        user.setUserStatus(userDto.getUserStatus());
+        user.setSociety(society);
 
-       }
+        String entryCode = generateUnique6DigitCode();
+        user.setEntryCode(entryCode);
 
-       // ---------- NORMAL USER ----------
-       if (user.getUserRole() == UserRole.NORMAL_USER) {
+        user = userRepository.save(user);
 
-           if (userDto.getFlatId() == null || userDto.getNormalUserType() == null) {
-               throw new BadRequestException("Flat & NormalUserType are required for NORMAL_USER");
-           }
+        String qrText = "USER:" + user.getId()
+                + "|CODE:" + entryCode
+                + "|ROLE:" + user.getUserRole()
+                + "|SOCIETY:" + society.getId();
 
-           // CHECK IF NormalUser RECORD EXISTS
-           NormalUser normalUser = normalUserRepository.findByUser(user).orElse(new NormalUser());
-           normalUser.setUser(user);
-           normalUser.setEmail(user.getEmail());
-           normalUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        String qrPath = generateQrCode(qrText, user.getId());
+        user.setQrCodePath(qrPath);
 
-           // FLAT OCCUPANCY CHECK
-           Optional<NormalUser> flatOccupied = normalUserRepository
-                   .findByFlat_Floor_Building_Society_IdAndBuilding_IdAndFloor_IdAndFlat_Id(
-                           userDto.getSocietyId(),
-                           userDto.getBuildingId(),
-                           userDto.getFloorId(),
-                           userDto.getFlatId()
-                   );
+        user = userRepository.save(user);
+    }
 
-           if (flatOccupied.isPresent() && !Objects.equals(flatOccupied.get().getUser().getId(), user.getId())) {
-               throw new BadRequestException("This flat is already occupied by another user in the same society/building/floor");
-           }
+    // ================= NORMAL USER =================
+    if (user.getUserRole() == UserRole.NORMAL_USER) {
+
+        if (userDto.getFlatId() == null || userDto.getNormalUserType() == null) {
+            throw new BadRequestException("Flat & NormalUserType required");
+        }
+
+        Boolean isLiving = userDto.getIsLiving() != null ? userDto.getIsLiving() : true;
+
+        Flat flat = flatRepository.findById(userDto.getFlatId())
+                .orElseThrow(() -> new ResourceNotFoundException("Flat", "id", userDto.getFlatId()));
+
+        // 🔥 EXISTING OWNER
+        List<FlatOwnership> existingOwners =
+                flatOwnershipRepository.findByFlatAndTypeAndActiveTrue(flat, NormalUserType.OWNER);
+
+        FlatOwnership existingOwnership =
+                existingOwners.isEmpty() ? null : existingOwners.get(0);
+
+        // 🔥 CURRENT OCCUPANT
+        FlatOccupancy currentOccupant =
+                flatOccupancyRepository.findTopByFlatIdAndActiveTrue(flat.getId());
+
+        // ================= RULES =================
+
+        // ❌ OWNER already exists
+        if (userDto.getNormalUserType() == NormalUserType.OWNER && existingOwnership != null) {
+            throw new BadRequestException("Owner already exists for this flat");
+        }
+
+        // ❌ OWNER living → tenant blocked
+        if (userDto.getNormalUserType() == NormalUserType.TENANT &&
+                currentOccupant != null &&
+                currentOccupant.getType() == NormalUserType.OWNER &&
+                Boolean.TRUE.equals(currentOccupant.getIsLiving())) {
+
+            throw new BadRequestException("Owner is currently living. Tenant not allowed");
+        }
+
+        // ================= NORMAL USER SAVE (FIXED) =================
+        NormalUser normalUser = normalUserRepository
+                .findByUser(user)
+                .orElse(null);
+
+        if (normalUser == null) {
+            normalUser = new NormalUser();
+            normalUser.setUser(user);   // only for new
+        }
+
+        // update fields
+        normalUser.setEmail(user.getEmail());
+
+        if (userDto.getPassword() != null) {
+            normalUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+
+        normalUser.setBuilding(buildingRepo.findById(userDto.getBuildingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Building", "id", userDto.getBuildingId())));
+
+        normalUser.setFloor(floorRepository.findById(userDto.getFloorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Floor", "id", userDto.getFloorId())));
+
+        normalUser.setFlat(flat);
+        normalUser.setNormalUserType(userDto.getNormalUserType());
+
+        normalUserRepository.save(normalUser);
+
+        // ================= OWNERSHIP =================
+        if (userDto.getNormalUserType() == NormalUserType.OWNER) {
+
+            FlatOwnership ownership = new FlatOwnership();
+            ownership.setFlat(flat);
+            ownership.setUser(user);
+            ownership.setType(NormalUserType.OWNER);
+            ownership.setStartDate(LocalDate.now());
+            ownership.setActive(true);
+
+            flatOwnershipRepository.save(ownership);
+        }
+
+        // ================= OCCUPANCY =================
+        if (isLiving) {
+
+            if (currentOccupant != null) {
+                currentOccupant.setActive(false);
+                currentOccupant.setIsLiving(false);
+                currentOccupant.setEndDate(LocalDate.now());
+                flatOccupancyRepository.save(currentOccupant);
+            }
+
+            FlatOccupancy newOccupancy = new FlatOccupancy();
+            newOccupancy.setFlat(flat);
+            newOccupancy.setUser(user);
+            newOccupancy.setType(userDto.getNormalUserType());
+            newOccupancy.setStartDate(LocalDate.now());
+            newOccupancy.setActive(true);
+            newOccupancy.setIsLiving(true);
+
+            flatOccupancyRepository.save(newOccupancy);
+
+            if (userDto.getNormalUserType() == NormalUserType.OWNER) {
+                flat.setFlatStatus(FlatStatus.OWNER_OCCUPIED);
+            } else {
+                flat.setFlatStatus(FlatStatus.TENANT_OCCUPIED);
+            }
+
+        } else {
+            flat.setFlatStatus(FlatStatus.VACANT);
+        }
+
+        flatRepository.save(flat);
+    }
+
+    // ================= STAFF =================
+    if (user.getUserRole() == UserRole.STAFF) {
+
+        if (userDto.getStaffType() == null || userDto.getStaffLevel() == null) {
+            throw new BadRequestException("StaffType & StaffLevel required");
+        }
+
+        Staff staff = staffRepository.findByUser(user).orElse(new Staff());
+
+        staff.setUser(user);
+        staff.setStaffType(userDto.getStaffType());
+        staff.setStaffLevel(userDto.getStaffLevel());
+        staff.setDutyTiming(userDto.getDutyTiming());
+        staff.setSalary(userDto.getSalary());
+        staff.setEmail(userDto.getEmail());
+
+        if (userDto.getPassword() != null) {
+            staff.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+
+        staffRepository.save(staff);
+    }
+
+    // ================= RESPONSE =================
+    UserDto response = new UserDto();
+
+    response.setId(user.getId());
+    response.setName(user.getName());
+    response.setEmail(user.getEmail());
+    response.setMobileNumber(user.getMobileNumber());
+    response.setUserRole(user.getUserRole());
+    response.setUserStatus(user.getUserStatus());
+    response.setSocietyId(user.getSociety().getId());
+    response.setCreatedAt(user.getCreatedAt());
+    response.setEntryCode(user.getEntryCode());
+    response.setQrCodePath(user.getQrCodePath());
+
+    return response;
+}
 
 
-           normalUser.setBuilding(buildingRepo.findById(userDto.getBuildingId())
-                  .orElseThrow(() -> new ResourceNotFoundException("Building", "id", userDto.getBuildingId())));
-           normalUser.setFloor(floorRepository.findById(userDto.getFloorId())
-                   .orElseThrow(() -> new ResourceNotFoundException("Floor", "id", userDto.getFloorId())));
-           normalUser.setFlat(flatRepository.findById(userDto.getFlatId())
-                   .orElseThrow(() -> new ResourceNotFoundException("Flat", "id", userDto.getFlatId())));
-           normalUser.setNormalUserType(userDto.getNormalUserType());
-
-           normalUserRepository.save(normalUser);
-       }
-
-       // STAFF
-       if (user.getUserRole() == UserRole.STAFF) {
-
-           if (userDto.getStaffType() == null || userDto.getStaffLevel() == null) {
-               throw new BadRequestException("StaffType & StaffLevel are required for STAFF");
-           }
-
-           // CHECK IF STAFF RECORD EXISTS
-           Staff staff = staffRepository.findByUser(user).orElse(new Staff());
-           staff.setUser(user);
-           staff.setStaffType(userDto.getStaffType());
-           staff.setStaffLevel(userDto.getStaffLevel());
-           staff.setDutyTiming(userDto.getDutyTiming());
-           staff.setSalary(userDto.getSalary());
-           staff.setEmail(userDto.getEmail());
-           staff.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-
-           staffRepository.save(staff);
-       }
-
-       // RESPONSE
-       UserDto response = new UserDto();
-       response.setId(user.getId());
-       response.setName(user.getName());
-       response.setEmail(user.getEmail());
-       response.setMobileNumber(user.getMobileNumber());
-       response.setUserRole(user.getUserRole());
-       response.setUserStatus(user.getUserStatus());
-       response.setSocietyId(user.getSociety().getId());
-       response.setCreatedAt(user.getCreatedAt());
-
-       response.setEntryCode(user.getEntryCode());
-       response.setQrCodePath(user.getQrCodePath());
-
-
-       return response;
-   }
-
-// GENERATE QR
-private String generateQrCode(String text, Integer userId) throws Exception {
+//========================================================================================= GENERATE QR
+private String generateQrCode(String text, Long  userId) throws Exception {
 
     int width = 300;
     int height = 300;
@@ -253,7 +335,7 @@ private String generateQrCode(String text, Integer userId) throws Exception {
     //==================================================================================================
 // GET ALL USERS (STAFF + NORMAL USER) IN A SOCIETY
    @Override
-   public List<UserProfileDto> getAllUsersOfSociety(Integer societyId) {
+   public List<UserProfileDto> getAllUsersOfSociety(Long societyId) {
 
        List<User> users = userRepository.findBySocietyId(societyId);
 
@@ -298,7 +380,7 @@ private String generateQrCode(String text, Integer userId) throws Exception {
 
 // GET SOCIETY SUMMARY
     @Override
-    public UserCountResponse getSocietyUserSummary(Integer societyId) {
+    public UserCountResponse getSocietyUserSummary(Long societyId) {
         UserCountResponse response = new UserCountResponse();
 
         response.setTotalUsers(userRepository.countBySocietyId(societyId));
@@ -322,7 +404,7 @@ private String generateQrCode(String text, Integer userId) throws Exception {
 
 // GET USER IN A SOCIETY BY ROLE
     @Override
-    public List<UserDto> getUsersOfSocietyByRole(Integer societyId, UserRole role) {
+    public List<UserDto> getUsersOfSocietyByRole(Long societyId, UserRole role) {
         return userRepository.findBySocietyIdAndUserRole(societyId, role)
                 .stream()
                 .map(this::mapToDto)
@@ -332,7 +414,7 @@ private String generateQrCode(String text, Integer userId) throws Exception {
 
 // GET USER BY STATUS
     @Override
-    public List<UserDto> getUsersOfSocietyByStatus(Integer societyId, UserStatus status) {
+    public List<UserDto> getUsersOfSocietyByStatus(Long societyId, UserStatus status) {
         return userRepository.findBySocietyIdAndUserStatus(societyId, status)
                 .stream()
                 .map(this::mapToDto)
@@ -342,7 +424,7 @@ private String generateQrCode(String text, Integer userId) throws Exception {
 
 // GET USER BY ID
 @Override
-public UserDto getUserById(Integer userId, Integer societyId) {
+public UserDto getUserById(Long userId, Long societyId) {
 
     User user = userRepository
             .findByIdAndSociety_Id(userId, societyId)
@@ -365,7 +447,7 @@ public UserDto getUserById(Integer userId, Integer societyId) {
 
     // ==================== GET BY Flat ID ====================
     @Override
-    public NormalUserProfileDto getUserByFlatId(Integer flatId) {
+    public NormalUserProfileDto getUserByFlatId(Long flatId) {
 
         NormalUser normalUser = normalUserRepository.findByFlatId(flatId)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -391,7 +473,7 @@ public UserDto getUserById(Integer userId, Integer societyId) {
 // UPDATE
 
     @Override
-    public UserDto updateUser(Integer userId, UserDto dto) {
+    public UserDto updateUser(Long userId, UserDto dto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -409,49 +491,67 @@ public UserDto getUserById(Integer userId, Integer societyId) {
 
 
 // DELETE USERS
-    @Override
-    @Transactional
-    public ApiResponse deleteUser(Integer userId, Integer societyId, Integer buildingId) {
+@Override
+@Transactional
+public ApiResponse deleteUser(Long userId, Long societyId, Long buildingId) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getSociety().getId().equals(societyId)) {
-            throw new RuntimeException("User does not belong to this society");
-        }
-
-        // 🔥 NORMAL USER CASE
-        if (user.getUserRole() == UserRole.NORMAL_USER) {
-
-            normalUserRepository.findByUser(user).ifPresent(normalUser -> {
-
-                // 🔥 RESET FLAT STATUS
-                if (normalUser.getFlat() != null) {
-                    normalUser.getFlat().setFlatStatus(FlatStatus.VACANT);
-                    flatRepository.save(normalUser.getFlat());
-                }
-
-                normalUserRepository.delete(normalUser);
-            });
-        }
-
-        // STAFF
-        if (user.getUserRole() == UserRole.STAFF) {
-            staffRepository.findByUser(user).ifPresent(staffRepository::delete);
-        }
-
-        // 🔥 DELETE USER
-        userRepository.delete(user);
-
-        return new ApiResponse("User deleted successfully, flat set to VACANT", true);
+    if (!user.getSociety().getId().equals(societyId)) {
+        throw new RuntimeException("User does not belong to this society");
     }
+
+    // ================= NORMAL USER =================
+    if (user.getUserRole() == UserRole.NORMAL_USER) {
+
+        normalUserRepository.findByUser(user).ifPresent(normalUser -> {
+
+            Flat flat = normalUser.getFlat();
+
+            if (flat != null) {
+
+                List<FlatOwnership> ownershipList =
+                        flatOwnershipRepository.findByFlatAndActiveTrue(flat);
+
+                ownershipList.forEach(ownership -> {
+                    ownership.setActive(false);
+                    ownership.setEndDate(LocalDate.now());
+                });
+
+                flatOwnershipRepository.saveAll(ownershipList);
+
+                // 🔥 reset flat
+                flat.setFlatStatus(FlatStatus.VACANT);
+                flatRepository.save(flat);
+            }
+
+            normalUserRepository.delete(normalUser);
+        });
+    }
+
+    // ================= STAFF =================
+    if (user.getUserRole() == UserRole.STAFF) {
+        staffRepository.findByUser(user)
+                .ifPresent(staffRepository::delete);
+    }
+
+    // ================= USER DELETE =================
+    user.setUserStatus(UserStatus.INACTIVE);
+    userRepository.save(user);
+
+    return new ApiResponse(
+            "User deleted successfully, history preserved",
+            true
+    );
+}
 
 
 
 
 /* ========================================== PAGINATION & SORT ================================*/
     @Override
-    public List<UserDto> getUsersOfSocietyPaged(Integer societyId, int page, int size, String sortBy, String sortDir) {
+    public List<UserDto> getUsersOfSocietyPaged(Long societyId, int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         return userRepository.findBySocietyIdWithPage(societyId, PageRequest.of(page, size, sort))
                 .stream()
@@ -461,7 +561,7 @@ public UserDto getUserById(Integer userId, Integer societyId) {
 
     // ==================== SEARCH ====================
     @Override
-    public List<UserDto> searchUsersByEmailInSociety(Integer societyId, String emailKeyword) {
+    public List<UserDto> searchUsersByEmailInSociety(Long societyId, String emailKeyword) {
         return userRepository.findBySocietyIdAndEmailContainingIgnoreCase(societyId, emailKeyword)
                 .stream()
                 .map(this::mapToDto)
@@ -469,18 +569,16 @@ public UserDto getUserById(Integer userId, Integer societyId) {
     }
 
     @Override
-    public List<UserDto> searchUserByName(Integer societyId, String keyword) {
+    public List<UserDto> searchUserByName(Long societyId, String keyword) {
         return userRepository.searchUsersInSociety(societyId, UserStatus.ACTIVE, keyword)
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
 
-
-
 /* ====================================== IMAGE ======================================*/
     @Override
-    public UserDto updateUserImage(Integer userId, MultipartFile image) {
+    public UserDto updateUserImage(Long userId, MultipartFile image) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -595,6 +693,12 @@ public UserDto getUserById(Integer userId, Integer societyId) {
         user.setUserRole(dto.getUserRole());
         user.setImageURL(dto.getImageURL());
         return user;
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
 }

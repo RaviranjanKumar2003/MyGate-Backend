@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 
 public class VerificationCodeDto {
 
-    private Integer id;
+    private Long id;
     private String code;
     private LocalDateTime expiryTime;
     private boolean used;
-    private Integer userId;
+    private Long userId;
 
     private String visitorName;
 
@@ -16,7 +16,7 @@ public class VerificationCodeDto {
 // Constructors
     public VerificationCodeDto() {}
 
-    public VerificationCodeDto(Integer id, String code, LocalDateTime expiryTime, boolean used, Integer userId, String visitorName) {
+    public VerificationCodeDto(Long id, String code, LocalDateTime expiryTime, boolean used, Long userId, String visitorName) {
         this.id = id;
         this.code = code;
         this.expiryTime = expiryTime;
@@ -25,8 +25,24 @@ public class VerificationCodeDto {
         this.visitorName = visitorName;
     }
 
-    // Getters & Setters
+// Getters & Setters
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getVisitorName() {
         return visitorName;
@@ -34,18 +50,6 @@ public class VerificationCodeDto {
 
     public void setVisitorName(String visitorName) {
         this.visitorName = visitorName;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public String getCode() { return code; }
@@ -57,7 +61,4 @@ public class VerificationCodeDto {
     public boolean isUsed() { return used; }
     public void setUsed(boolean used) { this.used = used; }
 
-    public Integer getUserId() {
-        return userId;
-    }
 }

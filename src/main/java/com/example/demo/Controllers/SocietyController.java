@@ -2,6 +2,7 @@ package com.example.demo.Controllers;
 
 import com.example.demo.Entities.SocietyAdmin;
 import com.example.demo.Exceptions.ResourceNotFoundException;
+import com.example.demo.Payloads.BuildingFullDto;
 import com.example.demo.Payloads.SocietyAdminDto;
 import com.example.demo.Payloads.SocietyDto;
 import com.example.demo.Repositories.SocietyAdminRepository;
@@ -64,7 +65,7 @@ public class SocietyController {
 // GET SOCIETY BY ID
     @GetMapping("/{societyId}")
     public ResponseEntity<SocietyDto> getSocietyById(
-            @PathVariable Integer societyId
+            @PathVariable Long societyId
     ) {
         return ResponseEntity.ok(societyService.getSocietyById(societyId));
     }
@@ -74,7 +75,7 @@ public class SocietyController {
     @PutMapping("/{societyId}")
     public ResponseEntity<SocietyDto> updateSociety(
             @RequestBody SocietyDto dto,
-            @PathVariable Integer societyId
+            @PathVariable Long societyId
     ) {
         return ResponseEntity.ok(societyService.updateSociety(dto, societyId));
     }
@@ -84,7 +85,7 @@ public class SocietyController {
 // DELETE (SOFT)
     @DeleteMapping("/{societyId}")
     public ResponseEntity<String> deleteSociety(
-            @PathVariable Integer societyId
+            @PathVariable Long societyId
     ) {
         societyService.deleteSociety(societyId);
         return ResponseEntity.ok("Society soft deleted successfully");
@@ -98,6 +99,16 @@ public class SocietyController {
             @RequestParam String keyword
     ) {
         return ResponseEntity.ok(societyService.searchSociety(keyword));
+    }
+
+
+    @GetMapping("/{societyId}/buildings/full")
+    public ResponseEntity<List<BuildingFullDto>> getFullBuildings(
+            @PathVariable Long societyId
+    ) {
+        return ResponseEntity.ok(
+                societyService.getFullBuildings(societyId)
+        );
     }
 
 }

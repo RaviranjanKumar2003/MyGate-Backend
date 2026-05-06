@@ -43,7 +43,7 @@ public class AdminService {
 
 //  Approve user
     @Transactional
-    public UserDto approveUser(Integer userId, UserRole role) {
+    public UserDto approveUser(Long userId, UserRole role) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
@@ -62,7 +62,7 @@ public class AdminService {
 
 //  Deactivate user
     @Transactional
-    public UserDto deactivateUser(Integer userId) {
+    public UserDto deactivateUser(Long userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() ->new ResourceNotFoundException("User", "id", userId));
 

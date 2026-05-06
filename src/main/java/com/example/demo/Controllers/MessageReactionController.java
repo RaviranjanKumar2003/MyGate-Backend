@@ -42,7 +42,7 @@ public class MessageReactionController {
 
     @GetMapping("/{messageId}")
     public Map<String, Long> getReactions(
-            @PathVariable Integer messageId
+            @PathVariable Long messageId
     ) {
 
         return messageReactionService.getReactions(messageId);
@@ -52,7 +52,7 @@ public class MessageReactionController {
 
     @GetMapping("/users/{messageId}")
     public ResponseEntity<List<ReactionDto>> getReactionUsers(
-            @PathVariable Integer messageId
+            @PathVariable Long messageId
     ){
 
         return ResponseEntity.ok(
@@ -65,8 +65,8 @@ public class MessageReactionController {
 
     @DeleteMapping("/remove/{messageId}/{userId}")
     public void removeReaction(
-            @PathVariable Integer messageId,
-            @PathVariable Integer userId
+            @PathVariable Long messageId,
+            @PathVariable Long userId
     ){
         messageReactionService.removeReaction(messageId,userId);
     }

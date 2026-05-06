@@ -6,13 +6,13 @@ import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
 
-    private Integer id;
+    private Long id;
     private String username;
     private String password;
     private String role;
-    private Integer societyId;
+    private Long societyId;
 
-    public CustomUserDetails(Integer id, String username, String password, String role, Integer societyId) {
+    public CustomUserDetails(Long id, String username, String password, String role, Long societyId) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -20,9 +20,17 @@ public class CustomUserDetails implements UserDetails {
         this.societyId = societyId;
     }
 
-    public Integer getId() { return id; }
-    public String getRole() { return role; }
-    public Integer getSocietyId() { return societyId; }
+    public Long getId() {
+        return id;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

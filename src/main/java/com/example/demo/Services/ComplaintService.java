@@ -12,25 +12,25 @@ public interface ComplaintService {
     ComplaintDto createComplaint(ComplaintDto dto);
 
 // GET COMPLAINT
-    List<ComplaintDto> getComplaints(Integer societyId,Integer userId, String role);
+    List<ComplaintDto> getComplaints(Long societyId,Long userId, String role);
 
 
 // Delete complaint method
-    boolean deleteComplaint(Integer complaintId, Integer userId, String role);
+    boolean deleteComplaint(Long complaintId, Long userId, String role);
 
 
 // UPDATE COMPLAINT STATUS
      ComplaintDto updateComplaintStatus(
-           Integer complaintId,
+             Long complaintId,
            ComplaintStatus status,
            String role
     );
 
 // UPDATE COMPLAINT
     ComplaintDto updateComplaint(
-            Integer complaintId,
+            Long complaintId,
             ComplaintDto dto,
-            Integer userId,
+            Long userId,
             String role
     );
 

@@ -14,29 +14,31 @@ public interface FloorService {
 
 // GET FLOORS IN A BUILDING
 
-    List<FloorDto> getFloorsByBuilding(int buildingId);
+    List<FloorDto> getFloorsByBuilding(Long buildingId);
 
 // GET FLOORS BY BUILDING + STATUS
 
-    List<FloorDto> getFloorsByBuildingAndStatus(int buildingId, FloorStatus status);
+    List<FloorDto> getFloorsByBuildingAndStatus(Long buildingId, FloorStatus status);
 
 // GET FLOORS BY SOCIETY + STATUS
 
-    List<FloorDto> getFloorsBySocietyAndStatus(int societyId, FloorStatus status);
+    List<FloorDto> getFloorsBySocietyAndStatus(Long societyId, FloorStatus status);
 
 
 //  SUMMARY APIs
     // Building Summary
-    FloorSummaryDto getBuildingFloorSummary(int buildingId);
+    FloorSummaryDto getBuildingFloorSummary(Long buildingId);
     // Society Summary
-    FloorSummaryDto getSocietyFloorSummary(int societyId);
+    FloorSummaryDto getSocietyFloorSummary(Long societyId);
 
 
 // UPDATE FLOOR
 
-    FloorDto updateFloor(int floorId, FloorDto dto);
+    FloorDto updateFloor(Long floorId, FloorDto dto);
 
 // DELETE FLOOR (SOFT DELETE)
 
-    void deleteFloor(int floorId);
+    void deleteFloor(Long floorId);
+
+    List<FloorDto> getFloorsByBuildingAndSociety(Long societyId, Long buildingId);
 }

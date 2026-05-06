@@ -3,12 +3,12 @@ package com.example.demo.Payloads;
 public class GuardVerifyResponseDto {
     private boolean success;       // Entry allowed ya nahi
     private String message;        // Status message
-    private Integer userId;        // Optional: user details
+    private Long userId;        // Optional: user details
     private String userName;       // Optional: user details
     private String temporaryCode;  // 5-minute code
 
 
-// getters & setters
+// GETTERS & SETTERS
 
 
     public boolean isSuccess() {
@@ -27,11 +27,11 @@ public class GuardVerifyResponseDto {
         this.message = message;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

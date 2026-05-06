@@ -14,23 +14,51 @@ public class NotificationDto {
 
     private NotificationType type;
 
-    private Integer societyId;
-    private Integer receiverAdminId;
+    private Long societyId;
+    private Long receiverAdminId;
 
     private boolean isRead;
 
     private LocalDateTime createdAt;
 
-    private Integer targetSocietyId; // null = global
+    private Long targetSocietyId; // null = global
     private String targetRole;
-    private Integer referenceId;
+    private Long referenceId;
 
 
 // GETTERS & SETTERS
 
 
-    public Integer getTargetSocietyId() {
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public Long getReceiverAdminId() {
+        return receiverAdminId;
+    }
+
+    public void setReceiverAdminId(Long receiverAdminId) {
+        this.receiverAdminId = receiverAdminId;
+    }
+
+    public Long getTargetSocietyId() {
         return targetSocietyId;
+    }
+
+    public void setTargetSocietyId(Long targetSocietyId) {
+        this.targetSocietyId = targetSocietyId;
+    }
+
+    public Long getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(Long referenceId) {
+        this.referenceId = referenceId;
     }
 
     public String getTargetRole() {
@@ -39,18 +67,6 @@ public class NotificationDto {
 
     public void setTargetRole(String targetRole) {
         this.targetRole = targetRole;
-    }
-
-    public Integer getReferenceId() {
-        return referenceId;
-    }
-
-    public void setTargetSocietyId(Integer targetSocietyId) {
-        this.targetSocietyId = targetSocietyId;
-    }
-
-    public void setReferenceId(Integer referenceId) {
-        this.referenceId = referenceId;
     }
 
     public Long getId() {
@@ -83,22 +99,6 @@ public class NotificationDto {
 
     public void setType(NotificationType type) {
         this.type = type;
-    }
-
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
-    }
-
-    public Integer getReceiverAdminId() {
-        return receiverAdminId;
-    }
-
-    public void setReceiverAdminId(Integer receiverAdminId) {
-        this.receiverAdminId = receiverAdminId;
     }
 
     public boolean isRead() {

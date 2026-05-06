@@ -4,11 +4,11 @@ import com.example.demo.Enums.BuildingStatus;
 
 public class BuildingDto {
 
-    private Integer id;
+    private Long id;
 
     private String name;
 
-    private Integer societyId;
+    private Long societyId;
 
     private BuildingStatus isActive;
 
@@ -16,12 +16,21 @@ public class BuildingDto {
 
 // GETTERS & SETTERS
 
-    public Integer getId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
     }
 
     public String getName() {
@@ -30,14 +39,6 @@ public class BuildingDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
     }
 
     public BuildingStatus getIsActive() {

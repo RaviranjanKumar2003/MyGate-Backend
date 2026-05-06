@@ -25,7 +25,7 @@ public class BillItemServiceImpl implements BillItemService {
 
 // CREATE ITEM
    @Override
-public BillItemDto createBillItem(BillItemDto dto, Integer societyId) {
+public BillItemDto createBillItem(BillItemDto dto, Long societyId) {
 
     MonthlyBill bill = monthlyBillRepository.findById(dto.getMonthlyBillId())
             .orElseThrow(() -> new RuntimeException("Monthly Bill not found"));
@@ -49,7 +49,7 @@ public BillItemDto createBillItem(BillItemDto dto, Integer societyId) {
 
     // GET ITEMS BY BILL
     @Override
-    public List<BillItemDto> getItemsByMonthlyBill(Integer monthlyBillId) {
+    public List<BillItemDto> getItemsByMonthlyBill(Long monthlyBillId) {
 
         List<BillItem> items =
                 billItemRepository.findByMonthlyBillId(monthlyBillId);
@@ -61,7 +61,7 @@ public BillItemDto createBillItem(BillItemDto dto, Integer societyId) {
 
     // UPDATE ITEM
     @Override
-    public BillItemDto updateBillItem(Integer itemId, BillItemDto dto) {
+    public BillItemDto updateBillItem(Long itemId, BillItemDto dto) {
 
         BillItem item = billItemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Bill item not found"));
@@ -80,7 +80,7 @@ public BillItemDto createBillItem(BillItemDto dto, Integer societyId) {
 
     //  DELETE ITEM
     @Override
-    public void deleteBillItem(Integer itemId) {
+    public void deleteBillItem(Long itemId) {
 
         BillItem item = billItemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Bill item not found"));

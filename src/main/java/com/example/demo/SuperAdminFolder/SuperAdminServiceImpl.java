@@ -48,7 +48,7 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
 // GET SUPER ADMIN BY ID
     @Override
-    public SuperAdminDto getSuperAdminById(int id) {
+    public SuperAdminDto getSuperAdminById(Long id) {
 
         SuperAdmin admin = superAdminRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("SuperAdmin", "id", id));
@@ -69,7 +69,7 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
 // UPDATE SUPER ADMIN
     @Override
-    public SuperAdminDto updateSuperAdmin(int id, SuperAdminDto dto) {
+    public SuperAdminDto updateSuperAdmin(Long id, SuperAdminDto dto) {
 
         SuperAdmin admin = superAdminRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("SuperAdmin", "id", id));
@@ -83,7 +83,7 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
 // DELETE SUPER ADMIN
     @Override
-    public void deactivateSuperAdmin(int superAdminId) {
+    public void deactivateSuperAdmin(Long superAdminId) {
 
         SuperAdmin admin = superAdminRepository.findById(superAdminId)
                 .orElseThrow(() -> new ResourceNotFoundException("SuperAdmin", "id", superAdminId));
@@ -95,7 +95,7 @@ public class SuperAdminServiceImpl implements SuperAdminService {
 
 // UPDATE SUPER ADMIN IMAGE
     @Override
-    public SuperAdminDto updateSuperAdminImage(Integer superAdminId, String imageName) {
+    public SuperAdminDto updateSuperAdminImage(Long superAdminId, String imageName) {
 
         SuperAdmin superAdmin = superAdminRepository.findById(superAdminId)
                 .orElseThrow(() ->

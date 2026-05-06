@@ -7,21 +7,22 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface NormalUserRepository extends JpaRepository<NormalUser, Integer> {
+public interface NormalUserRepository extends JpaRepository<NormalUser, Long> {
 
     Optional<NormalUser> findByUser(User user);
 
     void deleteByUser(User user);
 
-    Optional<NormalUser> findByFlatId(Integer flatId);
+    Optional<NormalUser> findByFlatId(Long flatId);
 
 
 
     Optional<NormalUser> findByFlat_Floor_Building_Society_IdAndBuilding_IdAndFloor_IdAndFlat_Id(
-            Integer societyId, Integer buildingId, Integer floorId, Integer flatId
+            Long societyId, Long buildingId, Long floorId, Long flatId
     );
 
-    Optional<NormalUser> findByUserId(Integer userId);
+    Optional<NormalUser> findByUserId(Long userId);
+
 
 
 }

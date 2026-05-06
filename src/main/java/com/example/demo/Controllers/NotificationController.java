@@ -27,8 +27,8 @@ public class NotificationController {
 // GET notifications for society admin
     @GetMapping("/society/{societyId}/admin/{adminId}")
     public ResponseEntity<List<NotificationDto>> getNotifications(
-            @PathVariable Integer societyId,
-            @PathVariable Integer adminId
+            @PathVariable Long societyId,
+            @PathVariable Long adminId
     ) {
         return ResponseEntity.ok(
                 notificationService.getNotificationsForAdmin(societyId, adminId)
@@ -42,7 +42,7 @@ public class NotificationController {
         Object principal = auth.getPrincipal();
 
         String userRole = null;
-        Integer societyId = null;
+        Long societyId = null;
 
         if (principal instanceof CustomUserDetails) {
             CustomUserDetails user = (CustomUserDetails) principal;
@@ -58,7 +58,7 @@ public class NotificationController {
     // Mark notification as read
     @PutMapping("/{notificationId}/read")
     public ResponseEntity<Void> markAsRead(
-            @PathVariable Integer notificationId
+            @PathVariable Long notificationId
     ) {
         notificationService.markAsRead(notificationId);
         return ResponseEntity.ok().build();
@@ -95,7 +95,7 @@ public class NotificationController {
 
 
     @DeleteMapping("/{notificationId}")
-    public ResponseEntity<Void> deleteNotification(@PathVariable Integer notificationId) {
+    public ResponseEntity<Void> deleteNotification(@PathVariable Long notificationId) {
         notificationService.deleteNotification(notificationId);
         return ResponseEntity.ok().build();
     }

@@ -12,14 +12,14 @@ import java.util.List;
 @Data
 public class MonthlyBillDto {
 
-    private Integer id;
+    private Long id;
 
-    private Integer societyId;
+    private Long societyId;
     private String societyName;
 
-    private Integer userId;          // Tenant / Owner
+    private Long userId;          // Tenant / Owner
     private String userName;
-    private Integer flatId;
+    private Long flatId;
 
     private String billMonth;     // 2026-02
 
@@ -43,6 +43,38 @@ public class MonthlyBillDto {
 // GETTERS & SETTERS
 
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getFlatId() {
+        return flatId;
+    }
+
+    public void setFlatId(Long flatId) {
+        this.flatId = flatId;
+    }
+
     public UserRole getCreatedByRole() {
         return createdByRole;
     }
@@ -59,30 +91,6 @@ public class MonthlyBillDto {
         this.receiverRole = receiverRole;
     }
 
-    public Integer getFlatId() {
-        return flatId;
-    }
-
-    public void setFlatId(Integer flatId) {
-        this.flatId = flatId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
-    }
-
     public String getSocietyName() {
         return societyName;
     }
@@ -91,20 +99,12 @@ public class MonthlyBillDto {
         this.societyName = societyName;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
-
     public String getBillMonth() {
         return billMonth;
     }
 
     public void setBillMonth(String billMonth) {
         this.billMonth = billMonth;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public String getUserName() {

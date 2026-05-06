@@ -7,23 +7,27 @@ import jakarta.persistence.*;
 @Table(
         name = "normal_users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"flat_id"})
+                // ✔ 1 user = 1 normal profile only
+                @UniqueConstraint(columnNames = {"user_id"})
         }
 )
 public class NormalUser {
 
+    // 🔥 PRIMARY KEY = USER ID (because of @MapsId)
     @Id
-    private Integer id;
+    private Long id;
 
     private String email;
 
     private String password;
 
+    // ================= USER =================
     @OneToOne
     @MapsId
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // ================= RELATIONS =================
     @ManyToOne
     @JoinColumn(name = "building_id")
     private Building building;
@@ -32,15 +36,18 @@ public class NormalUser {
     @JoinColumn(name = "floor_id")
     private Floor floor;
 
+    // ⚠️ IMPORTANT FIX: remove unique=true
     @ManyToOne
-    @JoinColumn(name = "flat_id", nullable = false, unique = true)
+    @JoinColumn(name = "flat_id", nullable = false)
     private Flat flat;
 
+    // ================= TYPE =================
     @Enumerated(EnumType.STRING)
-    private NormalUserType normalUserType; // TENANT / OWNER
+    private NormalUserType normalUserType; // OWNER / TENANT
 
 
 // GETTERS & SETTERS
+
 
 
     public String getPassword() {
@@ -59,11 +66,11 @@ public class NormalUser {
         this.email = email;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

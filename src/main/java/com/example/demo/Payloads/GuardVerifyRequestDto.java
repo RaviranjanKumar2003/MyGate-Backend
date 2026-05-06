@@ -4,8 +4,9 @@ public class GuardVerifyRequestDto {
 
     private String code;          // User ka QR/entryCode
 
-// getters & setters
 
+
+// GETTERS & SETTERS
 
     public String getCode() {
         return code;

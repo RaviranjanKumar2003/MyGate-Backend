@@ -7,12 +7,12 @@ import java.util.Map;
 
 public interface MessageReactionService {
 
-    void toggleReaction(Integer messageId, Integer userId, String emoji);
+    void toggleReaction(Long messageId, Long userId, String emoji);
 
-    Map<String, Long> getReactions(Integer messageId);
+    Map<String, Long> getReactions(Long messageId);
 
-    List<ReactionDto> getReactionUsers(Integer messageId);
+    List<ReactionDto> getReactionUsers(Long messageId);
 
-    void removeReaction(Integer messageId, Integer userId);
+    void removeReaction(Long messageId, Long userId);
 
 }

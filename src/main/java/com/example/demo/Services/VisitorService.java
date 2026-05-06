@@ -14,50 +14,50 @@ public interface VisitorService {
 
 
 // GET VISITOR BY ID
-    VisitorDto getVisitorById(Integer societyId, Integer visitorId);
+    VisitorDto getVisitorById(Long societyId, Long visitorId);
 
 // GET VISITORS BY STATUS
-   List<VisitorDto> getVisitorsBySocietyAndStatus(Integer societyId, VisitorStatus status);
+   List<VisitorDto> getVisitorsBySocietyAndStatus(Long societyId, VisitorStatus status);
 
 // GET VISITORS BY Type
-    List<VisitorDto> getVisitorsBySocietyAndVisitorsType(Integer societyId, VisitorType visitorType);
+    List<VisitorDto> getVisitorsBySocietyAndVisitorsType(Long societyId, VisitorType visitorType);
 
 // GET ALL VISITOR In A Society
-    List<VisitorDto> getAllVisitors(Integer societyId);
+    List<VisitorDto> getAllVisitors(Long societyId);
 
 
     List<VisitorDto> getVisitorsForOwnerTenant(
-            Integer societyId,
-            Integer buildingId,
-            Integer floorId,
-            Integer flatId
+            Long societyId,
+            Long buildingId,
+            Long floorId,
+            Long flatId
     );
 
 
     List<VisitorDto> getVisitorsForOwnerTenantByStatus(
-            Integer societyId,
-            Integer buildingId,
-            Integer floorId,
-            Integer flatId,
+            Long societyId,
+            Long buildingId,
+            Long floorId,
+            Long flatId,
             VisitorStatus status
     );
 
 
 //  UPDATE VISITOR
-    VisitorDto updateVisitor(Integer societyId,Integer visitorId,VisitorDto dto);
+    VisitorDto updateVisitor(Long societyId,Long visitorId,VisitorDto dto);
 
 // UPDATE VISITORS STATUS
-   VisitorDto updateVisitorStatus(Integer societyId, Integer visitorId, VisitorStatus status);
+   VisitorDto updateVisitorStatus(Long societyId, Long visitorId, VisitorStatus status);
 
 
 //  DELETE VISITOR
-    void deactivateVisitor(Integer id, Integer societyId);
+    void deactivateVisitor(Long id, Long societyId);
 
 
 // SEARCH VISITOR WITH NAME,MOBILE NUMBER,ID
-    List<VisitorDto> searchVisitors(Integer societyId, String keyword);
+    List<VisitorDto> searchVisitors(Long societyId, String keyword);
 
-    VisitorDto updateVisitorLogo(Integer visitorId, MultipartFile image);
+    VisitorDto updateVisitorLogo(Long visitorId, MultipartFile image);
 
 // COUNT VISITOR BY TODAY DATE SOCIETY WISE
     long getTodayVisitorCount(Long societyId);

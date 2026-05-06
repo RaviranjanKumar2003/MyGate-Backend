@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class BillItemDto {
 
-    private Integer id;
+    private Long id;
 
-    private Integer monthlyBillId;
+    private Long monthlyBillId;
 
     private String title;        // Maintenance, Water, Parking
     private String description;  // Optional details
@@ -18,19 +18,19 @@ public class BillItemDto {
 // GETTERS & SETTERS
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getMonthlyBillId() {
+    public Long getMonthlyBillId() {
         return monthlyBillId;
     }
 
-    public void setMonthlyBillId(Integer monthlyBillId) {
+    public void setMonthlyBillId(Long monthlyBillId) {
         this.monthlyBillId = monthlyBillId;
     }
 

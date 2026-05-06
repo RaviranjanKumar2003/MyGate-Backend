@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface StaffRepository extends JpaRepository<Staff, Integer> {
+public interface StaffRepository extends JpaRepository<Staff, Long> {
 
     // GET staff by level
     List<Staff> findByStaffLevel(StaffLevel staffLevel);

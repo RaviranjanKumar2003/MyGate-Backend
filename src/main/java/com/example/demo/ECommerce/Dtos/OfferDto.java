@@ -5,9 +5,8 @@ import java.time.LocalDateTime;
 
 public class OfferDto {
 
-    private Integer id;
-    private Integer productId;
-    private Integer buyerId;
+    private Long id;
+    private Long buyerId;
     private BigDecimal offerPrice;
     private LocalDateTime offerTime;
 
@@ -17,14 +16,38 @@ public class OfferDto {
     private String buyerEmail;
     private String buyerMobile;
 
+    private Long refId;
+    private String refType;
+
+// CONSTRUCTORS
     public OfferDto() {}
 
-    public OfferDto(Integer id, Integer productId, Integer buyerId, BigDecimal offerPrice, LocalDateTime offerTime) {
-        this.id = id;
-        this.productId = productId;
-        this.buyerId = buyerId;
-        this.offerPrice = offerPrice;
-        this.offerTime = offerTime;
+    public OfferDto(Long id, Long refId, Long buyerId, BigDecimal offerPrice, LocalDateTime offerTime) {
+        this.id=id;
+        this.refId=refId;
+        this.buyerId=buyerId;
+        this.offerPrice=offerPrice;
+        this.offerTime=offerTime;
+
+    }
+
+// GETTERS & SETTERS
+
+
+    public Long getRefId() {
+        return refId;
+    }
+
+    public void setRefId(Long refId) {
+        this.refId = refId;
+    }
+
+    public String getRefType() {
+        return refType;
+    }
+
+    public void setRefType(String refType) {
+        this.refType = refType;
     }
 
     public String getBuyerName() {
@@ -59,27 +82,19 @@ public class OfferDto {
         this.status = status;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
-
-    public Integer getBuyerId() {
+    public Long getBuyerId() {
         return buyerId;
     }
 
-    public void setBuyerId(Integer buyerId) {
+    public void setBuyerId(Long buyerId) {
         this.buyerId = buyerId;
     }
 

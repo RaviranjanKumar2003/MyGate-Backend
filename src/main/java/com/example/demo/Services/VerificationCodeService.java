@@ -6,7 +6,7 @@ import com.example.demo.Payloads.VisitorCodeRequestDto;
 public interface VerificationCodeService {
 
     // Resident / Owner / Tenant code generate
-    VerificationCodeDto generateCode(Integer userId);
+    VerificationCodeDto generateCode(Long userId);
 
     // Owner / Tenant visitor code generate
     VerificationCodeDto generateVisitorCode(VisitorCodeRequestDto request);
@@ -17,7 +17,7 @@ public interface VerificationCodeService {
     // (optional) sirf visitor ke liye
     boolean verifyVisitorCode(String code);
 
-    boolean verifyCode(Integer userId, String code);
+    boolean verifyCode(Long userId, String code);
 
 
 }

@@ -1,9 +1,6 @@
 package com.example.demo.Services.Implementation;
 
-import com.example.demo.Entities.Notice;
-import com.example.demo.Entities.Notification;
-import com.example.demo.Entities.Society;
-import com.example.demo.Entities.SocietyAdmin;
+import com.example.demo.Entities.*;
 import com.example.demo.Enums.NoticeCreatedByRole;
 import com.example.demo.Enums.TargetAudience;
 import com.example.demo.Enums.NotificationType;
@@ -58,6 +55,9 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private NoticeSeenRepository noticeSeenRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     public NoticeServiceImpl(NoticeRepository noticeRepository) {
         this.noticeRepository = noticeRepository;
@@ -69,9 +69,9 @@ public class NoticeServiceImpl implements NoticeService {
 @Override
 public NoticeDto createNotice(
         NoticeDto dto,
-        Integer userId,
+        Long userId,
         NoticeCreatedByRole role,
-        Integer societyId,
+        Long societyId,
         MultipartFile attachment
 ) throws IOException {
 
@@ -102,13 +102,13 @@ public NoticeDto createNotice(
     notice.setCreatedAt(LocalDateTime.now());
     notice.setUpdatedAt(LocalDateTime.now());
 
-    notice.setCreatedById(userId);
+    notice.setCreatedById((long) Math.toIntExact(userId));
     notice.setCreatedByRole(role);
 
     // ================= ROLE BASED LOGIC =================
     if (role == NoticeCreatedByRole.SUPER_ADMIN) {
 
-        SuperAdmin admin = superAdminRepository.findById(userId)
+        SuperAdmin admin = superAdminRepository.findById((long) Math.toIntExact(userId))
                 .orElseThrow(() ->
                         new ResourceNotFoundException("SuperAdmin", "id", userId));
 
@@ -131,7 +131,7 @@ public NoticeDto createNotice(
         } else {
             // GLOBAL NOTICE
             notice.setTargetSocietyId(null);
-            notice.setRecievedById(0);
+            notice.setRecievedById(0L);
             notice.setRecievedByRole(null);
             notice.setReceivedByName("ALL SOCIETIES");
         }
@@ -139,7 +139,7 @@ public NoticeDto createNotice(
     }
     else if (role == NoticeCreatedByRole.SOCIETY_ADMIN) {
 
-        SocietyAdmin admin = societyAdminRepository.findById(userId)
+        SocietyAdmin admin = societyAdminRepository.findById((long) Math.toIntExact(userId))
                 .orElseThrow(() ->
                         new ResourceNotFoundException("SocietyAdmin", "id", userId));
 
@@ -149,7 +149,7 @@ public NoticeDto createNotice(
         notice.setCreatedByName(admin.getAdminName());
         notice.setTargetSocietyId(societyId);
 
-        notice.setRecievedById(0);
+        notice.setRecievedById(0L);
         notice.setRecievedByRole(null);
 
         // 🔹 GROUP TARGET NAME
@@ -202,17 +202,26 @@ public NoticeDto createNotice(
 
 
 // GET NOTICES FOR SOCIETY (global + society-specific)
-    @Override
-    public List<NoticeDto> getNoticesForSociety(Integer societyId) {
-        List<Notice> notices = noticeRepository.findNoticesForSociety(societyId);
-        System.out.println("Fetched notices for society " + societyId + ": " + notices.size());
-        return notices.stream().map(this::mapToDto).collect(Collectors.toList());
-    }
+public List<NoticeDto> getNoticesForSociety(Long societyId, Long societyAdminId) {
+
+    SocietyAdmin admin = societyAdminRepository.findById(societyAdminId)
+            .orElseThrow(() -> new RuntimeException("Society Admin not found"));
+
+    List<Notice> notices =
+            noticeRepository.findNoticesForSocietyWithDateFilter(
+                    societyId,
+                    admin.getCreatedAt()   // ✅ correct
+            );
+
+    return notices.stream()
+            .map(this::mapToDto)
+            .collect(Collectors.toList());
+}
 
 
 // GET SUPER ADMIN NOTICE BY ITSELF
     @Override
-    public List<NoticeDto> getNoticesCreatedBySuperAdmin(Integer superAdminId) {
+    public List<NoticeDto> getNoticesCreatedBySuperAdmin(Long superAdminId) {
 
         List<Notice> notices =
                 noticeRepository.findByCreatedByIdAndCreatedByRole(
@@ -228,7 +237,7 @@ public NoticeDto createNotice(
 
 // GET SOCIETY ADMIN NOTICE BY ITSELF
     @Override
-    public List<NoticeDto> getNoticesCreatedBySocietyAdmin(Integer societyAdminId) {
+    public List<NoticeDto> getNoticesCreatedBySocietyAdmin(Long societyAdminId) {
 
         List<Notice> notices =
                 noticeRepository.findByCreatedByIdAndCreatedByRole(
@@ -244,13 +253,21 @@ public NoticeDto createNotice(
 
 
 // GET SOCIETY ADMIN NOTICE BY STAFF
-   public List<NoticeDto> getNoticesForStaff(Integer societyId) {
-       // STAFF role
-       List<Notice> notices = noticeRepository.findNoticesForStaff(societyId, TargetAudience.STAFF);
-       return notices.stream()
+public List<NoticeDto> getNoticesForStaff(Long societyId, Long userId) {
+
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    List<Notice> notices = noticeRepository.findNoticesForStaffWithDateFilter(
+            societyId,
+            TargetAudience.STAFF,
+            user.getCreatedAt()
+    );
+
+    return notices.stream()
             .map(this::mapToDto)
             .collect(Collectors.toList());
-   }
+}
 
 
 
@@ -258,19 +275,32 @@ public NoticeDto createNotice(
 
     // 3. GET GLOBAL NOTICES
     @Override
-    public List<NoticeDto> getGlobalAdminNotices() {
-        return noticeRepository.findByTargetSocietyIdIsNullAndTargetRoleAndIsActiveTrue(TargetAudience.SOCIETY_ADMIN)
+    public List<NoticeDto> getGlobalAdminNotices(Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return noticeRepository.findGlobalNoticesWithDateFilter(
+                        TargetAudience.SOCIETY_ADMIN,
+                        user.getCreatedAt()
+                )
                 .stream()
                 .map(this::mapToDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
 
     @Override
-    public List<NoticeDto> getNoticesForNormalUser(Integer societyId) {
+    public List<NoticeDto> getNoticesForNormalUser(Long societyId, Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<Notice> notices =
-                noticeRepository.findNoticesForNormalUser(societyId);
+                noticeRepository.findNoticesForNormalUserWithDateFilter(
+                        societyId,
+                        user.getCreatedAt()
+                );
 
         return notices.stream()
                 .map(this::mapToDto)
@@ -281,11 +311,11 @@ public NoticeDto createNotice(
 
 // 4.  UPDATE NOTICE
     @Override
-    public NoticeDto updateNotice(Integer noticeId,
+    public NoticeDto updateNotice(Long noticeId,
                                   NoticeDto dto,
-                                  Integer userId,
+                                  Long userId,
                                   TargetAudience role,
-                                  Integer societyId,
+                                  Long societyId,
                                   MultipartFile attachment) throws IOException {
 
         Notice notice = noticeRepository.findById(noticeId)
@@ -316,9 +346,6 @@ public NoticeDto createNotice(
 
 
 
-
-
-
 // 5. DELETE NOTICE SOFT DELETE
 //    @Override
 //    public void deleteNotice(Integer noticeId,
@@ -345,10 +372,10 @@ public NoticeDto createNotice(
 // 5. DELETE NOTICE HARD DELETE
     @Transactional
     @Override
-    public void deleteNotice(Integer noticeId,
-                             Integer userId,
+    public void deleteNotice(Long noticeId,
+                             Long userId,
                              TargetAudience role,
-                             Integer societyId) {
+                             Long societyId) {
 
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RuntimeException("Notice not found"));
@@ -392,12 +419,6 @@ public NoticeDto createNotice(
     }
 
 }
-
-
-
-
-
-
 
 
 

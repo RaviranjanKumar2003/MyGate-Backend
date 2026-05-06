@@ -66,7 +66,7 @@ public class UserController {
 
 // GET ALL USER IN SOCIETY
     @GetMapping("/society/{societyId}")
-    public List<UserProfileDto> getAllUsersOfSociety(@PathVariable Integer societyId) {
+    public List<UserProfileDto> getAllUsersOfSociety(@PathVariable Long societyId) {
         return userService.getAllUsersOfSociety(societyId);
     }
 
@@ -74,14 +74,14 @@ public class UserController {
 
 // GET USERS SUMMARY IN SOCIETY
     @GetMapping("/society/{societyId}/summary")
-    public UserCountResponse getSocietyUserSummary(@PathVariable Integer societyId) {
+    public UserCountResponse getSocietyUserSummary(@PathVariable Long societyId) {
         return userService.getSocietyUserSummary(societyId);
     }
 
 
 // GET ALL USER IN SOCIETY BY ROLE
     @GetMapping("/society/{societyId}/role/{role}")
-    public List<UserDto> getUsersOfSocietyByRole(@PathVariable Integer societyId,
+    public List<UserDto> getUsersOfSocietyByRole(@PathVariable Long societyId,
                                                  @PathVariable UserRole role) {
         return userService.getUsersOfSocietyByRole(societyId, role);
     }
@@ -89,7 +89,7 @@ public class UserController {
 
 // GET ALL USERS IN A SOCIETY BY STATUS
     @GetMapping("/society/{societyId}/status/{status}")
-    public List<UserDto> getUsersOfSocietyByStatus(@PathVariable Integer societyId,
+    public List<UserDto> getUsersOfSocietyByStatus(@PathVariable Long societyId,
                                                    @PathVariable UserStatus status) {
         return userService.getUsersOfSocietyByStatus(societyId, status);
     }
@@ -97,8 +97,8 @@ public class UserController {
 // GET USER BY ID
    @GetMapping("/society/{societyId}/user/{userId}")
    public ResponseEntity<UserDto> getUserById(
-           @PathVariable Integer societyId,
-           @PathVariable Integer userId
+           @PathVariable Long societyId,
+           @PathVariable Long userId
    ) {
        return ResponseEntity.ok(
                userService.getUserById(userId, societyId)
@@ -112,7 +112,7 @@ public class UserController {
 
     @GetMapping("/flat/{flatId}")
     public ResponseEntity<NormalUserProfileDto> getUserByFlat(
-            @PathVariable Integer flatId) {
+            @PathVariable Long flatId) {
 
         return ResponseEntity.ok(
                 userService.getUserByFlatId(flatId)
@@ -124,7 +124,7 @@ public class UserController {
 
 // UPDATE USER
     @PutMapping("/society/{societyId}/user/{userId}")
-    public UserDto updateUser(@PathVariable Integer userId, @RequestBody UserDto dto) {
+    public UserDto updateUser(@PathVariable Long userId, @RequestBody UserDto dto) {
         return userService.updateUser(userId, dto);
     }
 
@@ -133,9 +133,9 @@ public class UserController {
 // DELETE
 @DeleteMapping("/society/{societyId}/user/{userId}")
 public ResponseEntity<ApiResponse> deleteUser(
-        @PathVariable Integer userId,
-        @PathVariable Integer societyId,
-        @RequestParam(required = false) Integer buildingId) {
+        @PathVariable Long userId,
+        @PathVariable Long societyId,
+        @RequestParam(required = false) Long buildingId) {
 
     ApiResponse response = userService.deleteUser(userId, societyId, buildingId);
     return ResponseEntity.ok(response);
@@ -147,23 +147,16 @@ public ResponseEntity<ApiResponse> deleteUser(
 
 // ==================== SEARCH ====================
     @GetMapping("/society/{societyId}/search/email")
-    public List<UserDto> searchUsersByEmail(@PathVariable Integer societyId,
+    public List<UserDto> searchUsersByEmail(@PathVariable Long societyId,
                                             @RequestParam String email) {
         return userService.searchUsersByEmailInSociety(societyId, email);
     }
 
     @GetMapping("/society/{societyId}/search/name")
-    public List<UserDto> searchUsersByName(@PathVariable Integer societyId,
+    public List<UserDto> searchUsersByName(@PathVariable Long societyId,
                                            @RequestParam String keyword) {
         return userService.searchUserByName(societyId, keyword);
     }
-
-
-
-
-
-
-
 
 // USERS IMAGE UPLOAD
 
@@ -192,7 +185,7 @@ public ResponseEntity<ApiResponse> deleteUser(
     public ResponseEntity<UserDto> uploadUserImage(
             @RequestParam("image") MultipartFile image,
             @PathVariable Integer societyId,
-            @PathVariable Integer userId
+            @PathVariable Long userId
     ) throws IOException {
 
         User user = userRepository.findById(userId).orElseThrow(() ->
@@ -214,7 +207,7 @@ public ResponseEntity<ApiResponse> deleteUser(
 // GET USERS IMAGE
     @GetMapping("/image/get/user/{userId}")
     public void downloadUserImage(
-            @PathVariable Integer userId,
+            @PathVariable Long userId,
             HttpServletResponse response
     ) throws IOException {
 
@@ -240,7 +233,7 @@ public ResponseEntity<ApiResponse> deleteUser(
 
 // GET QR & ENTRY CODE
     @GetMapping("/society/{societyId}/qr/{userId}")
-    public ResponseEntity<Resource> getUserQr(@PathVariable Integer userId) throws Exception {
+    public ResponseEntity<Resource> getUserQr(@PathVariable Long userId) throws Exception {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
@@ -260,5 +253,9 @@ public ResponseEntity<ApiResponse> deleteUser(
     }
 
 
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userService.findById(id);
+    }
 
 }

@@ -4,7 +4,7 @@ import com.example.demo.Enums.SocietyStatus;
 
 public class SocietyAdminDto {
 
-    private int id;
+    private Long id;
 
     private String adminName;
 
@@ -18,20 +18,29 @@ public class SocietyAdminDto {
 
     private SocietyStatus societyAdminStatus;
 
-    private Integer societyId;
+    private Long societyId;
 
 
 // GETTERS & SETTERS
 
-    public SocietyAdminDto(){}
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public SocietyAdminDto(){}
 
     public String getAdminName() {
         return adminName;
@@ -81,11 +90,4 @@ public class SocietyAdminDto {
         this.societyAdminStatus = societyAdminStatus;
     }
 
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
-    }
 }

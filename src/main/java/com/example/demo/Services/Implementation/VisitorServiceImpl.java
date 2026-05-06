@@ -137,7 +137,7 @@ public class VisitorServiceImpl implements VisitorService {
 
 // 1. GET ALL VISITORS IN A SOCIETY
     @Override
-    public List<VisitorDto> getAllVisitors(Integer societyId) {
+    public List<VisitorDto> getAllVisitors(Long societyId) {
 
         return visitorRepository.findBySociety_Id(societyId)
                 .stream()
@@ -147,7 +147,7 @@ public class VisitorServiceImpl implements VisitorService {
 
 // GET VISITORS FOR FLAT
    @Override
-   public List<VisitorDto> getVisitorsForOwnerTenant( Integer societyId, Integer buildingId,Integer floorId,Integer flatId) {
+   public List<VisitorDto> getVisitorsForOwnerTenant(Long societyId, Long buildingId, Long floorId, Long flatId) {
 
        // 1️⃣ Validate full hierarchy (SECURITY + DATA CONSISTENCY)
        Flat flat = flatRepository
@@ -166,10 +166,10 @@ public class VisitorServiceImpl implements VisitorService {
 // GET VISITORS FOR OWNER / TENANT BY STATUS
     @Override
     public List<VisitorDto> getVisitorsForOwnerTenantByStatus(
-            Integer societyId,
-            Integer buildingId,
-            Integer floorId,
-            Integer flatId,
+            Long societyId,
+            Long buildingId,
+            Long floorId,
+            Long flatId,
             VisitorStatus status
     ) {
 
@@ -203,7 +203,7 @@ public class VisitorServiceImpl implements VisitorService {
 // UPDATE VISITORS STATUS
    @Override
    @Transactional
-   public VisitorDto updateVisitorStatus( Integer societyId, Integer visitorId, VisitorStatus status) {
+   public VisitorDto updateVisitorStatus(Long societyId, Long visitorId, VisitorStatus status) {
 
     Visitor visitor = visitorRepository.findByIdAndSocietyId(visitorId, societyId)
             .orElseThrow(() -> new ResourceNotFoundException( "Visitor", "id", visitorId));
@@ -230,7 +230,7 @@ public class VisitorServiceImpl implements VisitorService {
 
     // 2. GET VISITORS IN A SOCIETY BY ID
    @Override
-   public VisitorDto getVisitorById(Integer societyId, Integer visitorId) {
+   public VisitorDto getVisitorById(Long societyId, Long visitorId) {
 
        Visitor visitor = visitorRepository.findByIdAndSociety_Id(visitorId, societyId).orElseThrow(() -> new ResourceNotFoundException("Visitor","id", visitorId));
 
@@ -240,7 +240,7 @@ public class VisitorServiceImpl implements VisitorService {
 
 // 3. GET VISITORS IN A SOCIETY BY STATUS
    @Override
-   public List<VisitorDto> getVisitorsBySocietyAndStatus(Integer societyId,VisitorStatus status ) {
+   public List<VisitorDto> getVisitorsBySocietyAndStatus(Long societyId, VisitorStatus status ) {
 
        return visitorRepository
             .findBySociety_IdAndVisitorStatus(societyId, status).stream()
@@ -252,7 +252,7 @@ public class VisitorServiceImpl implements VisitorService {
 
 // 4. GET VISITORS IN A SOCIETY BY Type
     @Override
-    public List<VisitorDto> getVisitorsBySocietyAndVisitorsType(Integer societyId, VisitorType visitorType) {
+    public List<VisitorDto> getVisitorsBySocietyAndVisitorsType(Long societyId, VisitorType visitorType) {
         List<Visitor> visitors = visitorRepository.findBySocietyIdAndVisitorType(societyId,visitorType);
         return visitors.stream()
                 .map(visitor -> modelMapper.map(visitor, VisitorDto.class))
@@ -263,7 +263,7 @@ public class VisitorServiceImpl implements VisitorService {
 
 // 5. UPDATE VISITORS
    @Override
-   public VisitorDto updateVisitor( Integer societyId,Integer visitorId,VisitorDto dto) {
+   public VisitorDto updateVisitor(Long societyId, Long visitorId, VisitorDto dto) {
        // ✅ 1. Visitor must belong to same society
        Visitor visitor = visitorRepository.findByIdAndSociety_Id(visitorId, societyId)
             .orElseThrow(() -> new ResourceNotFoundException("Visitor", "id", visitorId));
@@ -302,7 +302,7 @@ public class VisitorServiceImpl implements VisitorService {
 // 6. DELETE VISITORS
 @Override
 @Transactional
-public void deactivateVisitor(Integer visitorId, Integer societyId) {
+public void deactivateVisitor(Long visitorId, Long societyId) {
 
     Visitor visitor = visitorRepository
             .findByIdAndSocietyId(visitorId, societyId)
@@ -370,7 +370,7 @@ public void deactivateVisitor(Integer visitorId, Integer societyId) {
 
     // SEARCH VISITOR
     @Override
-    public List<VisitorDto> searchVisitors(Integer societyId, String keyword) {
+    public List<VisitorDto> searchVisitors(Long societyId, String keyword) {
         return visitorRepository
                 .searchVisitors(societyId, keyword)
                 .stream()
@@ -403,7 +403,7 @@ public void deactivateVisitor(Integer visitorId, Integer societyId) {
 
 // =================================== IMAGE ===========================================
     @Override
-    public VisitorDto updateVisitorLogo(Integer visitorId, MultipartFile image) {
+    public VisitorDto updateVisitorLogo(Long visitorId, MultipartFile image) {
 
         Visitor visitor = visitorRepository.findById(visitorId)
                 .orElseThrow(() -> new RuntimeException("Visitor not found"));

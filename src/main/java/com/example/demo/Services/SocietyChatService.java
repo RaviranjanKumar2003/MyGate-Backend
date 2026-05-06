@@ -11,20 +11,20 @@ public interface SocietyChatService {
     SocietyChatDto sendMessage(SocietyChatDto dto);
 
     // GET ALL MESSAGES
-    List<SocietyChatDto> getMessages(Integer societyId,Integer userId);
+    List<SocietyChatDto> getMessages(Long societyId,Long userId);
 
     // UPDATE MESSAGE (ONLY SENDER)
-    SocietyChatDto updateMessage(Integer societyId, Integer messageId, Integer senderId, String newMessage);
+    SocietyChatDto updateMessage(Long societyId, Long messageId, Long senderId, String newMessage);
 
     // SOFT DELETE (ONLY SENDER)
-    void softDeleteMessage(Integer societyId, Integer messageId, Integer senderId);
+    void softDeleteMessage(Long societyId, Long messageId, Long senderId);
 
     // HARD DELETE (ONLY SENDER)
-    void hardDeleteMessage(Integer societyId, Integer messageId, Integer senderId);
+    void hardDeleteMessage(Long societyId, Long messageId, Long senderId);
 
     // MARK AS SEEN
-    void markMessagesAsSeen(Integer societyId, Integer userId);
+    void markMessagesAsSeen(Long societyId, Long userId);
 
-    List<Map<String, Object>> getSeenUsers(Integer messageId);
+    List<Map<String, Object>> getSeenUsers(Long messageId);
 
 }

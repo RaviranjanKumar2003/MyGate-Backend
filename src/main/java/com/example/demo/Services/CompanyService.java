@@ -12,6 +12,6 @@ public interface CompanyService {
 
     List<CompanyDto> getCompaniesByType(CompanyType companyType);
 
-    CompanyDto updateCompanyLogo(Integer companyId, MultipartFile image);
+    CompanyDto updateCompanyLogo(Long companyId, MultipartFile image);
 
 }

@@ -11,7 +11,7 @@ public interface StaffService {
 
 
 // GET BY ID
-    StaffDto getStaffById(Integer staffId);
+    StaffDto getStaffById(Long staffId);
 
 
 // GET ALL
@@ -23,8 +23,8 @@ public interface StaffService {
 
 
     // UPDATE
-    StaffDto updateStaff(Integer staffId, StaffDto dto);
+    StaffDto updateStaff(Long staffId, StaffDto dto);
 
     // DELETE
-    void deleteStaff(Integer staffId);
+    void deleteStaff(Long staffId);
 }

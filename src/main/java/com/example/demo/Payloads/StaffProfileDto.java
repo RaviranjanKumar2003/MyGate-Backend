@@ -1,7 +1,7 @@
 package com.example.demo.Payloads;
 
 public class StaffProfileDto {
-    private Integer id;
+    private Long id;
     private String name;
     private String email;
     private String mobileNumber;
@@ -13,14 +13,13 @@ public class StaffProfileDto {
     private String imageUrl;
 
 
-    // getters & setters
+// getters & setters
 
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -132,7 +132,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<PaymentDto> getPaymentsForUser(Integer userId, String role, Integer societyId) {
+    public List<PaymentDto> getPaymentsForUser(Long userId, String role, Long societyId) {
 
         List<Payment> payments;
 
@@ -156,7 +156,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentDto getPaymentById(Integer paymentId) {
+    public PaymentDto getPaymentById(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
         return mapToDto(payment);
@@ -164,11 +164,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentDto updatePaymentStatus(
-            Integer paymentId,
+            Long paymentId,
             PaymentStatus status,
-            Integer userId,
+            Long userId,
             String role,
-            Integer societyId
+            Long societyId
     ) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
@@ -193,7 +193,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentDto updatePayment(Integer paymentId, PaymentDto dto) {
+    public PaymentDto updatePayment(Long paymentId, PaymentDto dto) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
 
@@ -206,12 +206,12 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public boolean deletePayment(Integer paymentId, Integer userId, String role) {
+    public boolean deletePayment(Long paymentId, Long userId, String role) {
 
         Payment payment = paymentRepository.findById(paymentId).orElse(null);
         if (payment == null) return false;
 
-        if (payment.getPaidById().equals(userId) || "SUPER_ADMIN".equals(role)) {
+        if ("SUPER_ADMIN".equals(role)) {
             paymentRepository.delete(payment);
             return true;
         }

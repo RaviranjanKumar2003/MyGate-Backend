@@ -125,14 +125,16 @@ public ComplaintDto createComplaint(ComplaintDto dto) {
     // GET COMPLAINT
     @Override
     public List<ComplaintDto> getComplaints(
-            Integer societyId,
-            Integer userId,
+            Long societyId,
+            Long userId,
             String role
     ) {
 
-        List<Complaint> complaints;
+        List<Complaint> complaints = List.of();
 
-        // 🔥 SUPER ADMIN → sirf SocietyAdmin ke complaints
+        // ================= ROLE BASED FETCH =================
+
+        // 🔴 SUPER ADMIN → only SocietyAdmin complaints
         if (TargetAudience.SUPER_ADMIN.name().equals(role)) {
 
             complaints = complaintRepository
@@ -141,15 +143,23 @@ public ComplaintDto createComplaint(ComplaintDto dto) {
                     );
         }
 
-        // 🔥 SOCIETY ADMIN → apni society ke saare complaints
+        // 🔵 SOCIETY ADMIN → ALL complaints of society (IMPORTANT)
         else if (TargetAudience.SOCIETY_ADMIN.name().equals(role)) {
+
+            if (societyId == null) {
+                throw new RuntimeException("SocietyId is missing for Society Admin");
+            }
 
             complaints = complaintRepository
                     .findBySocietyIdOrderByCreatedAtDesc(societyId);
         }
 
-        // 🔥 NORMAL USER (OWNER / TENANT)
+        // 🟢 OWNER / TENANT → only their complaints
         else {
+
+            if (userId == null || role == null) {
+                throw new RuntimeException("UserId or Role is missing");
+            }
 
             complaints = complaintRepository
                     .findByCreatedByIdAndCreatedByRoleOrderByCreatedAtDesc(
@@ -158,28 +168,44 @@ public ComplaintDto createComplaint(ComplaintDto dto) {
                     );
         }
 
-        // 🔥 Map + enrich
+        // ================= SAFETY FILTER =================
+        // (avoid null society issues)
+        complaints = complaints.stream()
+                .filter(c -> c != null && c.getSocietyId() != null)
+                .collect(Collectors.toList());
+
+        // ================= MAP + ENRICH =================
         return complaints.stream().map(c -> {
 
             ComplaintDto dto = modelMapper.map(c, ComplaintDto.class);
 
-            // Society name
+            // 🏢 Society Name
             if (c.getSocietyId() != null) {
                 societyRepo.findById(c.getSocietyId())
                         .ifPresent(s -> dto.setSocietyName(s.getName()));
             }
 
-            // Created by name
+            // 👤 Created By Name
             if (c.getCreatedById() != null && c.getCreatedByRole() != null) {
 
-                if (TargetAudience.SOCIETY_ADMIN.name().equals(c.getCreatedByRole())) {
+                try {
+                    TargetAudience creatorRole =
+                            TargetAudience.valueOf(c.getCreatedByRole());
 
-                    societyAdminRepository.findById(c.getCreatedById())
-                            .ifPresent(a -> dto.setCreatedByName(a.getAdminName()));
-                } else {
+                    if (creatorRole == TargetAudience.SOCIETY_ADMIN) {
 
-                    userRepository.findById(c.getCreatedById())
-                            .ifPresent(u -> dto.setCreatedByName(u.getName()));
+                        societyAdminRepository.findById(c.getCreatedById())
+                                .ifPresent(a -> dto.setCreatedByName(a.getAdminName()));
+
+                    } else {
+
+                        userRepository.findById(c.getCreatedById())
+                                .ifPresent(u -> dto.setCreatedByName(u.getName()));
+                    }
+
+                } catch (Exception e) {
+                    // 🔥 role mismatch safe fallback
+                    dto.setCreatedByName("Unknown");
                 }
             }
 
@@ -192,7 +218,7 @@ public ComplaintDto createComplaint(ComplaintDto dto) {
 // ================= UPDATE COMPLAINT STATUS =================
 @Override
 public ComplaintDto updateComplaintStatus(
-        Integer complaintId,
+        Long complaintId,
         ComplaintStatus status,
         String role
 ) {
@@ -238,9 +264,9 @@ public ComplaintDto updateComplaintStatus(
 // UPDATE COMPLAINT
     @Override
     public ComplaintDto updateComplaint(
-            Integer complaintId,
+            Long complaintId,
             ComplaintDto dto,
-            Integer userId,
+            Long userId,
             String role
     ) {
 
@@ -274,7 +300,7 @@ public ComplaintDto updateComplaintStatus(
 // DELETE COMPLAINT
 
     @Override
-    public boolean deleteComplaint(Integer complaintId, Integer userId, String role) {
+    public boolean deleteComplaint(Long complaintId, Long userId, String role) {
 
         // 🔹 Fetch complaint from DB
         Complaint complaint = complaintRepository.findById(complaintId).orElse(null);

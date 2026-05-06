@@ -67,7 +67,7 @@ public class ComplaintController {
 // UPDATE COMPLAINT STATUS
 @PutMapping("/{id}/status")
 public ResponseEntity<ComplaintDto> updateComplaintStatus(
-        @PathVariable Integer id,
+        @PathVariable Long id,
         @RequestParam ComplaintStatus status
 ) {
     // get currently authenticated user
@@ -90,7 +90,7 @@ public ResponseEntity<ComplaintDto> updateComplaintStatus(
 // UPDATE COMPLAINT
     @PutMapping("/{id}")
     public ResponseEntity<ComplaintDto> updateComplaint(
-            @PathVariable Integer id,
+            @PathVariable Long id,
             @RequestBody ComplaintDto dto,
             Authentication authentication
     ) {
@@ -112,7 +112,7 @@ public ResponseEntity<ComplaintDto> updateComplaintStatus(
 
     // ================= DELETE COMPLAINT =================
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteComplaint(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteComplaint(@PathVariable Long id) {
 
         CustomUserDetails user =
                 (CustomUserDetails) SecurityContextHolder

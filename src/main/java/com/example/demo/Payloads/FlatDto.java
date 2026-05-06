@@ -4,30 +4,56 @@ import com.example.demo.Enums.FlatStatus;
 
 public class FlatDto {
 
-    private Integer id;
+    private Long id;
     private String flatNumber;
     private FlatStatus flatStatus;
 
 
-    private Integer floorId;
+    private Long floorId;
     private String floorNumber;
 
 
-    private Integer buildingId;
+    private Long buildingId;
     private String buildingName;
 
-    private Integer societyId;
+    private Long societyId;
     private String societyName;
 
-    // getters & setters
 
 
-    public Integer getId() {
+// GETTERS & SETTERS
+
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getFloorId() {
+        return floorId;
+    }
+
+    public void setFloorId(Long floorId) {
+        this.floorId = floorId;
+    }
+
+    public Long getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(Long buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
     }
 
     public String getFlatNumber() {
@@ -46,14 +72,6 @@ public class FlatDto {
         this.flatStatus = flatStatus;
     }
 
-    public Integer getFloorId() {
-        return floorId;
-    }
-
-    public void setFloorId(Integer floorId) {
-        this.floorId = floorId;
-    }
-
     public String getFloorNumber() {
         return floorNumber;
     }
@@ -62,28 +80,12 @@ public class FlatDto {
         this.floorNumber = floorNumber;
     }
 
-    public Integer getBuildingId() {
-        return buildingId;
-    }
-
-    public void setBuildingId(Integer buildingId) {
-        this.buildingId = buildingId;
-    }
-
     public String getBuildingName() {
         return buildingName;
     }
 
     public void setBuildingName(String buildingName) {
         this.buildingName = buildingName;
-    }
-
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
     }
 
     public String getSocietyName() {

@@ -6,6 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface OfferRepository extends JpaRepository<Offer, Integer> {
-    List<Offer> findByProductId(Integer productId);
+
     List<Offer> findByBuyerId(Integer buyerId);
+
+    List<Offer> findByRefIdAndRefType(Long refId, String refType);
+
+    List<Offer> findByRefIdAndRefTypeIgnoreCase(Long refId, String refType);
+
 }

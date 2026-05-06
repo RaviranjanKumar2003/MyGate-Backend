@@ -12,7 +12,7 @@ public interface VisitorLogService {
 
 
 // GET VISITOR LOG BY ID
-    VisitorLogDto getVisitorLogById(Integer id);
+    VisitorLogDto getVisitorLogById(Long id);
 
 
 // GET ALL VISITOR LOG
@@ -20,11 +20,11 @@ public interface VisitorLogService {
 
 
 // UPDATE VISITOR LOG
-    VisitorLogDto updateVisitorLog(Integer id, VisitorLogDto dto);
+    VisitorLogDto updateVisitorLog(Long id, VisitorLogDto dto);
 
 
 // DELETE VISITOR LOG
-    void deleteVisitorLog(Integer logId);
+    void deleteVisitorLog(Long logId);
 
 
 }

@@ -22,9 +22,9 @@ public class Notification {
     private NotificationType type;
 
 
-    private Integer societyId;
+    private Long societyId;
 
-    private Integer receiverAdminId;
+    private Long receiverAdminId;
 
     private boolean isRead = false;
 
@@ -35,7 +35,7 @@ public class Notification {
         this.createdAt = LocalDateTime.now();
     }
 
-    private Integer targetSocietyId; // null = global
+    private Long targetSocietyId; // null = global
     private String targetRole;
     private Long referenceId;
 
@@ -74,11 +74,11 @@ public class Notification {
         this.targetRole = targetRole;
     }
 
-    public Integer getTargetSocietyId() {
+    public Long getTargetSocietyId() {
         return targetSocietyId;
     }
 
-    public void setTargetSocietyId(Integer targetSocietyId) {
+    public void setTargetSocietyId(Long targetSocietyId) {
         this.targetSocietyId = targetSocietyId;
     }
 
@@ -127,19 +127,19 @@ public class Notification {
         this.type = type;
     }
 
-    public Integer getSocietyId() {
+    public Long getSocietyId() {
         return societyId;
     }
 
-    public void setSocietyId(Integer societyId) {
+    public void setSocietyId(Long societyId) {
         this.societyId = societyId;
     }
 
-    public Integer getReceiverAdminId() {
+    public Long getReceiverAdminId() {
         return receiverAdminId;
     }
 
-    public void setReceiverAdminId(Integer receiverAdminId) {
+    public void setReceiverAdminId(Long receiverAdminId) {
         this.receiverAdminId = receiverAdminId;
     }
 

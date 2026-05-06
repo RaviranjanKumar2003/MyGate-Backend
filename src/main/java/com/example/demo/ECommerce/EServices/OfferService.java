@@ -19,4 +19,6 @@ public interface OfferService {
     List<OfferDto> getOffersByProduct(Integer productId);
 
     List<OfferDto> getOffersByBuyer(Integer buyerId);
+
+    List<OfferDto> getOffersByFlat(Long flatId);
 }

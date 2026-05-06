@@ -1,6 +1,5 @@
 package com.example.demo.Payloads;
 
-import com.example.demo.Enums.PaymentMode;
 import com.example.demo.Enums.PaymentStatus;
 import com.example.demo.Enums.PaymentType;
 
@@ -8,23 +7,23 @@ import java.time.LocalDateTime;
 
 public class PaymentDto {
 
-    private Integer id;
+    private Long id;
     private Double amount;
     private String description;
     private PaymentStatus status;
     private PaymentType paymentType;
     private String societyName;
     private String payerName;
-    private Integer paidById;
+    private Long  paidById;
     private String paidByRole;
-    private Integer receivedById;
+    private Long receivedById;
     private String receivedByRole;
-    private Integer societyId;
+    private Long societyId;
     private String paidByName;
     private String receivedByName;
     private LocalDateTime paymentDate;
 
-    private Integer billId;
+    private Long billId;
 
     // Razorpay response
     private String razorpayOrderId;
@@ -45,11 +44,11 @@ public class PaymentDto {
         this.paymentMode = paymentMode;
     }
 
-    public Integer getBillId() {
+    public Long getBillId() {
         return billId;
     }
 
-    public void setBillId(Integer billId) {
+    public void setBillId(Long billId) {
         this.billId = billId;
     }
 
@@ -101,12 +100,16 @@ public class PaymentDto {
         this.paymentType = paymentType;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setReceivedById(Long receivedById) {
+        this.receivedById = receivedById;
     }
 
     public Double getAmount() {
@@ -133,11 +136,11 @@ public class PaymentDto {
         this.status = status;
     }
 
-    public Integer getPaidById() {
+    public Long getPaidById() {
         return paidById;
     }
 
-    public void setPaidById(Integer paidById) {
+    public void setPaidById(Long paidById) {
         this.paidById = paidById;
     }
 
@@ -149,12 +152,8 @@ public class PaymentDto {
         this.paidByRole = paidByRole;
     }
 
-    public Integer getReceivedById() {
+    public Long getReceivedById() {
         return receivedById;
-    }
-
-    public void setReceivedById(Integer receivedById) {
-        this.receivedById = receivedById;
     }
 
     public String getReceivedByRole() {
@@ -165,11 +164,11 @@ public class PaymentDto {
         this.receivedByRole = receivedByRole;
     }
 
-    public Integer getSocietyId() {
+    public Long getSocietyId() {
         return societyId;
     }
 
-    public void setSocietyId(Integer societyId) {
+    public void setSocietyId(Long societyId) {
         this.societyId = societyId;
     }
 

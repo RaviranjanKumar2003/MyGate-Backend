@@ -9,22 +9,22 @@ public interface PaymentService {
 
     PaymentDto createPayment(PaymentDto dto);
 
-    List<PaymentDto> getPaymentsForUser(Integer userId, String role, Integer societyId);
+    List<PaymentDto> getPaymentsForUser(Long userId, String role, Long societyId);
 
-    PaymentDto getPaymentById(Integer paymentId);
+    PaymentDto getPaymentById(Long paymentId);
 
-    PaymentDto updatePayment(Integer paymentId, PaymentDto dto);
+    PaymentDto updatePayment(Long paymentId, PaymentDto dto);
 
-    boolean deletePayment(Integer paymentId, Integer userId, String role);
+    boolean deletePayment(Long paymentId, Long userId, String role);
 
 
 
     PaymentDto updatePaymentStatus(
-            Integer paymentId,
+            Long paymentId,
             PaymentStatus status,
-            Integer userId,
+            Long userId,
             String role,
-            Integer societyId
+            Long societyId
     );
 
     Map<String, Object> createOrder(PaymentDto dto);

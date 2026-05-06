@@ -27,7 +27,7 @@ public class StaffServiceImpl implements StaffService {
 
 // GET STAFF BY ID
     @Override
-    public StaffDto getStaffById(Integer staffId) {
+    public StaffDto getStaffById(Long staffId) {
         Staff staff = staffRepository.findById(staffId)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", staffId));
         return mapper.map(staff, StaffDto.class);
@@ -57,7 +57,7 @@ public class StaffServiceImpl implements StaffService {
 
 // UPDATE STAFF
     @Override
-    public StaffDto updateStaff(Integer staffId, StaffDto dto) {
+    public StaffDto updateStaff(Long staffId, StaffDto dto) {
         Staff staff = staffRepository.findById(staffId)
                 .orElseThrow(() -> new ResourceNotFoundException("Staff", "id", staffId));
 
@@ -70,7 +70,7 @@ public class StaffServiceImpl implements StaffService {
 
 // DELETE STAFF
    @Override
-   public void deleteStaff(Integer staffId) {
+   public void deleteStaff(Long staffId) {
        Staff staff = staffRepository.findById(staffId).orElseThrow(() -> new ResourceNotFoundException("Staff", "id", staffId));
    }
 

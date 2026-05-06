@@ -19,8 +19,8 @@ public class NoticeSeenController {
     // ✅ MARK AS SEEN
     @PostMapping("/{noticeId}/seen")
     public ResponseEntity<?> markSeen(
-            @PathVariable Integer noticeId,   // 🔥 Integer → Long
-            @RequestParam Integer userId,     // 🔥 Integer → Long
+            @PathVariable Long noticeId,   // 🔥 Integer → Long
+            @RequestParam Long userId,     // 🔥 Integer → Long
             @RequestParam String role
     ) {
         noticeSeenService.markAsSeen(noticeId, userId, role);
@@ -30,7 +30,7 @@ public class NoticeSeenController {
     // ✅ GET SEEN USERS
     @GetMapping("/{noticeId}/seen-users")
     public ResponseEntity<List<NoticeSeenDto>> getSeenUsers(
-            @PathVariable Integer noticeId
+            @PathVariable Long noticeId
     ) {
         return ResponseEntity.ok(
                 noticeSeenService.getSeenUsers(noticeId)

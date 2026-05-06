@@ -7,25 +7,25 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
-public interface MonthlyBillRepository extends JpaRepository<MonthlyBill, Integer> {
+public interface MonthlyBillRepository extends JpaRepository<MonthlyBill, Long> {
 
     // 📄 Get all bills of a society
-    List<MonthlyBill> findBySocietyIdOrderByBillMonthDesc(Integer societyId);
+    List<MonthlyBill> findBySocietyIdOrderByBillMonthDesc(Long societyId);
 
     // 📄 Get bills of a user (tenant/owner)
-    List<MonthlyBill> findByUserIdOrderByBillMonthDesc(Integer userId);
+    List<MonthlyBill> findByUserIdOrderByBillMonthDesc(Long userId);
 
     // 🔍 Check if bill already exists for month
     Optional<MonthlyBill> findBySocietyIdAndUserIdAndBillMonth(
-            Integer societyId,
-            Integer userId,
+            Long societyId,
+            Long userId,
             String billMonth
     );
 
     // SOCIETY ADMIN
     List<MonthlyBill> findByCreatedByRoleAndSocietyIdOrderByBillMonthDesc(
             UserRole role,
-            Integer societyId
+            Long societyId
     );
 
     // 📄 Get pending bills (for reminder / dashboard)
@@ -38,7 +38,7 @@ public interface MonthlyBillRepository extends JpaRepository<MonthlyBill, Intege
 
     // 🔹 (Optional) Society-wise Super Admin bills
     List<MonthlyBill> findBySocietyIdAndReceiverRoleOrderByBillMonthDesc(
-            Integer societyId,
+            Long societyId,
             UserRole receiverRole
     );
 

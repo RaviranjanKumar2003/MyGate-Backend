@@ -7,14 +7,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface BuildingRepo extends JpaRepository<Building,Integer> {
+public interface BuildingRepo extends JpaRepository<Building,Long> {
 
-    List<Building> findBySociety_IdAndIsActive(Integer societyId,BuildingStatus status);
+    List<Building> findBySociety_IdAndIsActive(Long societyId,BuildingStatus status);
 
-    Optional<Building> findByIdAndIsActive(Integer id,BuildingStatus status);
+    Optional<Building> findByIdAndIsActive(Long id,BuildingStatus status);
 
     List<Building> findByNameContainingIgnoreCaseAndIsActive(String name,BuildingStatus status);
 
-    Optional<Building> findByIdAndSociety_Id(Integer id, Integer societyId);
+    Optional<Building> findByIdAndSociety_Id(Long id, Long societyId);
+
+    List<Building> findBySocietyId(Long societyId);
 
 }

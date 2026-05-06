@@ -6,16 +6,16 @@ import java.util.List;
 
 public interface SocietyAdminService {
 
-    SocietyAdminDto updateSocietyAdminImage(Integer societyAdminId, String imageURL);
+    SocietyAdminDto updateSocietyAdminImage(Long societyAdminId, String imageURL);
 
 
     // Get all society admins
     List<SocietyAdminDto> getAllSocietyAdmins();
 
     // Gell Society Admin By Id
-    SocietyAdminDto getSocietyAdminById(Integer adminId);
+    SocietyAdminDto getSocietyAdminById(Long adminId);
 
     // Update society admin
-    SocietyAdminDto updateSocietyAdmin(SocietyAdminDto dto, Integer adminId);
+    SocietyAdminDto updateSocietyAdmin(SocietyAdminDto dto, Long adminId);
 
 }

@@ -62,7 +62,7 @@ public class VisitorLogServiceImpl implements VisitorLogService {
 
 // GET VISITOR LOG BY ID
     @Override
-    public VisitorLogDto getVisitorLogById(Integer logId) {
+    public VisitorLogDto getVisitorLogById(Long logId) {
         VisitorLog log = visitorLogRepository.findById(logId)
                 .orElseThrow(() -> new ResourceNotFoundException("VisitorLog","id",logId));
         return mapper.map(log, VisitorLogDto.class);
@@ -82,7 +82,7 @@ public class VisitorLogServiceImpl implements VisitorLogService {
 // UPDATE VISITOR LOG
 @Override
 @Transactional
-public VisitorLogDto updateVisitorLog(Integer logId, VisitorLogDto dto) {
+public VisitorLogDto updateVisitorLog(Long logId, VisitorLogDto dto) {
 
     VisitorLog log = visitorLogRepository.findById(logId)
             .orElseThrow(() ->
@@ -109,7 +109,7 @@ public VisitorLogDto updateVisitorLog(Integer logId, VisitorLogDto dto) {
 
     // DELETE VISITOR LOG
     @Override
-    public void deleteVisitorLog(Integer logId) {
+    public void deleteVisitorLog(Long logId) {
         VisitorLog log = visitorLogRepository.findById(logId)
                 .orElseThrow(() -> new ResourceNotFoundException("VisitorLog","id",logId));
         visitorLogRepository.delete(log);

@@ -32,7 +32,7 @@ public class AdminController {
 //  Approve user (PENDING → PENDING)
     @PutMapping("/approve/{userId}")
     public ResponseEntity<UserDto> approveUser(
-            @PathVariable Integer userId,
+            @PathVariable Long userId,
             @RequestBody UserDto dto
     ) {
         return ResponseEntity.ok(
@@ -43,7 +43,7 @@ public class AdminController {
 //  Deactivate user
     @PutMapping("/deactivate/{userId}")
     public ResponseEntity<UserDto> deactivateUser(
-            @PathVariable Integer userId
+            @PathVariable Long userId
     ) {
         return ResponseEntity.ok(adminService.deactivateUser(userId));
     }

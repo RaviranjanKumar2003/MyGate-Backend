@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 public class VisitorDto {
 
-    private int id;
+    private Long id;
 
     @NotBlank
     private String name;
@@ -25,23 +25,23 @@ public class VisitorDto {
     private VisitorStatus visitorStatus;
 
     @NotNull
-    private Integer societyId;
+    private Long societyId;
 
     @NotNull
-    private Integer buildingId;
+    private Long buildingId;
 
     @NotNull
-    private Integer floorId;
+    private Long floorId;
 
     @NotNull
-    private Integer flatId;
+    private Long flatId;
 
     /* Building Name, Floor Name, Flat Name*/
     private String buildingName;
     private String floorNumber;
     private String flatNumber;
 
-    private Integer companyId;
+    private Long companyId;
     private String companyName;
     private String companyLogo;
     private String vehicleNumber;
@@ -60,6 +60,54 @@ public class VisitorDto {
 
 // GETTERS & SETTERS
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public Long getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(Long buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public Long getFloorId() {
+        return floorId;
+    }
+
+    public void setFloorId(Long floorId) {
+        this.floorId = floorId;
+    }
+
+    public Long getFlatId() {
+        return flatId;
+    }
+
+    public void setFlatId(Long flatId) {
+        this.flatId = flatId;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
 
     public LocalDateTime getInTime() {
         return inTime;
@@ -91,14 +139,6 @@ public class VisitorDto {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Integer getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
     }
 
     public String getCompanyName() {
@@ -155,46 +195,6 @@ public class VisitorDto {
 
     public void setFlatNumber(String flatNumber) {
         this.flatNumber = flatNumber;
-    }
-
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
-    }
-
-    public Integer getBuildingId() {
-        return buildingId;
-    }
-
-    public void setBuildingId(Integer buildingId) {
-        this.buildingId = buildingId;
-    }
-
-    public Integer getFloorId() {
-        return floorId;
-    }
-
-    public void setFloorId(Integer floorId) {
-        this.floorId = floorId;
-    }
-
-    public Integer getFlatId() {
-        return flatId;
-    }
-
-    public void setFlatId(Integer flatId) {
-        this.flatId = flatId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

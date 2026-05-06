@@ -7,6 +7,7 @@ import com.example.demo.Payloads.FlatCountResponse;
 import com.example.demo.Payloads.FlatDto;
 import com.example.demo.Repositories.*;
 import com.example.demo.Services.FlatService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,12 @@ public class FlatServiceImpl implements FlatService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private FlatOwnershipRepository flatOwnershipRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private final FlatRepository flatRepo;
     private final FloorRepository floorRepo;
@@ -41,59 +48,65 @@ public class FlatServiceImpl implements FlatService {
 
 
 // CREATE FLATS
-    @Override
-    public FlatDto createFlat(FlatDto dto) {
+@Override
+@Transactional
+public FlatDto createFlat(FlatDto dto) {
 
-        Floor floor = floorRepo.findById(dto.getFloorId())
-                .orElseThrow(() -> new RuntimeException("Floor not found"));
+    Floor floor = floorRepo.findById(dto.getFloorId())
+            .orElseThrow(() -> new RuntimeException("Floor not found"));
 
-        Building building = buildingRepo.findById(dto.getBuildingId())
-                .orElseThrow(() -> new RuntimeException("Building not found"));
+    Building building = buildingRepo.findById(dto.getBuildingId())
+            .orElseThrow(() -> new RuntimeException("Building not found"));
 
-        Society society = societyRepo.findById(dto.getSocietyId())
-                .orElseThrow(() -> new RuntimeException("Society not found"));
+    Society society = societyRepo.findById(dto.getSocietyId())
+            .orElseThrow(() -> new RuntimeException("Society not found"));
 
-        // ✅ VALIDATION: Floor belongs to building
-        if (!floor.getBuilding().getId().equals(building.getId())) {
-            throw new IllegalStateException("Floor does not belong to this building");
-        }
-
-        // ✅ VALIDATION: Building belongs to society
-        if (!building.getSociety().getId().equals(society.getId())) {
-            throw new IllegalStateException("Building does not belong to this society");
-        }
-
-        // ✅ DUPLICATE CHECK
-        boolean exists = flatRepo.existsBySocietyAndBuildingAndFloorAndFlatNumber(
-                society,
-                building,
-                floor,
-                dto.getFlatNumber().trim()
-        );
-
-        if (exists) {
-            throw new IllegalStateException(
-                    "Flat " + dto.getFlatNumber() + " already exists on this floor"
-            );
-        }
-
-        Flat flat = new Flat();
-        flat.setFlatNumber(dto.getFlatNumber().trim());
-        flat.setFlatStatus(
-                dto.getFlatStatus() != null ? dto.getFlatStatus() : FlatStatus.VACANT
-        );
-        flat.setFloor(floor);
-        flat.setBuilding(building);
-        flat.setSociety(society);
-
-        return mapToDto(flatRepo.save(flat));
+    // ✅ VALIDATION: Floor belongs to building
+    if (!floor.getBuilding().getId().equals(building.getId())) {
+        throw new IllegalStateException("Floor does not belong to this building");
     }
+
+    // ✅ VALIDATION: Building belongs to society
+    if (!building.getSociety().getId().equals(society.getId())) {
+        throw new IllegalStateException("Building does not belong to this society");
+    }
+
+    // ✅ DUPLICATE CHECK
+    boolean exists = flatRepo.existsBySocietyAndBuildingAndFloorAndFlatNumber(
+            society,
+            building,
+            floor,
+            dto.getFlatNumber().trim()
+    );
+
+    if (exists) {
+        throw new IllegalStateException(
+                "Flat " + dto.getFlatNumber() + " already exists on this floor"
+        );
+    }
+
+    // ================= CREATE FLAT =================
+    Flat flat = new Flat();
+    flat.setFlatNumber(dto.getFlatNumber().trim());
+
+    // ✅ ALWAYS START AS VACANT
+    flat.setFlatStatus(FlatStatus.VACANT);
+
+    flat.setFloor(floor);
+    flat.setBuilding(building);
+    flat.setSociety(society);
+
+    flat = flatRepo.save(flat);
+
+
+    return mapToDto(flat);
+}
 
 
 
 // GET FLATS BY FLOOR
     @Override
-    public List<FlatDto> getFlatsByFloor(Integer floorId) {
+    public List<FlatDto> getFlatsByFloor(Long floorId) {
 
         return flatRepo.findByFloorId(floorId).stream().map(this::mapToDto).collect(Collectors.toList());
 
@@ -102,7 +115,7 @@ public class FlatServiceImpl implements FlatService {
 
 // GET FLAT BY BUILDING
     @Override
-    public List<FlatDto> getFlatsByBuilding(Integer buildingId) {
+    public List<FlatDto> getFlatsByBuilding(Long buildingId) {
         return flatRepo.findByBuildingId(buildingId)
                 .stream().map(this::mapToDto).collect(Collectors.toList());
     }
@@ -110,7 +123,7 @@ public class FlatServiceImpl implements FlatService {
 
 // GET FLAT BY SOCIETY
     @Override
-    public List<FlatDto> getFlatsBySociety(Integer societyId) {
+    public List<FlatDto> getFlatsBySociety(Long societyId) {
         return flatRepo.findBySocietyId(societyId)
                 .stream().map(this::mapToDto).collect(Collectors.toList());
     }
@@ -118,7 +131,7 @@ public class FlatServiceImpl implements FlatService {
 
 // GET FLATS IN A SOCIETY BY STATUS
     @Override
-    public List<FlatDto> getFlatsBySocietyAndStatus(Integer societyId, FlatStatus status) {
+    public List<FlatDto> getFlatsBySocietyAndStatus(Long societyId, FlatStatus status) {
 
         return flatRepo.findBySocietyIdAndFlatStatus(societyId, status)
                 .stream()
@@ -132,7 +145,7 @@ public class FlatServiceImpl implements FlatService {
 // GET FLATS COUNT IN A SOCIETY
     @Override
     public long countFlatsBySocietyAndStatus(
-            Integer societyId,
+            Long societyId,
             FlatStatus status
     ) {
         return flatRepo.countBySocietyIdAndFlatStatus(societyId, status);
@@ -142,8 +155,8 @@ public class FlatServiceImpl implements FlatService {
 // GET FLATS COUNT IN A BUILDING
     @Override
     public long countFlatsByBuildingAndStatus(
-            Integer societyId,
-            Integer buildingId,
+            Long societyId,
+            Long buildingId,
             FlatStatus status
     ) {
         return flatRepo.countBySocietyIdAndBuildingIdAndFlatStatus(
@@ -156,9 +169,9 @@ public class FlatServiceImpl implements FlatService {
 // GET FLATS COUNT IN A FLOOR
     @Override
     public long countFlatsByFloorAndStatus(
-            Integer societyId,
-            Integer buildingId,
-            Integer floorId,
+            Long societyId,
+            Long buildingId,
+            Long floorId,
             FlatStatus status
     ) {
         return flatRepo.countBySocietyIdAndBuildingIdAndFloorIdAndFlatStatus(
@@ -174,7 +187,7 @@ public class FlatServiceImpl implements FlatService {
 
 // GET FLATS BY FLOOR AND STATUS
     @Override
-    public List<FlatDto> getFlatsByFloorAndStatus(Integer floorId, FlatStatus status) {
+    public List<FlatDto> getFlatsByFloorAndStatus(Long floorId, FlatStatus status) {
         return flatRepo.findByFloorIdAndFlatStatus(floorId, status)
                 .stream().map(this::mapToDto).collect(Collectors.toList());
     }
@@ -182,7 +195,7 @@ public class FlatServiceImpl implements FlatService {
 
 // GET FLATS BY ID
     @Override
-    public FlatDto getFlatById(Integer flatId) {
+    public FlatDto getFlatById(Long flatId) {
         Flat flat = flatRepo.findById(flatId)
                 .orElseThrow(() -> new RuntimeException("Flat not found"));
         return mapToDto(flat);
@@ -191,7 +204,7 @@ public class FlatServiceImpl implements FlatService {
 
 // GET FLATS COUNT BY FLOOR
     @Override
-    public FlatCountResponse getFlatCountByFloor(Integer floorId) {
+    public FlatCountResponse getFlatCountByFloor(Long floorId) {
 
         List<Object[]> result = flatRepo.countByFloorStatus(floorId);
 
@@ -200,14 +213,14 @@ public class FlatServiceImpl implements FlatService {
 
         for (Object[] row : result) {
             FlatStatus status = (FlatStatus) row[0];
-            Integer count = ((Long) row[1]).intValue();
+            int count = ((Long) row[1]).intValue();
 
             map.put(status, count);
             total += count;
         }
 
         FlatCountResponse response = new FlatCountResponse();
-        response.setTotalFlats(total);
+        response.setTotalFlats((long) total);
         response.setStatusWiseCount(map);
 
         return response;
@@ -216,7 +229,7 @@ public class FlatServiceImpl implements FlatService {
 
 // GET FLATS COUNT BY BUILDING
     @Override
-    public FlatCountResponse getFlatCountByBuilding(Integer buildingId) {
+    public FlatCountResponse getFlatCountByBuilding(Long buildingId) {
 
         List<Object[]> result = flatRepo.countByBuildingStatus(buildingId);
 
@@ -225,14 +238,14 @@ public class FlatServiceImpl implements FlatService {
 
         for (Object[] row : result) {
             FlatStatus status = (FlatStatus) row[0];
-            Integer count = ((Long) row[1]).intValue();
+            int count = ((Long) row[1]).intValue();
 
             map.put(status, count);
             total += count;
         }
 
         FlatCountResponse response = new FlatCountResponse();
-        response.setTotalFlats(total);
+        response.setTotalFlats((long) total);
         response.setStatusWiseCount(map);
 
         return response;
@@ -242,7 +255,7 @@ public class FlatServiceImpl implements FlatService {
 
 // GET FLATS COUNT BY SOCIETY
     @Override
-    public FlatCountResponse getFlatCountBySociety(Integer societyId) {
+    public FlatCountResponse getFlatCountBySociety(Long societyId) {
 
         List<Object[]> result = flatRepo.countBySocietyStatus(societyId);
 
@@ -251,14 +264,14 @@ public class FlatServiceImpl implements FlatService {
 
         for (Object[] row : result) {
             FlatStatus status = (FlatStatus) row[0];
-            Integer count = ((Long) row[1]).intValue();
+            int count = ((Long) row[1]).intValue();
 
             map.put(status, count);
             total += count;
         }
 
         FlatCountResponse response = new FlatCountResponse();
-        response.setTotalFlats(total);
+        response.setTotalFlats((long) total);
         response.setStatusWiseCount(map);
 
         return response;
@@ -267,28 +280,40 @@ public class FlatServiceImpl implements FlatService {
 
 
 // UPDATE FLAT (SAFE)
-    @Override
-    public FlatDto updateFlat(Integer flatId, FlatDto dto) {
+@Override
+public FlatDto updateFlat(Long flatId, FlatDto dto) {
 
-        Flat flat = flatRepo.findById(flatId)
-                .orElseThrow(() -> new RuntimeException("Flat not found"));
+    Flat flat = flatRepo.findById(flatId)
+            .orElseThrow(() -> new RuntimeException("Flat not found"));
 
-        // update only if value is provided
-        if (dto.getFlatNumber() != null) {
-            flat.setFlatNumber(dto.getFlatNumber());
-        }
+    // ================= RULE CHECK =================
+    boolean isOccupied =
+            flat.getFlatStatus() == FlatStatus.OWNER_OCCUPIED ||
+                    flat.getFlatStatus() == FlatStatus.TENANT_OCCUPIED;
 
-        if (dto.getFlatStatus() != null) {
-            flat.setFlatStatus(dto.getFlatStatus());
-        }
-
-        return mapToDto(flatRepo.save(flat));
+    if (isOccupied && dto.getFlatStatus() != null) {
+        throw new RuntimeException(
+                "❌ Flat is occupied. Status update not allowed"
+        );
     }
+
+    // ================= UPDATE SAFE FIELDS =================
+    if (dto.getFlatNumber() != null) {
+        flat.setFlatNumber(dto.getFlatNumber());
+    }
+
+    // ONLY allow status change if VACANT/allowed states
+    if (dto.getFlatStatus() != null && !isOccupied) {
+        flat.setFlatStatus(dto.getFlatStatus());
+    }
+
+    return mapToDto(flatRepo.save(flat));
+}
 
 
 // UPDATE FLATS BY STATUS
     @Override
-    public void updateFlatStatus(Integer flatId, FlatStatus status) {
+    public void updateFlatStatus(Long flatId, FlatStatus status) {
         Flat flat = flatRepo.findById(flatId)
                 .orElseThrow(() -> new ResourceNotFoundException("Flat", "id", flatId));
 
@@ -299,7 +324,7 @@ public class FlatServiceImpl implements FlatService {
 
     /* ================= SOCIETY LEVEL ================= */
     @Override
-    public void blockFlatsBySociety(Integer societyId) {
+    public void blockFlatsBySociety(Long societyId) {
         List<Flat> flats = flatRepo.findBySocietyId(societyId);
         flats.forEach(f -> f.setFlatStatus(FlatStatus.BLOCKED));
         flatRepo.saveAll(flats);
@@ -307,7 +332,7 @@ public class FlatServiceImpl implements FlatService {
 
     /* ================= BUILDING LEVEL ================= */
     @Override
-    public void blockFlatsByBuilding(Integer buildingId) {
+    public void blockFlatsByBuilding(Long buildingId) {
         List<Flat> flats = flatRepo.findByBuildingId(buildingId);
         flats.forEach(f -> f.setFlatStatus(FlatStatus.BLOCKED));
         flatRepo.saveAll(flats);
@@ -315,7 +340,7 @@ public class FlatServiceImpl implements FlatService {
 
     /* ================= FLOOR LEVEL ================= */
     @Override
-    public void blockFlatsByFloor(Integer floorId) {
+    public void blockFlatsByFloor(Long floorId) {
         List<Flat> flats = flatRepo.findByFloorId(floorId);
         flats.forEach(f -> f.setFlatStatus(FlatStatus.BLOCKED));
         flatRepo.saveAll(flats);
@@ -328,7 +353,7 @@ public class FlatServiceImpl implements FlatService {
 
 // SOFT DELETE
     @Override
-    public void softDeleteFlat(Integer flatId) {
+    public void softDeleteFlat(Long flatId) {
         Flat flat = flatRepo.findById(flatId)
                 .orElseThrow(() -> new RuntimeException("Flat not found"));
 

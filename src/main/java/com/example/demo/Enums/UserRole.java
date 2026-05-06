@@ -9,6 +9,7 @@ public enum UserRole {
         SUB_ADMIN,
         STAFF,
         OWNER_OCCUPIED,
-        TENANT
+        TENANT,
+        LEGAL_OWNER
 
 }

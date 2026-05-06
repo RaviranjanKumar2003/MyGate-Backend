@@ -1,12 +1,12 @@
 package com.example.demo.Payloads;
 
 public class NoticeSeenDto {
-    private Integer userId;
+
+    private Long userId;
     private String userRole;
 
     private String userName;
 
-    // society admin fields
     private String societyName;
 
     // normal user fields
@@ -15,14 +15,15 @@ public class NoticeSeenDto {
     private String floor;
     private String flat;
 
+
 // GETTERS & SETTERS
 
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

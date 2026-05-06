@@ -11,31 +11,31 @@ public interface MonthlyBillService {
 
 
     //  Get single bill
-    MonthlyBillDto getBillById(Integer billId);
+    MonthlyBillDto getBillById(Long billId);
 
 
     //  Get bills of society
-    List<MonthlyBillDto> getBillsBySociety(Integer societyId);
+    List<MonthlyBillDto> getBillsBySociety(Long societyId);
 
 
     //  Get bills of user (Tenant / Owner)
-    List<MonthlyBillDto> getBillsByUser(Integer userId);
+    List<MonthlyBillDto> getBillsByUser(Long userId);
 
     // 🔹 Super Admin created bills
     List<MonthlyBillDto> getBillsCreatedBySuperAdmin();
 
     // 🔹 (Optional) society-wise
-    List<MonthlyBillDto> getBillsCreatedBySuperAdminBySociety(Integer societyId);
+    List<MonthlyBillDto> getBillsCreatedBySuperAdminBySociety(Long societyId);
 
-    List<MonthlyBillDto> getBillsCreatedBySocietyAdmin(Integer societyId);
+    List<MonthlyBillDto> getBillsCreatedBySocietyAdmin(Long societyId);
 
 
     //  Update status (after payment)
-    MonthlyBillDto updateBillStatus(Integer billId,Integer societyId,Integer userId,UserRole updaterRole);
+    MonthlyBillDto updateBillStatus(Long billId,Long societyId,Long userId,UserRole updaterRole);
 
 
     //  Delete bill (only if no payment)
-    void deleteBill(Integer billId);
+    void deleteBill(Long billId);
 
 
 }

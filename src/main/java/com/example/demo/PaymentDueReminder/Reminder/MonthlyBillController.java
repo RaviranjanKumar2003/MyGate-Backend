@@ -38,14 +38,14 @@ public class MonthlyBillController {
 
 // GET MONTHLY BILL BY ID
     @GetMapping("/{billId}")
-    public ResponseEntity<MonthlyBillDto> getById(@PathVariable Integer billId) {
+    public ResponseEntity<MonthlyBillDto> getById(@PathVariable Long billId) {
         return ResponseEntity.ok(monthlyBillService.getBillById(billId));
     }
 
 
 //  Society bills
     @GetMapping("/society/{societyId}")
-    public ResponseEntity<List<MonthlyBillDto>> getBySociety(@PathVariable Integer societyId) {
+    public ResponseEntity<List<MonthlyBillDto>> getBySociety(@PathVariable Long societyId) {
         return ResponseEntity.ok(
                 monthlyBillService.getBillsBySociety(societyId)
         );
@@ -54,7 +54,7 @@ public class MonthlyBillController {
 
 //  User bills (Tenant / Owner)
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<MonthlyBillDto>> getByUser(@PathVariable Integer userId) {
+    public ResponseEntity<List<MonthlyBillDto>> getByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(
                 monthlyBillService.getBillsByUser(userId)
         );
@@ -68,7 +68,7 @@ public class MonthlyBillController {
 // GET MONTHLY BILL BY SUPER ADMIN (JO BILL SOCIETY ADMIN KE LIYE CREATE KIYA HAI) BY SOCIETY
     @GetMapping("/super-admin/society/{societyId}")
     public List<MonthlyBillDto> getSuperAdminBillsBySociety(
-            @PathVariable Integer societyId
+            @PathVariable Long societyId
     ) {
         return monthlyBillService.getBillsCreatedBySuperAdminBySociety(societyId);
     }
@@ -76,7 +76,7 @@ public class MonthlyBillController {
 // society admin ke khud ka create kiya huaa bills
     @GetMapping("/society-admin/society/{societyId}")
     public List<MonthlyBillDto> getSocietyAdminBills(
-            @PathVariable Integer societyId
+            @PathVariable Long societyId
     ) {
         return monthlyBillService.getBillsCreatedBySocietyAdmin(societyId);
     }
@@ -85,8 +85,8 @@ public class MonthlyBillController {
 //  Update status
    @PutMapping("society/{societyId}/billId/{billId}/status")
    public ResponseEntity<MonthlyBillDto> updateStatus(
-           @PathVariable Integer billId,
-           @PathVariable Integer societyId,
+           @PathVariable Long billId,
+           @PathVariable Long societyId,
            Authentication authentication
    ) {
        String email = authentication.getName(); // ✅ always works
@@ -109,7 +109,7 @@ public class MonthlyBillController {
 
 //  Delete bill
     @DeleteMapping("/{billId}")
-    public ResponseEntity<Void> delete(@PathVariable Integer billId) {
+    public ResponseEntity<Void> delete(@PathVariable Long billId) {
         monthlyBillService.deleteBill(billId);
         return ResponseEntity.noContent().build();
     }

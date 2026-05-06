@@ -1,8 +1,7 @@
 package com.example.demo.Services;
 
-import com.example.demo.Payloads.SocietyAdminDto;
+import com.example.demo.Payloads.BuildingFullDto;
 import com.example.demo.Payloads.SocietyDto;
-import com.example.demo.SuperAdminFolder.SuperAdminDto;
 
 import java.util.List;
 
@@ -18,16 +17,19 @@ public interface SocietyService {
     List<SocietyDto> getAllDeActiveSocieties();
 
 // GET BY ID
-    SocietyDto getSocietyById(Integer id);
+    SocietyDto getSocietyById(Long id);
 
     // UPDATE
-    SocietyDto updateSociety(SocietyDto societyDto, Integer id);
+    SocietyDto updateSociety(SocietyDto societyDto, Long id);
 
     // DELETE
-    void deleteSociety(Integer id);
+    void deleteSociety(Long id);
 
     // SEARCH
     List<SocietyDto> searchSociety(String keyword);
+
+
+    public List<BuildingFullDto> getFullBuildings(Long societyId);
 
 
 

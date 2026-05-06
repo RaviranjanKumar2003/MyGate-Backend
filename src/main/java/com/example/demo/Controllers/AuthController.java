@@ -76,13 +76,13 @@ public class AuthController {
                 .getAuthority()
                 .replace("ROLE_", "");
 
-        Integer userId;
+        Long userId;
         String email = request.getEmail();
         String name = null;
-        Integer societyId = null;
+        Long societyId = null;
         String societyName = null;
 
-        // ⭐ ADD THIS
+        // ADD THIS
         NormalUserType userType = null;
 
         switch (role) {
@@ -93,7 +93,7 @@ public class AuthController {
                         .findByEmail(email)
                         .orElseThrow(() -> new RuntimeException("SuperAdmin not found"));
 
-                userId = sa.getId();
+                userId = (long) Math.toIntExact(sa.getId());
             }
 
             case "SOCIETY_ADMIN" -> {
@@ -102,9 +102,9 @@ public class AuthController {
                         .findByAdminEmail(email)
                         .orElseThrow(() -> new RuntimeException("SocietyAdmin not found"));
 
-                userId = soc.getId();
+                userId = (long) Math.toIntExact(soc.getId());
                 name = soc.getAdminName();
-                societyId = soc.getSociety().getId();
+                societyId = (long) Math.toIntExact(soc.getSociety().getId());
                 societyName = soc.getSociety().getName();
 
                 userType = NormalUserType.SOCIETY_ADMIN;
@@ -116,14 +116,14 @@ public class AuthController {
                         .findByEmail(email)
                         .orElseThrow(() -> new RuntimeException("Staff not found"));
 
-                userId = staff.getId();
+                userId = (long) Math.toIntExact(staff.getId());
 
                 User user = userRepository
                         .findByEmail(email)
                         .orElseThrow(() -> new RuntimeException("Staff Not Found"));
 
                 name = user.getName();
-                societyId = user.getSociety().getId();
+                societyId = (long) Math.toIntExact(user.getSociety().getId());
                 societyName = user.getSociety().getName();
             }
 
@@ -133,9 +133,9 @@ public class AuthController {
                         .findByEmail(email)
                         .orElseThrow(() -> new RuntimeException("User not found"));
 
-                userId = user.getId();
+                userId = (long) Math.toIntExact(user.getId());
                 name = user.getName();
-                societyId = user.getSociety().getId();
+                societyId = (long) Math.toIntExact(user.getSociety().getId());
                 societyName = user.getSociety().getName();
 
                 NormalUser normalUser = normalUserRepository
@@ -154,7 +154,7 @@ public class AuthController {
                         userId,
                         token,
                         userRole,
-                        userType,   // ⭐ ADD THIS
+                        userType,   // ADD THIS
                         email,
                         name,
                         societyId,

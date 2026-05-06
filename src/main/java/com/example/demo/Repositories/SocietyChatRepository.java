@@ -5,10 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SocietyChatRepository extends JpaRepository<SocietyChat, Integer> {
+public interface SocietyChatRepository extends JpaRepository<SocietyChat, Long> {
 
-    List<SocietyChat> findBySocietyIdOrderByCreatedAtAsc(Integer societyId);
+    List<SocietyChat> findBySocietyIdOrderByCreatedAtAsc(Long societyId);
 
-    List<SocietyChat> findBySocietyId(Integer societyId);
+    List<SocietyChat> findBySocietyId(Long societyId);
 
 }

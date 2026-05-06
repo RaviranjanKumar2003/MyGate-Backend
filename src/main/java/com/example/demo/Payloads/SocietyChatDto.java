@@ -9,9 +9,9 @@ import java.util.Set;
 
 public class SocietyChatDto {
 
-    private Integer id;
-    private Integer societyId;
-    private Integer senderId;
+    private Long id;
+    private Long societyId;
+    private Long senderId;
     private String senderName;
     private UserRole role;
     private NormalUserType userType;
@@ -26,28 +26,28 @@ public class SocietyChatDto {
 
     private boolean seen;
 
-    private Set<Integer> seenByUsers;
+    private Set<Long> seenByUsers;
 
     private Long tempId;
 
     private String fileType;
 
-    private Integer replyToMessageId;
+    private Long replyToMessageId;
     private String replyToMessageText;
     private String replyToSenderName;
 
     private String replyToFileType;
 
 
-// GETTERS & SETTERS & CONSTRUCTOR
+// CONSTRUCTOR
 
     public SocietyChatDto() {
     }
 
     public SocietyChatDto(
-            Integer id,
-            Integer societyId,
-            Integer senderId,
+            Long id,
+            Long societyId,
+            Long senderId,
             String senderName,
             UserRole role,
             NormalUserType userType,
@@ -64,20 +64,56 @@ public class SocietyChatDto {
         this.createdAt = createdAt;
     }
 
+
+// GETTERS & SETTERS
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public Long getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(Long senderId) {
+        this.senderId = senderId;
+    }
+
+    public Set<Long> getSeenByUsers() {
+        return seenByUsers;
+    }
+
+    public void setSeenByUsers(Set<Long> seenByUsers) {
+        this.seenByUsers = seenByUsers;
+    }
+
+    public Long getReplyToMessageId() {
+        return replyToMessageId;
+    }
+
+    public void setReplyToMessageId(Long replyToMessageId) {
+        this.replyToMessageId = replyToMessageId;
+    }
+
     public String getReplyToFileType() {
         return replyToFileType;
     }
 
     public void setReplyToFileType(String replyToFileType) {
         this.replyToFileType = replyToFileType;
-    }
-
-    public Integer getReplyToMessageId() {
-        return replyToMessageId;
-    }
-
-    public void setReplyToMessageId(Integer replyToMessageId) {
-        this.replyToMessageId = replyToMessageId;
     }
 
     public String getReplyToMessageText() {
@@ -94,14 +130,6 @@ public class SocietyChatDto {
 
     public void setReplyToSenderName(String replyToSenderName) {
         this.replyToSenderName = replyToSenderName;
-    }
-
-    public Set<Integer> getSeenByUsers() {
-        return seenByUsers;
-    }
-
-    public void setSeenByUsers(Set<Integer> seenByUsers) {
-        this.seenByUsers = seenByUsers;
     }
 
     public String getFileType() {
@@ -144,14 +172,6 @@ public class SocietyChatDto {
         this.edited = edited;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public boolean isDeletedForEveryone() {
         return deletedForEveryone;
     }
@@ -182,22 +202,6 @@ public class SocietyChatDto {
 
     public void setUserType(NormalUserType userType) {
         this.userType = userType;
-    }
-
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
-    }
-
-    public Integer getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(Integer senderId) {
-        this.senderId = senderId;
     }
 
     public String getSenderName() {

@@ -10,7 +10,7 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     /* ================= CORE ================= */
 
@@ -26,7 +26,7 @@ public class Payment {
 
     /* ================= BILL LINK ================= */
 
-    private Integer billId;          // MonthlyBill ID (IMPORTANT)
+    private Long billId;          // MonthlyBill ID (IMPORTANT)
 
     /* ================= GATEWAY ================= */
 
@@ -39,15 +39,15 @@ public class Payment {
 
     /* ================= USER / SOCIETY ================= */
 
-    private Integer paidById;
+    private Long paidById;
     private String paidByRole;        // TENANT, OWNER
 
     private String payerName;
 
-    private Integer receivedById;
+    private Long receivedById;
     private String receivedByRole;    // SOCIETY_ADMIN
 
-    private Integer societyId;
+    private Long societyId;
     private String societyName;
 
     /* ================= DATES ================= */
@@ -61,12 +61,20 @@ public class Payment {
 // GETTERS & SETTERS
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setPaidById(Long paidById) {
+        this.paidById = paidById;
+    }
+
+    public void setReceivedById(Long receivedById) {
+        this.receivedById = receivedById;
     }
 
     public Double getAmount() {
@@ -102,12 +110,16 @@ public class Payment {
         return paymentMode;
     }
 
-    public Integer getBillId() {
+    public Long getBillId() {
         return billId;
     }
 
-    public void setBillId(Integer billId) {
+    public void setBillId(Long billId) {
         this.billId = billId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
     }
 
     public String getProvider() {
@@ -150,12 +162,8 @@ public class Payment {
         this.upiApp = upiApp;
     }
 
-    public Integer getPaidById() {
+    public Long getPaidById() {
         return paidById;
-    }
-
-    public void setPaidById(Integer paidById) {
-        this.paidById = paidById;
     }
 
     public String getPaidByRole() {
@@ -174,12 +182,8 @@ public class Payment {
         this.payerName = payerName;
     }
 
-    public Integer getReceivedById() {
+    public Long getReceivedById() {
         return receivedById;
-    }
-
-    public void setReceivedById(Integer receivedById) {
-        this.receivedById = receivedById;
     }
 
     public String getReceivedByRole() {
@@ -190,12 +194,8 @@ public class Payment {
         this.receivedByRole = receivedByRole;
     }
 
-    public Integer getSocietyId() {
+    public Long getSocietyId() {
         return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
     }
 
     public String getSocietyName() {

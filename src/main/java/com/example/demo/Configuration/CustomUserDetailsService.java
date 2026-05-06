@@ -7,6 +7,7 @@ import com.example.demo.Repositories.StaffRepository;
 import com.example.demo.Repositories.UserRepository;
 import com.example.demo.SuperAdminFolder.SuperAdmin;
 import com.example.demo.SuperAdminFolder.SuperAdminRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,71 +38,73 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // 1️⃣ SUPER ADMIN
+        // ================= SUPER ADMIN =================
         Optional<SuperAdmin> superAdmin = superAdminRepository.findByEmail(email);
         if (superAdmin.isPresent()) {
+            SuperAdmin admin = superAdmin.get();
+
             return new CustomUserDetails(
-                    superAdmin.get().getId(),
-                    superAdmin.get().getEmail(),
-                    superAdmin.get().getPassword(),
+                    admin.getId(),
+                    admin.getEmail(),
+                    admin.getPassword(),
                     "SUPER_ADMIN",
-                    null // global, no societyId
+                    null // no society
             );
         }
 
-        // 2️⃣ SOCIETY ADMIN
+        // ================= SOCIETY ADMIN =================
         Optional<SocietyAdmin> societyAdmin = societyAdminRepository.findByAdminEmail(email);
         if (societyAdmin.isPresent()) {
+            SocietyAdmin admin = societyAdmin.get();
+
+            if (admin.getSociety() == null) {
+                throw new RuntimeException("SocietyAdmin is not linked to any society");
+            }
+
             return new CustomUserDetails(
-                    societyAdmin.get().getId(),
-                    societyAdmin.get().getAdminEmail(),
-                    societyAdmin.get().getAdminPassword(),
+                    admin.getId(),
+                    admin.getAdminEmail(),
+                    admin.getAdminPassword(),
                     "SOCIETY_ADMIN",
-                    societyAdmin.get().getSociety().getId()
+                    admin.getSociety().getId() // ✅ correct
             );
         }
 
-        // 3️⃣ STAFF
-        // Uncomment if Staff repository ready
-    /*
-    Optional<Staff> staff = staffRepository.findByEmail(email);
-    if(staff.isPresent()){
-        return new CustomUserDetails(
-            staff.get().getId(),
-            staff.get().getEmail(),
-            staff.get().getPassword(),
-            "STAFF",
-            staff.get().getSociety().getId()
-        );
-    }
-    */
+        // ================= STAFF (Optional) =================
+        /*
+        Optional<Staff> staff = staffRepository.findByEmail(email);
+        if (staff.isPresent()) {
+            Staff s = staff.get();
 
-        // 4️⃣ NORMAL USER
+            if (s.getSociety() == null) {
+                throw new RuntimeException("Staff is not linked to any society");
+            }
+
+            return new CustomUserDetails(
+                    s.getId(),
+                    s.getEmail(),
+                    s.getPassword(),
+                    "STAFF",
+                    s.getSociety().getId()
+            );
+        }
+        */
+
+        // ================= NORMAL USER =================
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        if (user.getSociety() == null) {
+            throw new RuntimeException("User is not linked to any society");
+        }
 
         return new CustomUserDetails(
-                user.getId(),
+                user.getId(),                          // ✅ correct userId
                 user.getEmail(),
                 user.getPassword(),
-                user.getUserRole().name(),
-                user.getSociety().getId()
+                user.getUserRole().name(),            // OWNER / TENANT etc.
+                user.getSociety().getId()             // ✅ correct societyId
         );
-    }
-
-
-    // ============================== HELPER ==============================
-
-    private UserDetails buildUser(
-            String email,
-            String password,
-            String role) {
-
-        return org.springframework.security.core.userdetails.User
-                .withUsername(email)
-                .password(password)
-                .authorities("ROLE_" + role)
-                .build();
     }
 }
 

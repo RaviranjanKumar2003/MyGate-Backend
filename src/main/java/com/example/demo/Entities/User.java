@@ -1,5 +1,6 @@
 package com.example.demo.Entities;
 
+import com.example.demo.Enums.NormalUserType;
 import com.example.demo.Enums.UserRole;
 import com.example.demo.Enums.UserStatus;
 import jakarta.persistence.*;
@@ -19,7 +20,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotBlank(message = "Name is required")
     private String name;
@@ -38,8 +39,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole=UserRole.PENDING;
 
-//    @Enumerated(EnumType.STRING)
-//    private NormalUserType normalUserType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_status", nullable = false)
@@ -94,17 +93,53 @@ public class User {
 
     private String qrCodePath;
 
+    private Boolean deleted = false;
+
+    private LocalDateTime societyJoinedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "normal_user_type")
+    private NormalUserType normalUserType;
+
 
 // GETTERS & SETTERS
 
 
-//    public NormalUserType getNormalUserType() {
-//        return normalUserType;
-//    }
-//
-//    public void setNormalUserType(NormalUserType normalUserType) {
-//        this.normalUserType = normalUserType;
-//    }
+    public String getBuildingName() {
+        return buildingName;
+    }
+
+    public void setBuildingName(String buildingName) {
+        this.buildingName = buildingName;
+    }
+
+    public void setFloorNumber(String floorNumber) {
+        this.floorNumber = floorNumber;
+    }
+
+    public NormalUserType getNormalUserType() {
+        return normalUserType;
+    }
+
+    public void setNormalUserType(NormalUserType normalUserType) {
+        this.normalUserType = normalUserType;
+    }
+
+    public LocalDateTime getSocietyJoinedAt() {
+        return societyJoinedAt;
+    }
+
+    public void setSocietyJoinedAt(LocalDateTime societyJoinedAt) {
+        this.societyJoinedAt = societyJoinedAt;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public String getEntryCode() {
         return entryCode;
@@ -130,20 +165,8 @@ public class User {
         this.societyName = societyName;
     }
 
-    public String getBuildingName() {
-        return buildingName;
-    }
-
-    public void setBuildingName(String buildingName) {
-        this.buildingName = buildingName;
-    }
-
     public String getFloorNumber() {
         return floorNumber;
-    }
-
-    public void setFloorNumber(String floorNumber) {
-        this.floorNumber = floorNumber;
     }
 
     public String getFlatNumber() {
@@ -219,11 +242,11 @@ public class User {
         this.userStatus = userStatus;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

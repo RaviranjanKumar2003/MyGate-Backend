@@ -10,27 +10,24 @@ public class Offer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(name = "product_id", insertable = false, updatable = false)
-    private Integer productId;      // Which product this offer is for
-    private Integer buyerId;        // Member placing the offer
+    private Long id;
+    private Long buyerId;        // Member placing the offer
     private BigDecimal offerPrice;
 
     private LocalDateTime offerTime;
 
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private Long refId;        // productId ya flatListingId
+    private String refType;
+
 
 // CONSTRUCTORS
     public Offer() {}
 
-    public Offer(Integer id, Integer productId, Integer buyerId, BigDecimal offerPrice, LocalDateTime offerTime) {
+    public Offer(Long id,Long refId, Long buyerId, BigDecimal offerPrice, LocalDateTime offerTime) {
         this.id = id;
-        this.productId = productId;
+        this.refId=refId;
         this.buyerId = buyerId;
         this.offerPrice = offerPrice;
         this.offerTime = offerTime;
@@ -39,8 +36,20 @@ public class Offer {
 // GETTERS & SETTERS
 
 
-    public Product getProduct() {
-        return product;
+    public Long getRefId() {
+        return refId;
+    }
+
+    public void setRefId(Long refId) {
+        this.refId = refId;
+    }
+
+    public String getRefType() {
+        return refType;
+    }
+
+    public void setRefType(String refType) {
+        this.refType = refType;
     }
 
     public String getStatus() {
@@ -51,27 +60,19 @@ public class Offer {
         this.status = status;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
-
-    public Integer getBuyerId() {
+    public Long getBuyerId() {
         return buyerId;
     }
 
-    public void setBuyerId(Integer buyerId) {
+    public void setBuyerId(Long buyerId) {
         this.buyerId = buyerId;
     }
 

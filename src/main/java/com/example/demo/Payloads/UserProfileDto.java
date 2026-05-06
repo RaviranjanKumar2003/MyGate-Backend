@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class UserProfileDto {
 
     // Common fields for all users
-    private Integer id;
+    private Long id;
     private String name;
     private String email;
     private String imageURL;
@@ -20,9 +20,9 @@ public class UserProfileDto {
     private LocalDateTime createdAt;
 
     // NORMAL_USER specific
-    private Integer buildingId;
-    private Integer floorId;
-    private Integer flatId;
+    private Long buildingId;
+    private Long floorId;
+    private Long flatId;
     private NormalUserType normalUserType;
 
     // STAFF specific
@@ -34,6 +34,30 @@ public class UserProfileDto {
 // Getters & Setters
 
 
+    public Long getFloorId() {
+        return floorId;
+    }
+
+    public void setFloorId(Long floorId) {
+        this.floorId = floorId;
+    }
+
+    public Long getFlatId() {
+        return flatId;
+    }
+
+    public void setFlatId(Long flatId) {
+        this.flatId = flatId;
+    }
+
+    public Long getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(Long buildingId) {
+        this.buildingId = buildingId;
+    }
+
     public String getImageURL() {
         return imageURL;
     }
@@ -42,11 +66,11 @@ public class UserProfileDto {
         this.imageURL = imageURL;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -104,30 +128,6 @@ public class UserProfileDto {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Integer getBuildingId() {
-        return buildingId;
-    }
-
-    public void setBuildingId(Integer buildingId) {
-        this.buildingId = buildingId;
-    }
-
-    public Integer getFloorId() {
-        return floorId;
-    }
-
-    public void setFloorId(Integer floorId) {
-        this.floorId = floorId;
-    }
-
-    public Integer getFlatId() {
-        return flatId;
-    }
-
-    public void setFlatId(Integer flatId) {
-        this.flatId = flatId;
     }
 
     public NormalUserType getNormalUserType() {

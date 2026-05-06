@@ -9,7 +9,7 @@ public class Society {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String name;
 
@@ -35,6 +35,10 @@ public class Society {
 // Getters & Setters
 
 
+    public Long getId() {
+        return id;
+    }
+
     public SocietyAdmin getSocietyAdmin() {
         return societyAdmin;
     }
@@ -43,11 +47,7 @@ public class Society {
         this.societyAdmin = societyAdmin;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

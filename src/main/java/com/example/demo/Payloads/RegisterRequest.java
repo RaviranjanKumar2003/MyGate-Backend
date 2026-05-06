@@ -2,7 +2,7 @@ package com.example.demo.Payloads;
 
 public class RegisterRequest {
 
-    private Integer id;
+    private Long id;
     private String name;
     private String email;
     private String mobileNumber;
@@ -11,11 +11,11 @@ public class RegisterRequest {
 // GETTERS & SETTERS
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

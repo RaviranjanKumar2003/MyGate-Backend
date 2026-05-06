@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 
-    private int id;
+    private Long id;
 
     private String name;
 
@@ -29,13 +29,13 @@ public class UserDto {
     private LocalDateTime createdAt;
 
     private Society society;
-    private Integer societyId;
+    private Long societyId;
 
 
     // NORMAL USER
-    private Integer buildingId;
-    private Integer floorId;
-    private Integer flatId;
+    private Long buildingId;
+    private Long floorId;
+    private Long flatId;
     private NormalUserType normalUserType;
 
     // STAFF
@@ -55,8 +55,70 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String qrCodePath;
 
+    private Double price; // for OWNER
+    private Double rent;  // for TENANT
+
+    private Boolean isLiving;
+
 // GETTERS & SETTERS
 
+
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public Long getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(Long buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public Long getFloorId() {
+        return floorId;
+    }
+
+    public void setFloorId(Long floorId) {
+        this.floorId = floorId;
+    }
+
+    public Long getFlatId() {
+        return flatId;
+    }
+
+    public void setFlatId(Long flatId) {
+        this.flatId = flatId;
+    }
+
+    public Boolean getIsLiving() {
+        return isLiving;
+    }
+
+    public void setIsLiving(Boolean living) {
+        isLiving = living;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getRent() {
+        return rent;
+    }
+
+    public void setRent(Double rent) {
+        this.rent = rent;
+    }
 
     public String getEntryCode() {
         return entryCode;
@@ -104,30 +166,6 @@ public class UserDto {
 
     public void setFlatNumber(String flatNumber) {
         this.flatNumber = flatNumber;
-    }
-
-    public Integer getBuildingId() {
-        return buildingId;
-    }
-
-    public void setBuildingId(Integer buildingId) {
-        this.buildingId = buildingId;
-    }
-
-    public Integer getFloorId() {
-        return floorId;
-    }
-
-    public void setFloorId(Integer floorId) {
-        this.floorId = floorId;
-    }
-
-    public Integer getFlatId() {
-        return flatId;
-    }
-
-    public void setFlatId(Integer flatId) {
-        this.flatId = flatId;
     }
 
     public NormalUserType getNormalUserType() {
@@ -178,14 +216,6 @@ public class UserDto {
         this.society = society;
     }
 
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
-    }
-
     public String getMobileNumber() {
         return mobileNumber;
     }
@@ -211,11 +241,11 @@ public class UserDto {
         this.userStatus = userStatus;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -2,27 +2,56 @@ package com.example.demo.Payloads;
 
 import com.example.demo.Enums.FloorStatus;
 
+import java.util.List;
+
 public class FloorDto {
 
-    private int id;
+    private Long id;
 
     private String floorNumber;
 
     private FloorStatus floorStatus;
 
 
-    private int societyId;
-    private int buildingId;
+    private Long societyId;
+    private Long buildingId;
+
+    private List<FlatDto> flats;
+
+// CONSTRUCTORS
+    public FloorDto(Long id, String floorNumber, List<FlatDto> flats) {
+        this.id = id;
+        this.floorNumber = floorNumber;
+        this.flats = flats;
+    }
+
+    public FloorDto() {}
 
 
 // GETTERS & SETTERS
 
 
-    public int getId() {
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
+    }
+
+    public void setBuildingId(Long buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public List<FlatDto> getFlats() {
+        return flats;
+    }
+
+    public void setFlats(List<FlatDto> flats) {
+        this.flats = flats;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -42,19 +71,12 @@ public class FloorDto {
         this.floorStatus = floorStatus;
     }
 
-    public int getSocietyId() {
+    public long getSocietyId() {
         return societyId;
     }
 
-    public void setSocietyId(int societyId) {
-        this.societyId = societyId;
-    }
-
-    public int getBuildingId() {
+    public long getBuildingId() {
         return buildingId;
     }
 
-    public void setBuildingId(int buildingId) {
-        this.buildingId = buildingId;
-    }
 }

@@ -6,9 +6,9 @@ import com.example.demo.Enums.StaffType;
 
 public class StaffDto {
 
-    private Integer id;
+    private Long id;
 
-    private int userId;
+    private Long userId;
 
     private String mobileNumber;
 
@@ -24,8 +24,24 @@ public class StaffDto {
 
 
 
-    // GETTERS & SETTERS
+// GETTERS & SETTERS
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public StaffType getStaffType() {
         return staffType;
@@ -41,22 +57,6 @@ public class StaffDto {
 
     public void setStaffStatus(StaffStatus staffStatus) {
         this.staffStatus = staffStatus;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getMobileNumber() {

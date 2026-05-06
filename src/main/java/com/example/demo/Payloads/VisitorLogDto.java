@@ -8,9 +8,9 @@ public class VisitorLogDto {
 
     private Long id;
 
-    private Integer visitorId;
+    private Long visitorId;
 
-    private Integer flatId;
+    private Long flatId;
 
     private LocalDateTime inTime;
 
@@ -18,7 +18,8 @@ public class VisitorLogDto {
 
     private VisitorLogStatus visitorLogStatus;
 
-    // GETTERS & SETTERS
+
+// GETTERS & SETTERS
 
 
     public Long getId() {
@@ -29,19 +30,19 @@ public class VisitorLogDto {
         this.id = id;
     }
 
-    public Integer getVisitorId() {
+    public Long getVisitorId() {
         return visitorId;
     }
 
-    public void setVisitorId(Integer visitorId) {
+    public void setVisitorId(Long visitorId) {
         this.visitorId = visitorId;
     }
 
-    public Integer getFlatId() {
+    public Long getFlatId() {
         return flatId;
     }
 
-    public void setFlatId(Integer flatId) {
+    public void setFlatId(Long flatId) {
         this.flatId = flatId;
     }
 

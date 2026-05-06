@@ -155,7 +155,7 @@ public MonthlyBillDto createMonthlyBill(MonthlyBillDto dto, UserRole creatorRole
 
 //  GET BILL BY ID
     @Override
-    public MonthlyBillDto getBillById(Integer billId) {
+    public MonthlyBillDto getBillById(Long billId) {
         MonthlyBill bill = monthlyBillRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("Bill not found"));
         return mapToDto(bill);
@@ -164,7 +164,7 @@ public MonthlyBillDto createMonthlyBill(MonthlyBillDto dto, UserRole creatorRole
 
 // GET SOCIETY BILLS
     @Override
-    public List<MonthlyBillDto> getBillsBySociety(Integer societyId) {
+    public List<MonthlyBillDto> getBillsBySociety(Long societyId) {
 
         return monthlyBillRepository
                 .findBySocietyIdOrderByBillMonthDesc(societyId)
@@ -176,7 +176,7 @@ public MonthlyBillDto createMonthlyBill(MonthlyBillDto dto, UserRole creatorRole
 
 //  GET USER BILLS
     @Override
-    public List<MonthlyBillDto> getBillsByUser(Integer userId) {
+    public List<MonthlyBillDto> getBillsByUser(Long userId) {
 
         return monthlyBillRepository
                 .findByUserIdOrderByBillMonthDesc(userId)
@@ -197,7 +197,7 @@ public MonthlyBillDto createMonthlyBill(MonthlyBillDto dto, UserRole creatorRole
 
 
     @Override
-    public List<MonthlyBillDto> getBillsCreatedBySuperAdminBySociety(Integer societyId) {
+    public List<MonthlyBillDto> getBillsCreatedBySuperAdminBySociety(Long societyId) {
 
         return monthlyBillRepository
                 .findByCreatedByRoleAndSocietyIdOrderByBillMonthDesc(
@@ -211,7 +211,7 @@ public MonthlyBillDto createMonthlyBill(MonthlyBillDto dto, UserRole creatorRole
 
 
     @Override
-    public List<MonthlyBillDto> getBillsCreatedBySocietyAdmin(Integer societyId) {
+    public List<MonthlyBillDto> getBillsCreatedBySocietyAdmin(Long societyId) {
         return monthlyBillRepository
                 .findByCreatedByRoleAndSocietyIdOrderByBillMonthDesc(
                         UserRole.SOCIETY_ADMIN,
@@ -225,9 +225,9 @@ public MonthlyBillDto createMonthlyBill(MonthlyBillDto dto, UserRole creatorRole
 
 // UPDATE STATUS AFTER PAYMENT
 public MonthlyBillDto updateBillStatus(
-        Integer billId,
-        Integer societyId,
-        Integer updaterUserId,
+        Long billId,
+        Long societyId,
+        Long updaterUserId,
         UserRole updaterRole
 ) {
     MonthlyBill bill = monthlyBillRepository.findById(billId)
@@ -262,7 +262,7 @@ public MonthlyBillDto updateBillStatus(
 
     // ❌ DELETE BILL
     @Override
-    public void deleteBill(Integer billId) {
+    public void deleteBill(Long billId) {
 
         MonthlyBill bill = monthlyBillRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("Bill not found"));

@@ -20,10 +20,10 @@ public class Complaint {
     @Column(length = 1000)
     private String description;
 
-    private Integer societyId;
+    private Long societyId;
     private String societyName;
 
-    private Integer createdById;          // user / staff / renter id
+    private Long createdById;          // user / staff / renter id
     private String createdByName;
 
     private String createdByRole;         // SOCIETY_ADMIN / USER -> STAFF , RENTER ,.....
@@ -46,6 +46,7 @@ public class Complaint {
 
 
 // GETTERS & SETTERS
+
 
 
     public String getSocietyName() {
@@ -104,19 +105,19 @@ public class Complaint {
         this.description = description;
     }
 
-    public Integer getSocietyId() {
+    public Long getSocietyId() {
         return societyId;
     }
 
-    public void setSocietyId(Integer societyId) {
+    public void setSocietyId(Long societyId) {
         this.societyId = societyId;
     }
 
-    public Integer getCreatedById() {
+    public Long getCreatedById() {
         return createdById;
     }
 
-    public void setCreatedById(Integer createdById) {
+    public void setCreatedById(Long createdById) {
         this.createdById = createdById;
     }
 

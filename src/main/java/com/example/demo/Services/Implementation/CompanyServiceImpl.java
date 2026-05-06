@@ -66,7 +66,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     // ==================== IMAGE ====================
     @Override
-    public CompanyDto updateCompanyLogo(Integer userId, MultipartFile image) {
+    public CompanyDto updateCompanyLogo(Long userId, MultipartFile image) {
 
         Company company = companyRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));

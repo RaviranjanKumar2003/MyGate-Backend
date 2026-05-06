@@ -5,15 +5,15 @@ import java.util.List;
 public interface BillItemService {
 
     // ➕ Add item to bill
-    BillItemDto createBillItem(BillItemDto dto, Integer societyId);
+    BillItemDto createBillItem(BillItemDto dto, Long societyId);
 
     // 📄 Get all items of a bill
-    List<BillItemDto> getItemsByMonthlyBill(Integer monthlyBillId);
+    List<BillItemDto> getItemsByMonthlyBill(Long monthlyBillId);
 
     // ✏️ Update item
-    BillItemDto updateBillItem(Integer itemId, BillItemDto dto);
+    BillItemDto updateBillItem(Long itemId, BillItemDto dto);
 
     // ❌ Delete item
-    void deleteBillItem(Integer itemId);
+    void deleteBillItem(Long itemId);
 
 }

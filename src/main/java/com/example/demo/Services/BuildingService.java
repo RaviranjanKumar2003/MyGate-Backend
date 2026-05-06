@@ -8,27 +8,27 @@ public interface BuildingService {
 
 // CREATE BUILDING
 
-    BuildingDto createBuilding(Integer societyId, BuildingDto buildingDto);
+    BuildingDto createBuilding(Long societyId, BuildingDto buildingDto);
 
 // GET ALL PENDING BUILDING
 
-    List<BuildingDto> getAllActiveBuildings(Integer societyId);
+    List<BuildingDto> getAllActiveBuildings(Long societyId);
 
 // GET ALL DE-PENDING BUILDING
 
-    List<BuildingDto> getAllDeActiveBuildings(Integer societyId);
+    List<BuildingDto> getAllDeActiveBuildings(Long societyId);
 
 // GET BUILDING BY ID
 
-    BuildingDto getBuildingById(Integer buildingId);
+    BuildingDto getBuildingById(Long buildingId);
 
 // UPDATE BUILDING
 
-    BuildingDto updateBuilding(BuildingDto dto, Integer buildingId);
+    BuildingDto updateBuilding(BuildingDto dto, Long buildingId);
 
 // DELETE BUILDING(SOFT DELETE)
 
-    void deleteBuilding(Integer buildingId);
+    void deleteBuilding(Long buildingId);
 
 // SEARCH BUILDING
     List<BuildingDto> searchBuildingByName(String keyword);

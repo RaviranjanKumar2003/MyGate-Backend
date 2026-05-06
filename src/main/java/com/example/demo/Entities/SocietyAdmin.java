@@ -5,13 +5,15 @@ import com.example.demo.Enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "society_admins")
 public class SocietyAdmin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // ================= BASIC DETAILS =================
     private String adminName;
@@ -50,14 +52,25 @@ public class SocietyAdmin {
         }
     }
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
 // ================= GETTERS & SETTERS =
 
 
-    public Integer getId() {
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

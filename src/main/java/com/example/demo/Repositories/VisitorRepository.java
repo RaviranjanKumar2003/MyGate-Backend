@@ -14,33 +14,33 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface VisitorRepository extends JpaRepository<Visitor, Integer> {
+public interface VisitorRepository extends JpaRepository<Visitor, Long> {
 
     Optional<Visitor> findByMobileNumber(String mobileNumber);
 
-    List<Visitor> findBySocietyIdAndVisitorStatus(Integer societyId, VisitorStatus status);
+    List<Visitor> findBySocietyIdAndVisitorStatus(Long societyId, VisitorStatus status);
 
-    List<Visitor> findBySocietyIdAndVisitorType(Integer societyId, VisitorType visitorType);
+    List<Visitor> findBySocietyIdAndVisitorType(Long societyId, VisitorType visitorType);
 
     int countByMobileNumberAndCreatedAtAfter(String mobileNumber, LocalDateTime dateTime);
 
-    List<Visitor> findBySociety_Id(Integer societyId);
+    List<Visitor> findBySociety_Id(Long societyId);
 
-    Optional<Visitor> findByIdAndSociety_Id(Integer visitorId, Integer societyId);
+    Optional<Visitor> findByIdAndSociety_Id(Long visitorId, Long societyId);
 
-    List<Visitor> findByFlat_Id(Integer flatId);
+    List<Visitor> findByFlat_Id(Long flatId);
 
     List<Visitor> findBySociety_IdAndVisitorStatus(
-            Integer societyId,
+            Long societyId,
             VisitorStatus visitorStatus
     );
 
     List<Visitor> findByFlat_IdAndVisitorStatus(
-            Integer flatId,
+            Long flatId,
             VisitorStatus visitorStatus
     );
 
-    Optional<Visitor> findByIdAndSocietyId(Integer id, Integer societyId);
+    Optional<Visitor> findByIdAndSocietyId(Long id, Long societyId);
 
 
 
@@ -55,7 +55,7 @@ public interface VisitorRepository extends JpaRepository<Visitor, Integer> {
         )
     """)
     List<Visitor> searchVisitors(
-            @Param("societyId") Integer societyId,
+            @Param("societyId") Long societyId,
             @Param("keyword") String keyword
     );
 
@@ -64,7 +64,7 @@ public interface VisitorRepository extends JpaRepository<Visitor, Integer> {
     @Modifying
     @Transactional
     @Query("update Visitor v set v.visitorStatus = :status where v.id = :id")
-    void updateVisitorStatus(@Param("id") Integer id, @Param("status") VisitorStatus status);
+    void updateVisitorStatus(@Param("id") Long id, @Param("status") VisitorStatus status);
 
 
 // COUNT VISITOR BY TODAY DATE SOCIETY WISE

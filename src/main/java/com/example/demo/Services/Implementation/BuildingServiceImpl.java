@@ -32,7 +32,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 // CREATE BUILDING
     @Override
-    public BuildingDto createBuilding(Integer societyId, BuildingDto buildingDto) {
+    public BuildingDto createBuilding(Long societyId, BuildingDto buildingDto) {
 
         Society society = societyRepo.findByIdAndIsActive(societyId, SocietyStatus.ACTIVE).orElseThrow(() ->new ResourceNotFoundException("Society", "Society Id", societyId));
 
@@ -47,7 +47,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 // GET ALL PENDING BUILDINGS by Society
 @Override
-public List<BuildingDto> getAllActiveBuildings(Integer societyId) {
+public List<BuildingDto> getAllActiveBuildings(Long societyId) {
 
     return buildingRepo.findBySociety_IdAndIsActive(societyId, BuildingStatus.ACTIVE)
             .stream()
@@ -62,7 +62,7 @@ public List<BuildingDto> getAllActiveBuildings(Integer societyId) {
 
     // GET ALL IN BUILDINGS
     @Override
-    public List<BuildingDto> getAllDeActiveBuildings(Integer societyId) {
+    public List<BuildingDto> getAllDeActiveBuildings(Long societyId) {
 
         return buildingRepo.findBySociety_IdAndIsActive(societyId, BuildingStatus.INACTIVE)
                 .stream()
@@ -76,7 +76,7 @@ public List<BuildingDto> getAllActiveBuildings(Integer societyId) {
 
     // GET BUILDING BY ID (PENDING ONLY)
     @Override
-    public BuildingDto getBuildingById(Integer buildingId) {
+    public BuildingDto getBuildingById(Long buildingId) {
 
         Building building = buildingRepo
                 .findByIdAndIsActive(buildingId, BuildingStatus.ACTIVE)
@@ -92,7 +92,7 @@ public List<BuildingDto> getAllActiveBuildings(Integer societyId) {
 
     // UPDATE BUILDING
     @Override
-    public BuildingDto updateBuilding(BuildingDto dto, Integer buildingId) {
+    public BuildingDto updateBuilding(BuildingDto dto, Long buildingId) {
 
         Building building = buildingRepo
                 .findByIdAndIsActive(buildingId, BuildingStatus.ACTIVE)
@@ -109,7 +109,7 @@ public List<BuildingDto> getAllActiveBuildings(Integer societyId) {
 
     // SOFT DELETE BUILDING
     @Override
-    public void deleteBuilding(Integer buildingId) {
+    public void deleteBuilding(Long buildingId) {
 
         Building building = buildingRepo
                 .findByIdAndIsActive(buildingId, BuildingStatus.ACTIVE)

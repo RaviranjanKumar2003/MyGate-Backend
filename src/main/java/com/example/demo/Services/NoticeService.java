@@ -13,44 +13,44 @@ public interface NoticeService {
     // Create notice
     NoticeDto createNotice(
             NoticeDto dto,
-            Integer userId,
+            Long userId,
             NoticeCreatedByRole role,
-            Integer societyId,
+            Long societyId,
             MultipartFile attachment
     ) throws IOException;
 
     // Update notice
     NoticeDto updateNotice(
-            Integer noticeId,
+            Long noticeId,
             NoticeDto dto,
-            Integer userId,
+            Long userId,
             TargetAudience role,
-            Integer societyId,
+            Long societyId,
             MultipartFile attachment
     ) throws IOException;
 
     // Society Admin / Resident notices
-    List<NoticeDto> getNoticesForSociety(Integer societyId);
+    List<NoticeDto> getNoticesForSociety(Long societyId, Long societyAdminId);
 
 
-    List<NoticeDto> getNoticesCreatedBySuperAdmin(Integer superAdminId);
+    List<NoticeDto> getNoticesCreatedBySuperAdmin(Long superAdminId);
 
-    List<NoticeDto> getNoticesCreatedBySocietyAdmin(Integer societyAdminId);
+    List<NoticeDto> getNoticesCreatedBySocietyAdmin(Long societyAdminId);
 
-    List<NoticeDto> getNoticesForStaff(Integer societyId);
+    List<NoticeDto> getNoticesForStaff(Long societyId, Long userId);
 
-    List<NoticeDto> getNoticesForNormalUser(Integer societyId);
+    List<NoticeDto> getNoticesForNormalUser(Long societyId, Long userId);
 
 
     // Super Admin → Society Admin notices
-    List<NoticeDto> getGlobalAdminNotices();
+    List<NoticeDto> getGlobalAdminNotices(Long userId);
 
     // Delete notice
     void deleteNotice(
-            Integer noticeId,
-            Integer loggedInUserId,
+            Long noticeId,
+            Long loggedInUserId,
             TargetAudience loggedInRole,
-            Integer societyId
+            Long societyId
     );
 
 

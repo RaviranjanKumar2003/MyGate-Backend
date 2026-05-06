@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 
 public class ComplaintDto {
 
-    private int id;
+    private Long id;
     private String title;
     private String description;
 
-    private Integer societyId;
+    private Long societyId;
     private String societyName;
 
-    private Integer createdById;
+    private Long createdById;
     private String createdByName;
 
     private String createdByRole;
@@ -70,12 +70,20 @@ public class ComplaintDto {
         this.complainType = complainType;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(Long createdById) {
+        this.createdById = createdById;
     }
 
     public String getTitle() {
@@ -94,20 +102,12 @@ public class ComplaintDto {
         this.description = description;
     }
 
-    public Integer getSocietyId() {
+    public Long getSocietyId() {
         return societyId;
     }
 
-    public void setSocietyId(Integer societyId) {
+    public void setSocietyId(Long societyId) {
         this.societyId = societyId;
-    }
-
-    public Integer getCreatedById() {
-        return createdById;
-    }
-
-    public void setCreatedById(Integer createdById) {
-        this.createdById = createdById;
     }
 
     public String getCreatedByRole() {

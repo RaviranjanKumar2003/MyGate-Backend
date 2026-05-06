@@ -35,7 +35,7 @@ public class NoticeController {
             @RequestBody NoticeDto dto
     ) throws IOException {
         return ResponseEntity.ok(
-                noticeService.createNotice(dto, superAdminId, NoticeCreatedByRole.SUPER_ADMIN, null, null)
+                noticeService.createNotice(dto, Long.valueOf(superAdminId), NoticeCreatedByRole.SUPER_ADMIN, null, null)
         );
     }
 
@@ -43,15 +43,15 @@ public class NoticeController {
 // 1.2 SUPER ADMIN → CREATE NOTICE FOR A SPECIFIC SOCIETY
     @PostMapping("/superAdminId/{superAdminId}/society/{societyId}/create")
     public ResponseEntity<NoticeDto> createNoticeBySuperAdminForSociety(
-            @PathVariable Integer superAdminId,
-            @PathVariable Integer societyId,
+            @PathVariable Long superAdminId,
+            @PathVariable Long societyId,
             @RequestBody NoticeDto dto
     ) throws IOException {
 
         return ResponseEntity.ok(
                 noticeService.createNotice(
                         dto,
-                        superAdminId,
+                        Long.valueOf(superAdminId),
                         NoticeCreatedByRole.SUPER_ADMIN,
                         societyId,
                         null
@@ -63,15 +63,15 @@ public class NoticeController {
 // 2. CREATE NOTICE BY SOCIETY ADMIN
    @PostMapping("/society/{societyId}/societyAdminId/{societyAdminId}/create")
    public ResponseEntity<NoticeDto> createNoticeBySocietyAdmin(
-           @PathVariable Integer societyId,
-           @PathVariable Integer societyAdminId,
+           @PathVariable Long societyId,
+           @PathVariable Long societyAdminId,
            @RequestBody NoticeDto dto
 ) throws IOException {
 
     return ResponseEntity.ok(
             noticeService.createNotice(
                     dto,
-                    societyAdminId,
+                    Long.valueOf(societyAdminId),
                     NoticeCreatedByRole.SOCIETY_ADMIN,
                     societyId,
                     null
@@ -83,21 +83,22 @@ public class NoticeController {
 
 
 // GET SUPER ADMIN NOTICE BY SOCIETY ADMIN
-    @GetMapping("/society/{societyId}/societyAdminId/{societyAdminId}")
-    public ResponseEntity<List<NoticeDto>> getSocietyNotices(
-            @PathVariable Integer societyId,
-            @PathVariable Integer societyAdminId
-    ) {
-        List<NoticeDto> notices = noticeService.getNoticesForSociety(societyId);
-        return ResponseEntity.ok(notices);
-    }
+@GetMapping("/society/{societyId}/societyAdminId/{societyAdminId}")
+public ResponseEntity<List<NoticeDto>> getSocietyNotices(
+        @PathVariable Long societyId,
+        @PathVariable Long societyAdminId
+) {
+    return ResponseEntity.ok(
+            noticeService.getNoticesForSociety(societyId, societyAdminId)
+    );
+}
 
 
 // GET SUPER ADMIN NOTICE BY ITSELF
 
     @GetMapping("/superAdminId/{superAdminId}")
     public ResponseEntity<List<NoticeDto>> getNoticesCreatedBySuperAdmin(
-            @PathVariable Integer superAdminId
+            @PathVariable Long superAdminId
     ) {
         List<NoticeDto> notices =
                 noticeService.getNoticesCreatedBySuperAdmin(superAdminId);
@@ -108,7 +109,7 @@ public class NoticeController {
 // GET SOCIETY ADMIN NOTICE BY ITSELF
     @GetMapping("/societyAdminId/{societyAdminId}")
     public ResponseEntity<List<NoticeDto>> getNoticesCreatedBySocietyAdmin(
-            @PathVariable Integer societyAdminId
+            @PathVariable Long societyAdminId
     ) {
         List<NoticeDto> notices =
                 noticeService.getNoticesCreatedBySocietyAdmin(societyAdminId);
@@ -117,45 +118,48 @@ public class NoticeController {
 
 
 // GET SOCIETY ADMIN NOTICE BY STAFFS
-   @GetMapping("/society/{societyId}/staff/{staffId}")
-   public ResponseEntity<List<NoticeDto>> getNoticesForStaff(
-           @PathVariable Integer societyId,
-           @PathVariable Integer staffId
-   ) {
-       List<NoticeDto> notices = noticeService.getNoticesForStaff(societyId);
-       return ResponseEntity.ok(notices);
-   }
-
-
+@GetMapping("/society/{societyId}/staff/{staffId}")
+public ResponseEntity<List<NoticeDto>> getNoticesForStaff(
+        @PathVariable Long societyId,
+        @PathVariable Long staffId
+) {
+    return ResponseEntity.ok(
+            noticeService.getNoticesForStaff(societyId, staffId)
+    );
+}
 
 
 
     // Get global notices
     @GetMapping("/admin/global")
-    public ResponseEntity<List<NoticeDto>> getGlobalAdminNotices() {
-        return ResponseEntity.ok(noticeService.getGlobalAdminNotices());
+    public ResponseEntity<List<NoticeDto>> getGlobalAdminNotices(
+            @RequestParam Long userId
+    ) {
+        return ResponseEntity.ok(
+                noticeService.getGlobalAdminNotices(userId)
+        );
     }
 
 
     @GetMapping("/normal-user")
     public ResponseEntity<List<NoticeDto>> getUserNotices(
-            @RequestParam Integer societyId
+            @RequestParam Long societyId,
+            @RequestParam Long userId
     ) {
         return ResponseEntity.ok(
-                noticeService.getNoticesForNormalUser(societyId)
+                noticeService.getNoticesForNormalUser(societyId, userId)
         );
     }
-
 
 
 // Update notice
     @PutMapping("/{noticeId}")
     public ResponseEntity<NoticeDto> updateNotice(
-            @PathVariable Integer noticeId,
+            @PathVariable Long noticeId,
             @RequestPart("dto") String dtoString,
-            @RequestParam Integer userId,
+            @RequestParam Long userId,
             @RequestParam TargetAudience role,
-            @RequestParam(required = false) Integer societyId,
+            @RequestParam(required = false) Long societyId,
             @RequestPart(required = false) MultipartFile attachment
     ) throws IOException {
 
@@ -168,25 +172,17 @@ public class NoticeController {
     }
 
 
-
-
 // Delete notice
     @DeleteMapping("/{noticeId}")
     public ResponseEntity<String> deleteNotice(
-            @PathVariable Integer noticeId,
-            @RequestParam Integer userId,
+            @PathVariable Long noticeId,
+            @RequestParam Long userId,
             @RequestParam TargetAudience role,
-            @RequestParam(required = false) Integer societyId
+            @RequestParam(required = false) Long societyId
     ) {
         noticeService.deleteNotice(noticeId, userId, role, societyId);
         return ResponseEntity.ok("Notice deleted successfully");
     }
-
-
-
-
-
-
 
 
 }

@@ -8,6 +8,8 @@ public class UserCountResponse {
     private Map<String, Long> roleWiseCount;
     private Map<String, Long> statusWiseCount;
 
+// GETTERS & SETTERS
+
     public long getTotalUsers() {
         return totalUsers;
     }

@@ -30,34 +30,34 @@ public class FlatController {
 
 // GET ALL FLATS by ID
     @GetMapping("/flat/{flatId}")
-    public ResponseEntity<FlatDto> getFlat(@PathVariable Integer flatId) {
+    public ResponseEntity<FlatDto> getFlat(@PathVariable Long flatId) {
         return ResponseEntity.ok(flatService.getFlatById(flatId));
     }
 
 
 // GET FLATS BY FLOOR
     @GetMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}")
-    public ResponseEntity<List<FlatDto>> getByFloor(@PathVariable Integer floorId) {
+    public ResponseEntity<List<FlatDto>> getByFloor(@PathVariable Long floorId) {
         return ResponseEntity.ok(flatService.getFlatsByFloor(floorId));
     }
 
 
 // GET FLATS BY BUILDING
     @GetMapping("/building/{buildingId}")
-    public ResponseEntity<List<FlatDto>> getByBuilding(@PathVariable Integer buildingId) {
+    public ResponseEntity<List<FlatDto>> getByBuilding(@PathVariable Long buildingId) {
         return ResponseEntity.ok(flatService.getFlatsByBuilding(buildingId));
     }
 
 
 // GET FLATS BY SOCIETY
     @GetMapping("/society/{societyId}")
-    public ResponseEntity<List<FlatDto>> getBySociety(@PathVariable Integer societyId) {
+    public ResponseEntity<List<FlatDto>> getBySociety(@PathVariable Long societyId) {
         return ResponseEntity.ok(flatService.getFlatsBySociety(societyId));
     }
 
     @GetMapping("/society/{societyId}/status/{status}")
     public ResponseEntity<List<FlatDto>> getFlatsBySocietyAndStatus(
-            @PathVariable Integer societyId,
+            @PathVariable Long societyId,
             @PathVariable String status
     ) {
         FlatStatus flatStatus = FlatStatus.valueOf(status.toUpperCase());
@@ -93,7 +93,7 @@ public class FlatController {
 // GET FLATS COUNT IN A SOCIETY BY STATUS
     @GetMapping("/society/{societyId}/status/{status}/count")
     public ResponseEntity<Long> getSocietyFlatCount(
-            @PathVariable Integer societyId,
+            @PathVariable Long societyId,
             @PathVariable FlatStatus status
     ) {
         return ResponseEntity.ok(
@@ -105,8 +105,8 @@ public class FlatController {
 // GET FLATS COUNT IN A BUILDING
     @GetMapping("/society/{societyId}/building/{buildingId}/status/{status}/count")
     public ResponseEntity<Long> getBuildingFlatCount(
-            @PathVariable Integer societyId,
-            @PathVariable Integer buildingId,
+            @PathVariable Long societyId,
+            @PathVariable Long buildingId,
             @PathVariable FlatStatus status
     ) {
         return ResponseEntity.ok(
@@ -121,9 +121,9 @@ public class FlatController {
 // GET FLATS COUNT IN A FLOOR
     @GetMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}/status/{status}/count")
     public ResponseEntity<Long> getFloorFlatCount(
-            @PathVariable Integer societyId,
-            @PathVariable Integer buildingId,
-            @PathVariable Integer floorId,
+            @PathVariable Long societyId,
+            @PathVariable Long buildingId,
+            @PathVariable Long floorId,
             @PathVariable FlatStatus status
     ) {
         return ResponseEntity.ok(
@@ -141,7 +141,7 @@ public class FlatController {
 // GET FLATS IN FLOOR BY STATUS
     @GetMapping("society/{societyId}/building/{buildingId}/floor/{floorId}/status/{status}")
     public ResponseEntity<List<FlatDto>> getByFloorAndStatus(
-            @PathVariable Integer floorId,
+            @PathVariable Long floorId,
             @PathVariable FlatStatus status
     ) {
         return ResponseEntity.ok(flatService.getFlatsByFloorAndStatus(floorId, status));
@@ -151,7 +151,7 @@ public class FlatController {
 // GET FLATS COUNT BY FLOOR
     @GetMapping("society/{societyId}/building/{buildingId}/floor/{floorId}/count")
     public ResponseEntity<FlatCountResponse> getFlatCountByFloor(
-            @PathVariable Integer floorId
+            @PathVariable Long floorId
     ) {
         return ResponseEntity.ok(flatService.getFlatCountByFloor(floorId));
     }
@@ -160,7 +160,7 @@ public class FlatController {
 // GET FLATS COUNT BY BUILDING
     @GetMapping("/society/{societyId}/building/{buildingId}/count")
     public ResponseEntity<FlatCountResponse> getFlatCountByBuilding(
-            @PathVariable Integer buildingId
+            @PathVariable Long buildingId
     ) {
         return ResponseEntity.ok(flatService.getFlatCountByBuilding(buildingId));
     }
@@ -168,7 +168,7 @@ public class FlatController {
 // GET FLATS COUNT BY FLOOR
     @GetMapping("/society/{societyId}/count")
     public ResponseEntity<FlatCountResponse> getFlatCountBySociety(
-            @PathVariable Integer societyId
+            @PathVariable Long societyId
     ) {
         return ResponseEntity.ok(flatService.getFlatCountBySociety(societyId));
     }
@@ -178,10 +178,10 @@ public class FlatController {
 // UPDATE FLAT
     @PutMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}/flat/{flatId}")
     public ResponseEntity<FlatDto> updateFlat(
-            @PathVariable("societyId") Integer societyId,
-            @PathVariable("buildingId") Integer buildingId,
-            @PathVariable("floorId") Integer floorId,
-            @PathVariable("flatId") Integer flatId,
+            @PathVariable("societyId") Long societyId,
+            @PathVariable("buildingId") Long buildingId,
+            @PathVariable("floorId") Long floorId,
+            @PathVariable("flatId") Long flatId,
             @RequestBody FlatDto dto
     ) {
         // Optional: hierarchy validation later
@@ -191,7 +191,7 @@ public class FlatController {
 // UPDATE FLAT STATUS
 @PutMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}/flat/{flatId}/status")
 public ResponseEntity<String> updateFlatStatus(
-        @PathVariable Integer flatId,
+        @PathVariable Long flatId,
         @RequestBody FlatDto dto
 ) {
     if (dto.getFlatStatus() == null) {
@@ -207,7 +207,7 @@ public ResponseEntity<String> updateFlatStatus(
 
     @PutMapping("/society/{societyId}/block")
     public ResponseEntity<String> blockSocietyFlats(
-            @PathVariable Integer societyId
+            @PathVariable Long societyId
     ) {
         flatService.blockFlatsBySociety(societyId);
         return ResponseEntity.ok("All flats blocked for society");
@@ -216,7 +216,7 @@ public ResponseEntity<String> updateFlatStatus(
 
     @PutMapping("/society/{societyId}/building/{buildingId}/block")
     public ResponseEntity<String> blockBuildingFlats(
-            @PathVariable Integer buildingId
+            @PathVariable Long buildingId
     ) {
         flatService.blockFlatsByBuilding(buildingId);
         return ResponseEntity.ok("All flats blocked for building");
@@ -225,7 +225,7 @@ public ResponseEntity<String> updateFlatStatus(
 
     @PutMapping("/society/{societyId}/building/{buildingId}/floor/{floorId}/block")
     public ResponseEntity<String> blockFloorFlats(
-            @PathVariable Integer floorId
+            @PathVariable Long floorId
     ) {
         flatService.blockFlatsByFloor(floorId);
         return ResponseEntity.ok("All flats blocked for floor");
@@ -241,7 +241,7 @@ public ResponseEntity<String> updateFlatStatus(
 
     // DELETE FLATS
     @DeleteMapping("society/{societyId}/building/{buildingId}/floor/{floorId}/flat/{flatId}")
-    public ResponseEntity<String> deleteFlat(@PathVariable Integer flatId) {
+    public ResponseEntity<String> deleteFlat(@PathVariable Long flatId) {
         flatService.softDeleteFlat(flatId);
         return ResponseEntity.ok("Flat BLOCKED successfully");
     }

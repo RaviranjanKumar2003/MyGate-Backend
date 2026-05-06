@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 
 public class NoticeDto {
 
-    private int id;
+    private Long id;
 
     private String title;
     private String message;
 
-    private Integer createdById;
-    private Integer recievedById;
+    private Long createdById;
+    private Long recievedById;
 
     private NoticeCreatedByRole createdByRole;
     private NoticeCreatedByRole recievedByRole;
@@ -27,7 +27,7 @@ public class NoticeDto {
     private String recievedByName;
 
     private TargetAudience targetRole;
-    private Integer targetSocietyId;
+    private Long targetSocietyId;
 
     private NoticePriority priority;
     private NoticeType noticeType;
@@ -48,12 +48,36 @@ public class NoticeDto {
 // GETTERS & SETTERS
 
 
-    public Integer getRecievedById() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(Long createdById) {
+        this.createdById = createdById;
+    }
+
+    public Long getRecievedById() {
         return recievedById;
     }
 
-    public void setRecievedById(Integer recievedById) {
+    public void setRecievedById(Long recievedById) {
         this.recievedById = recievedById;
+    }
+
+    public Long getTargetSocietyId() {
+        return targetSocietyId;
+    }
+
+    public void setTargetSocietyId(Long targetSocietyId) {
+        this.targetSocietyId = targetSocietyId;
     }
 
     public NoticeCreatedByRole getRecievedByRole() {
@@ -96,14 +120,6 @@ public class NoticeDto {
         this.society = society;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -118,14 +134,6 @@ public class NoticeDto {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Integer getCreatedById() {
-        return createdById;
-    }
-
-    public void setCreatedById(Integer createdById) {
-        this.createdById = createdById;
     }
 
     public NoticeCreatedByRole getCreatedByRole() {
@@ -150,14 +158,6 @@ public class NoticeDto {
 
     public void setTargetRole(TargetAudience targetRole) {
         this.targetRole = targetRole;
-    }
-
-    public Integer getTargetSocietyId() {
-        return targetSocietyId;
-    }
-
-    public void setTargetSocietyId(Integer targetSocietyId) {
-        this.targetSocietyId = targetSocietyId;
     }
 
     public NoticePriority getPriority() {

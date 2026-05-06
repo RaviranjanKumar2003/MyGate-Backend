@@ -50,7 +50,7 @@ public class SocietyAdminController {
 // GET BY ID
     @GetMapping("/{adminId}")
     public ResponseEntity<SocietyAdminDto> getSocietyAdminById(
-            @PathVariable Integer adminId
+            @PathVariable Long adminId
     ) {
         return ResponseEntity.ok(
                 societyAdminService.getSocietyAdminById(adminId)
@@ -62,7 +62,7 @@ public class SocietyAdminController {
     @PutMapping("/{adminId}/update")
     public ResponseEntity<SocietyAdminDto> updateSocietyAdmin(
             @RequestBody SocietyAdminDto dto,
-            @PathVariable Integer adminId
+            @PathVariable Long adminId
     ) {
         SocietyAdminDto updatedAdmin = societyAdminService.updateSocietyAdmin(dto, adminId);
         return ResponseEntity.ok(updatedAdmin);
@@ -74,7 +74,7 @@ public class SocietyAdminController {
     @PostMapping("/image/upload/{adminId}")
     public ResponseEntity<SocietyAdminDto> uploadImage(
             @RequestParam("image") MultipartFile image,
-            @PathVariable Integer adminId
+            @PathVariable Long adminId
     ) throws IOException {
 
         SocietyAdmin admin = societyAdminRepository.findById(adminId)
@@ -96,7 +96,7 @@ public class SocietyAdminController {
 // GET IMAGE
     @GetMapping("/image/get/society-admin/{societyAdminId}")
     public void downloadSocietyAdminImage(
-            @PathVariable Integer societyAdminId,
+            @PathVariable Long societyAdminId,
             HttpServletResponse response
     ) throws IOException {
 

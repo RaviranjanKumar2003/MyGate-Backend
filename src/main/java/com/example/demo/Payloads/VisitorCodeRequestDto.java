@@ -6,31 +6,31 @@ import java.time.LocalDateTime;
 
 public class VisitorCodeRequestDto {
 
-    private Integer userId;       // owner/tenant id
+    private Long userId;       // owner/tenant id
     private String visitorName;   // visitor ka naam
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm") // match datetime-local input
     private LocalDateTime expiryTime; // custom expiry
 
-    private Integer societyId;
+    private Long societyId;
 
 // GETTERS & SETTERS
 
 
-    public Integer getSocietyId() {
-        return societyId;
-    }
-
-    public void setSocietyId(Integer societyId) {
-        this.societyId = societyId;
-    }
-
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(Long societyId) {
+        this.societyId = societyId;
     }
 
     public String getVisitorName() {

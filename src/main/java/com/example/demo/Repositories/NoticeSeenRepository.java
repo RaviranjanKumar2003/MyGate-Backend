@@ -6,14 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface NoticeSeenRepository extends JpaRepository<NoticeSeen, Integer> {
+public interface NoticeSeenRepository extends JpaRepository<NoticeSeen, Long> {
 
-    boolean existsByNoticeIdAndUserId(Integer noticeId, Integer userId);
+    boolean existsByNoticeIdAndUserId(Long noticeId, Long userId);
 
-    List<NoticeSeen> findByNoticeId(Integer noticeId);
+    List<NoticeSeen> findByNoticeId(Long noticeId);
 
     @Transactional
-    void deleteByNoticeId(Integer noticeId);
+    void deleteByNoticeId(Long noticeId);
 
-    boolean existsByNoticeIdAndUserIdAndUserRole(Integer noticeId, Integer userId, String userRole);
+    boolean existsByNoticeIdAndUserIdAndUserRole(Long noticeId, Long userId, String userRole);
 }

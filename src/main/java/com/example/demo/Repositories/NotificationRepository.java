@@ -10,20 +10,20 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface NotificationRepository
-        extends JpaRepository<Notification, Integer> {
+        extends JpaRepository<Notification, Long> {
 
     /* ================= ADMIN ================= */
 
     List<Notification> findBySocietyIdAndReceiverAdminIdOrderByCreatedAtDesc(
-            Integer societyId,
-            Integer receiverAdminId
+            Long societyId,
+            Long receiverAdminId
     );
 
     /* ================= COMMON ================= */
 
-    List<Notification> findByReferenceIdAndType(Integer referenceId, NotificationType type);
+    List<Notification> findByReferenceIdAndType(Long referenceId, NotificationType type);
 
-    void deleteByNotice_Id(Integer noticeId);
+    void deleteByNotice_Id(Long noticeId);
 
     boolean existsByReferenceIdAndType(Long referenceId, NotificationType type);
 
@@ -48,7 +48,7 @@ public interface NotificationRepository
     ORDER BY n.createdAt DESC
     """)
     List<Notification> findForUser(
-            @Param("societyId") Integer societyId,
+            @Param("societyId") Long societyId,
             @Param("role") String role
     );
 
@@ -72,7 +72,7 @@ public interface NotificationRepository
     )
     """)
     Long countUnread(
-            @Param("societyId") Integer societyId,
+            @Param("societyId") Long societyId,
             @Param("role") String role
     );
 
@@ -96,7 +96,7 @@ public interface NotificationRepository
     )
     """)
     void markAllAsRead(
-            @Param("societyId") Integer societyId,
+            @Param("societyId") Long societyId,
             @Param("role") String role
     );
 

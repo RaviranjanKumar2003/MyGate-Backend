@@ -71,7 +71,7 @@ public class SuperAdminAuthController {
         // Generate JWT token
         String token = jwtTokenHelper.generateToken(userDetails);
 
-        Integer societyId = null;
+        Long societyId = null;
         String societyName = null;
 
         // Return token, role, and email
